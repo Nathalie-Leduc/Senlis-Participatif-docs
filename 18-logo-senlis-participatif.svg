@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 120" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Senlis Participatif</title>
+  <desc id="logoDesc">Une bulle de dialogue contenant trois barres d'histogramme dont la plus haute se termine en flèche de cathédrale : la ville, les données et la parole citoyenne réunies.</desc>
+
+  <!-- ═══ Le signe : bulle de dialogue + flèche-histogramme ═══ -->
+  <!-- Bulle -->
+  <path d="M 28 10
+           h 64 a 20 20 0 0 1 20 20
+           v 44 a 20 20 0 0 1 -20 20
+           h -34 l -20 18 v -18 h -10
+           a 20 20 0 0 1 -20 -20
+           v -44 a 20 20 0 0 1 20 -20 z"
+        fill="#FFFFFF" stroke="#26333A" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- Histogramme-skyline (baseline y=78) -->
+  <rect x="30" y="58" width="14" height="20" rx="2" fill="#1E5F7C"/>
+  <rect x="52" y="46" width="14" height="32" rx="2" fill="#1E5F7C"/>
+  <!-- La barre-flèche (clocher de la cathédrale Notre-Dame) -->
+  <rect x="74" y="40" width="14" height="38" rx="2" fill="#1E5F7C"/>
+  <path d="M 72 40 L 90 40 L 81 20 Z" fill="#A8442F"/>
+
+  <!-- ═══ Le mot ═══ -->
+  <text x="138" y="62" font-family="Fraunces, Georgia, 'Times New Roman', serif"
+        font-size="44" font-weight="700" fill="#26333A">Senlis</text>
+  <text x="140" y="94" font-family="'Public Sans', 'Segoe UI', system-ui, sans-serif"
+        font-size="21" font-weight="600" letter-spacing="6" fill="#1E5F7C">PARTICIPATIF</text>
+</svg>

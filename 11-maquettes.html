@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquettes — Senlis Participatif (v1.1 joyeuse)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&family=Public+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   SENLIS JOYEUX — Template vivant & coloré
+   ══════════════════════════════════════════ */
+:root {
+  --ardoise: #26333A;
+  --pierre: #FDF9F0;
+  --blanc: #FFFFFF;
+  --nonette: #1E5F7C;
+  --nonette-light: #E3F0F6;
+  --nonette-glow: #2A8AB4;
+  --tilleul: #3A7A4D;
+  --tilleul-light: #E0F2E5;
+  --tilleul-bright: #4CAF65;
+  --brique: #A8442F;
+  --brique-light: #FCEAE6;
+  --dore: #D4A84A;
+  --dore-light: #FFF4DB;
+  --dore-bright: #F0C45A;
+  --gris: #6B6257;
+  --display: 'Fraunces', Georgia, serif;
+  --body: 'Public Sans', system-ui, sans-serif;
+  --radius: 20px;
+  --radius-lg: 32px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--body); font-size: 18px; line-height: 1.6; color: var(--ardoise); background: var(--pierre); overflow-x: hidden; }
+h1,h2,h3 { font-family: var(--display); }
+a { color: var(--nonette); }
+:focus-visible { outline: 3px solid var(--nonette); outline-offset: 2px; border-radius: 4px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--ardoise); color: #fff; padding: 10px 16px; border-radius: 8px; z-index: 100; }
+.skip:focus { left: 8px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+/* ═══ HEADER — plus vivant ═══ */
+header {
+  background: var(--blanc);
+  border-bottom: 2px solid var(--dore-light);
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar { display: flex; align-items: center; gap: 12px; padding: 12px 0; flex-wrap: wrap; }
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--display); font-weight: 700; font-size: 19px;
+  text-decoration: none; color: var(--ardoise);
+}
+.brand svg { width: 38px; height: 38px; }
+nav { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+nav button {
+  font: 700 15px var(--body); padding: 10px 16px; min-height: 44px;
+  border: none; background: none; border-radius: 12px;
+  cursor: default; color: var(--gris);
+  transition: all .2s;
+}
+nav button:hover { color: var(--nonette); background: var(--nonette-light); transform: translateY(-1px); }
+nav button.active { background: var(--nonette); color: #fff; }
+
+/* ═══ HERO — section immersive ═══ */
+.hero-section {
+  background: linear-gradient(170deg, #1a4f6b 0%, #1E5F7C 35%, #2A8AB4 100%);
+  color: #fff;
+  padding: 0 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+/* Organic blob shapes */
+.hero-blob-1 {
+  position: absolute; top: -80px; right: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(212,168,74,.2) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: blobFloat 12s ease-in-out infinite;
+}
+.hero-blob-2 {
+  position: absolute; bottom: -100px; left: -80px;
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(58,122,77,.15) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: blobFloat 15s ease-in-out infinite reverse;
+}
+.hero-blob-3 {
+  position: absolute; top: 40%; left: 50%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,.06) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: blobFloat 10s ease-in-out infinite 3s;
+}
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -15px) scale(1.05); }
+  66% { transform: translate(-10px, 10px) scale(.97); }
+}
+
+/* Decorative buildings silhouette */
+.hero-skyline {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+  overflow: hidden;
+}
+
+.hero-inner {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; gap: 40px;
+  padding: 56px 20px 20px;
+  max-width: 960px; margin: 0 auto;
+  flex-wrap: wrap;
+}
+.hero-text { flex: 1 1 320px; }
+.hero-text h1 {
+  font-size: clamp(30px, 5.5vw, 48px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.hero-text h1 .accent { color: var(--dore-bright); }
+.hero-text h1 .underline-fun {
+  position: relative;
+  display: inline-block;
+}
+.hero-text h1 .underline-fun::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0; right: 0; height: 6px;
+  background: var(--dore-bright);
+  border-radius: 3px;
+  transform: scaleX(0);
+  animation: underlineGrow 1s .8s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes underlineGrow { to { transform: scaleX(1); } }
+
+.hero-text p { font-size: 19px; opacity: .9; margin-bottom: 28px; line-height: 1.7; }
+.hero-text .stat-pills {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
+}
+.stat-pill {
+  background: rgba(255,255,255,.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font: 700 15px var(--body);
+  display: flex; align-items: center; gap: 6px;
+}
+.stat-pill .num { font-size: 20px; color: var(--dore-bright); }
+
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 700 17px var(--body); padding: 16px 32px;
+  border-radius: 16px; border: none; cursor: default;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  text-decoration: none; min-height: 52px;
+}
+.btn-gold {
+  background: var(--dore-bright); color: var(--ardoise);
+  box-shadow: 0 4px 20px rgba(240,196,90,.35);
+}
+.btn-gold:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 8px 30px rgba(240,196,90,.45); }
+.btn-white {
+  background: rgba(255,255,255,.15); color: #fff;
+  border: 2px solid rgba(255,255,255,.3);
+  backdrop-filter: blur(4px);
+}
+.btn-white:hover { background: rgba(255,255,255,.25); transform: translateY(-2px); }
+.btn-primary { background: var(--nonette); color: #fff; box-shadow: 0 4px 16px rgba(30,95,124,.3); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(30,95,124,.35); }
+.btn-tilleul { background: var(--tilleul); color: #fff; box-shadow: 0 4px 16px rgba(58,122,77,.3); }
+.btn-tilleul:hover { transform: translateY(-3px); }
+.btn:active { transform: translateY(0) scale(.98); }
+
+/* Hero mascot */
+.hero-mascot {
+  flex: 0 0 auto;
+  position: relative;
+}
+.hero-mascot svg {
+  width: 220px; height: 240px;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,.15));
+  cursor: default;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.hero-mascot svg:hover { transform: scale(1.06) rotate(-3deg); }
+.hero-mascot svg:active { transform: scale(.97); }
+
+/* Speech bubble on mascot */
+.hero-speech {
+  position: absolute; top: -10px; right: -30px;
+  background: #fff; color: var(--nonette);
+  border-radius: 18px 18px 18px 6px;
+  padding: 10px 16px;
+  font: 700 14px var(--body);
+  box-shadow: 0 4px 16px rgba(0,0,0,.1);
+  animation: bubbleFloat 3s ease-in-out infinite;
+  white-space: nowrap;
+  z-index: 3;
+}
+.hero-speech::after {
+  content: '';
+  position: absolute; bottom: -8px; left: 18px;
+  border-width: 8px 6px 0; border-style: solid;
+  border-color: #fff transparent transparent;
+}
+@keyframes bubbleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.eye-blink { animation: blink 4s ease-in-out infinite; }
+@keyframes blink { 0%,45%,55%,100% { transform: scaleY(1); } 50% { transform: scaleY(.05); } }
+.ear-wiggle { animation: earWiggle 5s ease-in-out infinite; transform-origin: bottom center; }
+@keyframes earWiggle { 0%,85%,100% { transform: rotate(0deg); } 88% { transform: rotate(8deg); } 91% { transform: rotate(-5deg); } 94% { transform: rotate(3deg); } }
+.tail-wag { animation: tailWag 2s ease-in-out infinite; transform-origin: left center; }
+@keyframes tailWag { 0%,100% { transform: rotate(0deg); } 25% { transform: rotate(12deg); } 75% { transform: rotate(-8deg); } }
+
+/* ═══ WAVE SEPARATOR ═══ */
+.wave-sep { display: block; width: 100%; margin-top: -2px; }
+.wave-sep-bottom { margin-bottom: -2px; margin-top: 0; }
+
+/* ═══ "HOW IT WORKS" — section colorée ═══ */
+.how-section {
+  background: var(--blanc);
+  padding: 56px 20px 64px;
+  position: relative;
+}
+.how-section h2 {
+  text-align: center; font-size: 32px; font-weight: 800; margin-bottom: 8px;
+}
+.how-section > p { text-align: center; color: var(--gris); font-size: 18px; margin-bottom: 40px; }
+
+.steps {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px; max-width: 960px; margin: 0 auto;
+}
+.step {
+  text-align: center; padding: 32px 20px;
+  border-radius: var(--radius-lg);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  cursor: default;
+}
+.step:hover { transform: translateY(-6px); }
+.step:nth-child(1) { background: var(--nonette-light); }
+.step:nth-child(2) { background: var(--dore-light); }
+.step:nth-child(3) { background: var(--tilleul-light); }
+.step:nth-child(4) { background: var(--brique-light); }
+
+.step-icon {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 32px;
+}
+.step:nth-child(1) .step-icon { background: var(--nonette); color: #fff; }
+.step:nth-child(2) .step-icon { background: var(--dore); color: #fff; }
+.step:nth-child(3) .step-icon { background: var(--tilleul); color: #fff; }
+.step:nth-child(4) .step-icon { background: var(--brique); color: #fff; }
+.step h3 { font-size: 20px; margin-bottom: 8px; }
+.step p { font-size: 15px; color: var(--gris); line-height: 1.5; }
+
+/* ═══ PROPOSITIONS — fond coloré ═══ */
+.proposals-section {
+  background: linear-gradient(180deg, var(--nonette-light) 0%, #d3e8f0 100%);
+  padding: 56px 20px 64px;
+  position: relative;
+}
+.proposals-section h2 { text-align: center; font-size: 32px; margin-bottom: 8px; }
+.proposals-section > p.sub { text-align: center; color: var(--gris); margin-bottom: 36px; font-size: 18px; }
+
+.proposal-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px; max-width: 960px; margin: 0 auto;
+}
+.proposal-card {
+  background: var(--blanc);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(38,51,58,.06);
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  cursor: default;
+}
+.proposal-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(38,51,58,.12); }
+
+.proposal-header {
+  padding: 24px 24px 16px;
+  position: relative;
+}
+.proposal-header .illust {
+  position: absolute; top: 12px; right: 16px;
+  font-size: 48px;
+  opacity: .15;
+}
+.badge-live {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 700 13px var(--body); text-transform: uppercase; letter-spacing: .5px;
+  color: var(--tilleul); margin-bottom: 10px;
+}
+.badge-live::before {
+  content: ''; width: 8px; height: 8px; background: var(--tilleul);
+  border-radius: 50%; animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .4; transform: scale(1.5); } }
+
+.proposal-header h3 { font-size: 22px; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+.proposal-header p { font-size: 15px; color: var(--gris); }
+
+.proposal-body { padding: 0 24px 24px; }
+
+/* Vote bar — bigger, more colorful */
+.vote-bar {
+  display: flex; height: 18px; border-radius: 999px;
+  overflow: hidden; background: #e0dbd0; margin: 14px 0 10px;
+}
+.vote-bar span { height: 100%; transition: width 1.2s cubic-bezier(.25,.46,.45,.94); }
+.vote-bar .pour { background: linear-gradient(90deg, #3A7A4D, #4CAF65); width: 0; }
+.vote-bar .neutre { background: #B9B2A4; width: 0; }
+.vote-bar .contre { background: linear-gradient(90deg, #C25539, #A8442F); width: 0; }
+.vote-bar.animated .pour { width: 59%; }
+.vote-bar.animated .neutre { width: 12%; }
+.vote-bar.animated .contre { width: 29%; }
+.vote-bar2.animated .pour { width: 79%; }
+.vote-bar2.animated .neutre { width: 6%; }
+.vote-bar2.animated .contre { width: 15%; }
+
+.vote-legend { font-size: 14px; color: var(--gris); display: flex; gap: 14px; flex-wrap: wrap; }
+.vote-legend strong { color: var(--ardoise); }
+
+.vote-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.vote-btn {
+  flex: 1 1 80px; font: 700 15px var(--body); min-height: 48px;
+  border-radius: 14px; cursor: default; background: var(--blanc);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+}
+.v-pour { border: 2.5px solid var(--tilleul); color: var(--tilleul); }
+.v-neutre { border: 2.5px solid var(--gris); color: var(--gris); }
+.v-contre { border: 2.5px solid var(--brique); color: var(--brique); }
+.v-pour:hover { background: var(--tilleul-light); transform: translateY(-3px) scale(1.04); }
+.v-neutre:hover { background: #f0ede6; transform: translateY(-3px) scale(1.04); }
+.v-contre:hover { background: var(--brique-light); transform: translateY(-3px) scale(1.04); }
+.vote-btn.voted { color: #fff !important; transform: scale(1.05); }
+.v-pour.voted { background: var(--tilleul) !important; border-color: var(--tilleul); }
+.v-neutre.voted { background: var(--gris) !important; border-color: var(--gris); }
+.v-contre.voted { background: var(--brique) !important; border-color: var(--brique); }
+
+/* ═══ SURVEY — section dorée ═══ */
+.survey-section {
+  background: linear-gradient(170deg, #FFF8E7 0%, var(--dore-light) 100%);
+  padding: 56px 20px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.survey-section::before {
+  content: ''; position: absolute; top: -80px; right: -60px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(212,168,74,.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.survey-section h2 { text-align: center; font-size: 32px; margin-bottom: 8px; position: relative; }
+.survey-section > p.sub { text-align: center; color: var(--gris); margin-bottom: 36px; font-size: 18px; position: relative; }
+
+.survey-card-big {
+  max-width: 700px; margin: 0 auto;
+  background: var(--blanc);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(212,168,74,.15);
+  position: relative;
+}
+.survey-card-top {
+  background: var(--dore);
+  padding: 24px 28px;
+  display: flex; align-items: center; gap: 20px;
+  color: #fff;
+}
+.survey-card-top svg { width: 80px; height: 90px; flex-shrink: 0; }
+.survey-card-top h3 { font-size: 22px; font-weight: 700; }
+.survey-card-top p { font-size: 15px; opacity: .9; margin-top: 4px; }
+.survey-card-body { padding: 28px; }
+
+.progress-track {
+  height: 12px; background: #EDE7D8; border-radius: 999px;
+  overflow: hidden; margin-bottom: 8px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--dore), var(--tilleul-bright));
+  border-radius: 999px;
+  width: 0; transition: width 1.5s cubic-bezier(.25,.46,.45,.94);
+  position: relative;
+}
+.progress-fill::after {
+  content: ''; position: absolute; right: -1px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px; background: var(--tilleul-bright);
+  border: 3px solid #fff; border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(58,122,77,.3);
+}
+.progress-label { font: 600 15px var(--body); color: var(--gris); margin-bottom: 20px; }
+.progress-label strong { color: var(--tilleul); font-size: 20px; }
+
+.survey-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.survey-tag {
+  background: var(--dore-light); color: var(--dore);
+  font: 600 13px var(--body); padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* ═══ MAP TEASER — section verte ═══ */
+.map-section {
+  background: linear-gradient(170deg, #e0f2e5 0%, #c8e6d0 100%);
+  padding: 56px 20px 64px;
+  position: relative;
+}
+.map-section h2 { text-align: center; font-size: 32px; margin-bottom: 8px; }
+.map-section > p.sub { text-align: center; color: var(--gris); margin-bottom: 36px; font-size: 18px; }
+
+.map-preview {
+  max-width: 700px; margin: 0 auto;
+  background: var(--blanc);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(58,122,77,.1);
+}
+.map-placeholder {
+  height: 280px;
+  background:
+    linear-gradient(135deg, #b8d4be 25%, transparent 25%),
+    linear-gradient(225deg, #a5c9ad 25%, transparent 25%),
+    linear-gradient(315deg, #b8d4be 25%, transparent 25%),
+    linear-gradient(45deg, #a5c9ad 25%, transparent 25%);
+  background-size: 40px 40px;
+  background-color: #c8dccb;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+/* Fake map markers */
+.map-marker {
+  position: absolute;
+  width: 36px; height: 44px;
+  animation: markerBounce 2s ease-in-out infinite;
+}
+.map-marker:nth-child(1) { top: 30%; left: 35%; animation-delay: 0s; }
+.map-marker:nth-child(2) { top: 50%; left: 55%; animation-delay: .3s; }
+.map-marker:nth-child(3) { top: 25%; left: 65%; animation-delay: .6s; }
+@keyframes markerBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.map-marker svg { width: 100%; height: 100%; }
+
+.map-legend {
+  padding: 20px 24px;
+  display: flex; gap: 20px; flex-wrap: wrap; align-items: center; justify-content: center;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; font: 600 14px var(--body); color: var(--gris); }
+.legend-dot { width: 14px; height: 14px; border-radius: 50%; }
+.legend-dot.blue { background: var(--nonette); }
+.legend-dot.green { background: var(--tilleul); }
+.legend-dot.gold { background: var(--dore); }
+
+/* ═══ CTA FINAL — section sombre ═══ */
+.cta-section {
+  background: linear-gradient(170deg, #1a4f6b 0%, var(--ardoise) 100%);
+  color: #fff;
+  padding: 64px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212,168,74,.08) 0%, transparent 60%);
+  border-radius: 50%;
+}
+.cta-section h2 { font-size: 34px; font-weight: 800; margin-bottom: 12px; position: relative; }
+.cta-section p { font-size: 19px; opacity: .8; max-width: 500px; margin: 0 auto 32px; position: relative; }
+.cta-section .btn { position: relative; }
+
+.cta-mascot {
+  margin: 0 auto 24px;
+  display: block;
+  animation: gentleBob 3s ease-in-out infinite;
+}
+@keyframes gentleBob {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* ═══ FOOTER ═══ */
+footer {
+  background: var(--ardoise); color: rgba(255,255,255,.6);
+  padding: 28px 20px; text-align: center; font-size: 14px;
+}
+footer strong { color: var(--dore-bright); }
+
+/* ═══ WIDGET FLOTTANT ═══ */
+.mascot-widget { position: fixed; bottom: 24px; right: 24px; z-index: 90; }
+.mascot-toggle {
+  width: 68px; height: 68px; border-radius: 50%;
+  border: 3px solid var(--dore);
+  background: var(--blanc); cursor: default;
+  box-shadow: 0 6px 24px rgba(212,168,74,.25);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+}
+.mascot-toggle:hover { transform: scale(1.12) rotate(-5deg); box-shadow: 0 10px 36px rgba(212,168,74,.35); }
+.mascot-toggle svg { width: 42px; height: 42px; }
+.mascot-toggle::after {
+  content: '1'; position: absolute; top: -4px; right: -4px;
+  width: 22px; height: 22px; background: var(--brique);
+  border-radius: 50%; border: 2px solid #fff;
+  font: 700 11px var(--body); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse 2s ease-in-out infinite;
+}
+.mascot-toggle.read::after { display: none; }
+
+.mascot-panel {
+  position: absolute; bottom: 80px; right: 0;
+  width: 330px; background: var(--blanc);
+  border-radius: 24px 24px 8px 24px;
+  box-shadow: 0 12px 48px rgba(38,51,58,.18);
+  border: 2px solid var(--dore-light);
+  display: none; overflow: hidden;
+  animation: slideUp .35s cubic-bezier(.34,1.56,.64,1);
+}
+.mascot-panel.open { display: block; }
+@keyframes slideUp { 0% { transform: translateY(20px) scale(.9); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
+
+.panel-head {
+  background: linear-gradient(135deg, var(--dore) 0%, #e0b85c 100%);
+  color: #fff; padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.panel-head svg { width: 40px; height: 40px; flex-shrink: 0; }
+.panel-head h4 { font-family: var(--display); font-size: 17px; }
+.panel-head small { font-size: 12px; opacity: .85; display: block; }
+
+.panel-msgs { padding: 16px; max-height: 220px; overflow-y: auto; }
+.pmsg {
+  background: var(--pierre); border-radius: 16px 16px 16px 4px;
+  padding: 12px 16px; margin-bottom: 8px;
+  font-size: 14px; line-height: 1.5;
+  animation: msgPop .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes msgPop { 0% { transform: translateX(-8px) scale(.95); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+.panel-actions { padding: 8px 16px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+.panel-btn {
+  font: 600 13px var(--body); padding: 7px 14px;
+  border: 1.5px solid var(--dore); border-radius: 999px;
+  background: transparent; color: var(--dore);
+  cursor: default; transition: all .2s;
+}
+.panel-btn:hover { background: var(--dore); color: #fff; transform: translateY(-1px); }
+
+/* ═══ TOAST ═══ */
+.toast {
+  position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--tilleul); color: #fff; padding: 14px 24px; border-radius: 16px;
+  font: 700 16px var(--body);
+  box-shadow: 0 8px 30px rgba(58,122,77,.3);
+  display: none; z-index: 100;
+  animation: toastIn .4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes toastIn { 0% { transform: translateX(-50%) translateY(20px) scale(.9); opacity: 0; } 100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; } }
+
+/* ═══ CONFETTIS ═══ */
+.confetti-box { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 200; overflow: hidden; }
+.confetti { position: absolute; width: 10px; height: 10px; top: -20px; animation: confDrop 3s ease-in forwards; }
+@keyframes confDrop { 0% { transform: translateY(0) rotate(0); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 700px) {
+  .hero-inner { flex-direction: column-reverse; text-align: center; padding: 32px 20px 20px; gap: 20px; }
+  .hero-text .stat-pills { justify-content: center; }
+  .hero-cta { justify-content: center; }
+  .hero-mascot svg { width: 160px; height: 175px; }
+  .hero-speech { right: -10px; top: -14px; font-size: 13px; }
+  .survey-card-top { flex-direction: column; text-align: center; }
+  .proposal-cards { grid-template-columns: 1fr; }
+  .mascot-panel { width: 290px; right: -8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<div style="background:linear-gradient(135deg,#A8442F,#c25539);color:#fff;text-align:center;padding:12px 16px;font:700 14px 'Public Sans',system-ui,sans-serif;letter-spacing:.5px;">
+  MAQUETTES HAUTE FIDÉLITÉ — Document de conception, non interactif — v1.1 « la pierre, la rivière et le cerf »
+</div>
+<a href="#main" class="skip">Aller au contenu</a>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="#" class="brand">
+        <svg viewBox="0 0 38 38" fill="none">
+          <rect width="38" height="38" rx="10" fill="#1E5F7C"/>
+          <path d="M9 24 L14 13 L19 19 L24 10 L29 24 Z" fill="#fff" opacity=".9"/>
+          <circle cx="26" cy="10" r="3.5" fill="#F0C45A"/>
+        </svg>
+        Senlis Participatif
+      </a>
+      <nav>
+        <button class="active">Propositions</button>
+        <button>Enquêtes</button>
+        <button>Carte</button>
+        <button>Connexion</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero-section">
+  <div class="hero-blob-1"></div>
+  <div class="hero-blob-2"></div>
+  <div class="hero-blob-3"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1>Votre ville.<br>Votre <span class="underline-fun accent">voix</span>.</h1>
+      <p>Découvrez les propositions pour Senlis, votez en 10 secondes et participez aux enquêtes qui comptent vraiment.</p>
+      <div class="stat-pills">
+        <div class="stat-pill"><span class="num">312</span> participants</div>
+        <div class="stat-pill"><span class="num">2</span> propositions actives</div>
+        <div class="stat-pill"><span class="num">1</span> enquête en cours</div>
+      </div>
+      <div class="hero-cta">
+        <button class="btn btn-gold">Je participe !</button>
+        <button class="btn btn-white">Explorer la carte</button>
+      </div>
+    </div>
+    <div class="hero-mascot">
+      <div class="hero-speech" id="heroSpeech">Bienvenue à Senlis ! 🏛️</div>
+      <svg viewBox="0 0 200 220" fill="none" id="mainMascot" role="img" aria-label="Cerf mascotte de Senlis Participatif">
+        <!-- Body -->
+        <ellipse cx="100" cy="158" rx="44" ry="38" fill="#C89B3C"/>
+        <ellipse cx="100" cy="158" rx="38" ry="32" fill="#D4A84A"/>
+        <ellipse cx="100" cy="165" rx="24" ry="18" fill="#F6F1E7"/>
+        <!-- Legs -->
+        <rect x="68" y="184" width="11" height="28" rx="5.5" fill="#C89B3C"/>
+        <rect x="120" y="184" width="11" height="28" rx="5.5" fill="#C89B3C"/>
+        <rect x="66" y="208" width="15" height="8" rx="4" fill="#26333A"/>
+        <rect x="118" y="208" width="15" height="8" rx="4" fill="#26333A"/>
+        <!-- Tail -->
+        <g class="tail-wag"><ellipse cx="144" cy="148" rx="10" ry="7" fill="#F6F1E7" transform="rotate(-20 144 148)"/></g>
+        <!-- Head -->
+        <ellipse cx="100" cy="96" rx="34" ry="30" fill="#D4A84A"/>
+        <ellipse cx="100" cy="102" rx="22" ry="18" fill="#E8BD6A"/>
+        <!-- Muzzle -->
+        <ellipse cx="100" cy="112" rx="14" ry="9" fill="#F6F1E7"/>
+        <ellipse cx="100" cy="108" rx="7" ry="4.5" fill="#26333A"/>
+        <path d="M93 116 Q100 121 107 116" stroke="#26333A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Eyes -->
+        <g class="eye-blink" style="transform-origin:86px 96px;">
+          <circle cx="86" cy="96" r="5.5" fill="#26333A"/>
+          <circle cx="84" cy="94" r="2" fill="#fff"/>
+        </g>
+        <g class="eye-blink" style="transform-origin:114px 96px;">
+          <circle cx="114" cy="96" r="5.5" fill="#26333A"/>
+          <circle cx="112" cy="94" r="2" fill="#fff"/>
+        </g>
+        <!-- Happy eyebrows -->
+        <path d="M78 88 Q83 84 89 87" stroke="#C89B3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M111 87 Q117 84 122 88" stroke="#C89B3C" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Blush -->
+        <circle cx="76" cy="105" r="7" fill="#E8A090" opacity=".3"/>
+        <circle cx="124" cy="105" r="7" fill="#E8A090" opacity=".3"/>
+        <!-- Ears -->
+        <g class="ear-wiggle" style="transform-origin:74px 78px;">
+          <ellipse cx="68" cy="68" rx="10" ry="18" fill="#D4A84A" transform="rotate(-25 68 68)"/>
+          <ellipse cx="68" cy="68" rx="5" ry="12" fill="#E8BD6A" transform="rotate(-25 68 68)"/>
+        </g>
+        <g class="ear-wiggle" style="transform-origin:126px 78px; animation-delay:.3s;">
+          <ellipse cx="132" cy="68" rx="10" ry="18" fill="#D4A84A" transform="rotate(25 132 68)"/>
+          <ellipse cx="132" cy="68" rx="5" ry="12" fill="#E8BD6A" transform="rotate(25 132 68)"/>
+        </g>
+        <!-- Antlers -->
+        <g stroke="#8B6914" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M78 66 L68 38 L58 27"/><path d="M68 38 L78 30"/>
+          <path d="M122 66 L132 38 L142 27"/><path d="M132 38 L122 30"/>
+        </g>
+        <!-- Scarf -->
+        <path d="M64 126 Q100 138 136 126 Q140 132 134 138 Q100 148 66 138 Q60 132 64 126 Z" fill="#1E5F7C"/>
+        <path d="M128 132 L136 156 L124 152 Z" fill="#1E5F7C"/>
+        <!-- Little stars -->
+        <text x="40" y="56" font-size="14" fill="#F0C45A" opacity=".7">✦</text>
+        <text x="155" y="48" font-size="10" fill="#fff" opacity=".4">✦</text>
+        <text x="160" y="120" font-size="8" fill="#F0C45A" opacity=".5">✦</text>
+      </svg>
+    </div>
+  </div>
+  <!-- Skyline -->
+  <svg class="wave-sep" viewBox="0 0 1440 80" fill="none" preserveAspectRatio="none" style="height:60px;">
+    <path d="M0,80 L0,50 L60,50 L60,35 L80,35 L80,50 L120,50 L120,20 L135,10 L150,20 L150,50 L200,50 L200,40 L220,40 L220,50 L320,50 L320,30 L340,30 L340,50 L400,50 L400,45 L420,45 L420,50 L500,50 L500,25 L510,15 L520,25 L520,50 L600,50 L600,55 L700,55 L700,35 L720,35 L720,55 L800,55 L800,42 L815,42 L815,55 L900,55 L900,30 L910,20 L920,30 L920,55 L1000,55 L1000,45 L1020,45 L1020,55 L1100,55 L1100,38 L1120,38 L1120,55 L1200,55 L1200,25 L1210,15 L1220,25 L1220,55 L1300,55 L1300,48 L1320,48 L1320,55 L1440,55 L1440,80 Z" fill="#FFFFFF" opacity=".1"/>
+    <path d="M0,80 C360,60 720,75 1080,55 C1260,48 1380,65 1440,60 L1440,80 Z" fill="#FFFFFF"/>
+  </svg>
+</section>
+
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<section class="how-section">
+  <div class="wrap">
+    <h2>Comment ça marche ?</h2>
+    <p>Quatre étapes, zéro prise de tête</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">📖</div>
+        <h3>Découvrez</h3>
+        <p>Lisez les propositions argumentées et sourcées pour votre ville</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🗳️</div>
+        <h3>Votez</h3>
+        <p>Pour, contre ou neutre — chaque voix compte, en 10 secondes</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">📊</div>
+        <h3>Répondez</h3>
+        <p>Participez aux enquêtes qui éclairent le débat avec des données réelles</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🎯</div>
+        <h3>Impactez</h3>
+        <p>Vos résultats sont présentés à la mairie pour faire bouger les choses</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE -->
+<svg class="wave-sep wave-sep-bottom" viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none" style="height:40px; background:#fff;">
+  <path d="M0,0 C240,50 480,50 720,25 C960,0 1200,40 1440,20 L1440,60 L0,60 Z" fill="#E3F0F6"/>
+</svg>
+
+<!-- ═══════════ PROPOSITIONS ═══════════ -->
+<section class="proposals-section">
+  <div class="wrap">
+    <h2>Propositions en concertation</h2>
+    <p class="sub">Votre avis façonne Senlis — votez maintenant !</p>
+    <div class="proposal-cards">
+      <div class="proposal-card">
+        <div class="proposal-header">
+          <div class="illust">🚶</div>
+          <div class="badge-live">En concertation</div>
+          <h3>Piétonnisation du centre le samedi</h3>
+          <p>Centre historique piéton de 9h à 19h, parkings de report fléchés</p>
+        </div>
+        <div class="proposal-body">
+          <div class="vote-bar" id="vb1"><span class="pour"></span><span class="neutre"></span><span class="contre"></span></div>
+          <div class="vote-legend">
+            <span>✓ <strong>184</strong> pour</span>
+            <span>◯ <strong>36</strong> neutres</span>
+            <span>✗ <strong>92</strong> contre</span>
+          </div>
+          <div class="vote-actions">
+            <button class="vote-btn v-pour">✓ Pour</button>
+            <button class="vote-btn v-neutre">◯ Neutre</button>
+            <button class="vote-btn v-contre">✗ Contre</button>
+          </div>
+        </div>
+      </div>
+      <div class="proposal-card">
+        <div class="proposal-header">
+          <div class="illust">🌳</div>
+          <div class="badge-live">En concertation</div>
+          <h3>Végétalisation place Henri IV</h3>
+          <p>12 arbres, 200 m² d'espace vert et bancs ombragés</p>
+        </div>
+        <div class="proposal-body">
+          <div class="vote-bar vote-bar2" id="vb2"><span class="pour"></span><span class="neutre"></span><span class="contre"></span></div>
+          <div class="vote-legend">
+            <span>✓ <strong>241</strong> pour</span>
+            <span>◯ <strong>18</strong> neutres</span>
+            <span>✗ <strong>45</strong> contre</span>
+          </div>
+          <div class="vote-actions">
+            <button class="vote-btn v-pour">✓ Pour</button>
+            <button class="vote-btn v-neutre">◯ Neutre</button>
+            <button class="vote-btn v-contre">✗ Contre</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE -->
+<svg class="wave-sep" viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none" style="height:40px; background:#d3e8f0;">
+  <path d="M0,0 C360,50 720,10 1080,40 C1260,50 1380,20 1440,30 L1440,60 L0,60 Z" fill="#FFF8E7"/>
+</svg>
+
+<!-- ═══════════ ENQUÊTE ═══════════ -->
+<section class="survey-section">
+  <div class="wrap">
+    <h2>📋 Enquête en cours</h2>
+    <p class="sub">Vos réponses = des données concrètes pour le débat</p>
+    <div class="survey-card-big" id="surveyCard">
+      <div class="survey-card-top">
+        <!-- Mini cerf clipboard -->
+        <svg viewBox="0 0 80 90" fill="none">
+          <ellipse cx="40" cy="60" rx="20" ry="18" fill="#E8BD6A"/>
+          <ellipse cx="40" cy="63" rx="12" ry="10" fill="#F6F1E7"/>
+          <ellipse cx="40" cy="42" rx="16" ry="14" fill="#E8BD6A"/>
+          <ellipse cx="40" cy="45" rx="10" ry="9" fill="#F0D080"/>
+          <ellipse cx="40" cy="49" rx="6" ry="4" fill="#F6F1E7"/>
+          <ellipse cx="40" cy="47" rx="3" ry="2" fill="#26333A"/>
+          <path d="M36 52 Q40 55 44 52" stroke="#26333A" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <g class="eye-blink" style="transform-origin:34px 41px;"><circle cx="34" cy="41" r="2.5" fill="#26333A"/><circle cx="33" cy="40" r="1" fill="#fff"/></g>
+          <g class="eye-blink" style="transform-origin:46px 41px;"><circle cx="46" cy="41" r="2.5" fill="#26333A"/><circle cx="45" cy="40" r="1" fill="#fff"/></g>
+          <g stroke="#8B6914" stroke-width="2" fill="none" stroke-linecap="round">
+            <path d="M28 32 L24 20 L20 15"/><path d="M24 20 L28 16"/>
+            <path d="M52 32 L56 20 L60 15"/><path d="M56 20 L52 16"/>
+          </g>
+          <rect x="58" y="48" width="18" height="24" rx="3" fill="#fff" opacity=".9"/>
+          <rect x="61" y="53" width="12" height="2" rx="1" fill="#D4A84A" opacity=".7"/>
+          <rect x="61" y="58" width="9" height="2" rx="1" fill="#D4A84A" opacity=".5"/>
+          <rect x="61" y="63" width="11" height="2" rx="1" fill="#D4A84A" opacity=".5"/>
+        </svg>
+        <div>
+          <h3>Stationnement au centre-ville le samedi</h3>
+          <p>3 minutes · réponses anonymisées · résultats présentés à la mairie</p>
+        </div>
+      </div>
+      <div class="survey-card-body">
+        <div class="survey-tags">
+          <span class="survey-tag">🏠 Résidents</span>
+          <span class="survey-tag">🏪 Commerçants</span>
+          <span class="survey-tag">⏱️ ~3 min</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+        <div class="progress-label"><strong id="rCount">0</strong> / 150 réponses — presque au but ! 🎯</div>
+        <button class="btn btn-tilleul" style="margin-top: 16px; width: 100%;">
+          Répondre à l'enquête →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE -->
+<svg class="wave-sep" viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none" style="height:40px; background:#FFF8E7;">
+  <path d="M0,0 C480,55 960,10 1440,45 L1440,60 L0,60 Z" fill="#e0f2e5"/>
+</svg>
+
+<!-- ═══════════ CARTE ═══════════ -->
+<section class="map-section">
+  <div class="wrap">
+    <h2>🗺️ La carte interactive</h2>
+    <p class="sub">Visualisez les propositions et les quartiers concernés</p>
+    <div class="map-preview">
+      <div class="map-placeholder">
+        <!-- Fake animated markers -->
+        <div class="map-marker">
+          <svg viewBox="0 0 36 44"><path d="M18 0 C8 0 0 8 0 18 C0 30 18 44 18 44 C18 44 36 30 36 18 C36 8 28 0 18 0 Z" fill="#1E5F7C"/><circle cx="18" cy="16" r="7" fill="#fff"/><text x="18" y="20" text-anchor="middle" font-size="12" fill="#1E5F7C">🚶</text></svg>
+        </div>
+        <div class="map-marker">
+          <svg viewBox="0 0 36 44"><path d="M18 0 C8 0 0 8 0 18 C0 30 18 44 18 44 C18 44 36 30 36 18 C36 8 28 0 18 0 Z" fill="#3A7A4D"/><circle cx="18" cy="16" r="7" fill="#fff"/><text x="18" y="20" text-anchor="middle" font-size="12" fill="#3A7A4D">🌳</text></svg>
+        </div>
+        <div class="map-marker">
+          <svg viewBox="0 0 36 44"><path d="M18 0 C8 0 0 8 0 18 C0 30 18 44 18 44 C18 44 36 30 36 18 C36 8 28 0 18 0 Z" fill="#D4A84A"/><circle cx="18" cy="16" r="7" fill="#fff"/><text x="18" y="20" text-anchor="middle" font-size="12" fill="#D4A84A">🅿️</text></svg>
+        </div>
+        <span style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.9);padding:8px 20px;border-radius:12px;font:700 14px var(--body);color:var(--nonette);">Carte Leaflet + OpenStreetMap intégrée ici</span>
+      </div>
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot blue"></div> Propositions</div>
+        <div class="legend-item"><div class="legend-dot green"></div> Périmètre piéton</div>
+        <div class="legend-item"><div class="legend-dot gold"></div> Parkings de report</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE -->
+<svg class="wave-sep" viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none" style="height:40px; background:#e0f2e5;">
+  <path d="M0,0 C360,55 1080,10 1440,50 L1440,60 L0,60 Z" fill="#1a4f6b"/>
+</svg>
+
+<!-- ═══════════ CTA FINAL ═══════════ -->
+<section class="cta-section">
+  <div class="wrap">
+    <!-- Mini cerf -->
+    <svg class="cta-mascot" width="90" height="100" viewBox="0 0 80 90" fill="none">
+      <ellipse cx="40" cy="60" rx="20" ry="18" fill="#D4A84A"/>
+      <ellipse cx="40" cy="63" rx="12" ry="10" fill="#F6F1E7"/>
+      <ellipse cx="40" cy="42" rx="16" ry="14" fill="#D4A84A"/>
+      <ellipse cx="40" cy="45" rx="10" ry="9" fill="#E8BD6A"/>
+      <ellipse cx="40" cy="49" rx="6" ry="4" fill="#F6F1E7"/>
+      <ellipse cx="40" cy="47" rx="3" ry="2" fill="#26333A"/>
+      <path d="M36 52 Q40 55 44 52" stroke="#26333A" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <circle cx="34" cy="41" r="2.5" fill="#26333A"/><circle cx="33" cy="40" r="1" fill="#fff"/>
+      <circle cx="46" cy="41" r="2.5" fill="#26333A"/><circle cx="45" cy="40" r="1" fill="#fff"/>
+      <g stroke="#8B6914" stroke-width="2" fill="none" stroke-linecap="round">
+        <path d="M28 32 L24 20 L20 15"/><path d="M24 20 L28 16"/>
+        <path d="M52 32 L56 20 L60 15"/><path d="M56 20 L52 16"/>
+      </g>
+      <path d="M26 56 Q40 62 54 56 Q55 59 52 62 Q40 66 28 62 Q25 59 26 56 Z" fill="#1E5F7C"/>
+    </svg>
+    <h2>Chaque voix compte.<br>Surtout la vôtre.</h2>
+    <p>Rejoignez les 312 Senlisiens qui construisent la ville de demain</p>
+    <button class="btn btn-gold">
+      Créer mon compte gratuitement
+    </button>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Senlis Participatif</strong> · Plateforme citoyenne indépendante · Données hébergées en France</p>
+  <p style="margin-top:4px;">🦌 Aucun cerf n'a été blessé pendant la fabrication de ce site</p>
+</footer>
+
+<!-- ═══ WIDGET FLOTTANT ═══ -->
+<div class="mascot-widget">
+  <div class="mascot-panel" id="mPanel">
+    <div class="panel-head">
+      <svg viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="17" fill="#E8BD6A"/>
+        <circle cx="20" cy="22" r="11" fill="#F6F1E7"/>
+        <circle cx="15" cy="18" r="2.2" fill="#26333A"/><circle cx="14" cy="17" r=".9" fill="#fff"/>
+        <circle cx="25" cy="18" r="2.2" fill="#26333A"/><circle cx="24" cy="17" r=".9" fill="#fff"/>
+        <ellipse cx="20" cy="21" rx="2.5" ry="1.8" fill="#26333A"/>
+        <path d="M16 25 Q20 28 24 25" stroke="#26333A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <g stroke="#8B6914" stroke-width="1.5" fill="none" stroke-linecap="round"><path d="M11 10 L8 3"/><path d="M29 10 L32 3"/></g>
+      </svg>
+      <div>
+        <h4>Cerf-tifié utile ! 🦌</h4>
+        <small>Votre guide citoyen</small>
+      </div>
+    </div>
+    <div class="panel-msgs" id="pMsgs">
+      <div class="pmsg">👋 Bienvenue ! Je suis le cerf de Senlis. Je vous aide à naviguer sur la plateforme.</div>
+      <div class="pmsg">💡 Commencez par <strong>voter</strong> sur une proposition, ou répondez à l'<strong>enquête stationnement</strong> !</div>
+    </div>
+    <div class="panel-actions">
+      <button class="panel-btn">Comment voter ?</button>
+      <button class="panel-btn">Mes données ?</button>
+      <button class="panel-btn">Pourquoi participer ?</button>
+    </div>
+  </div>
+  <button class="mascot-toggle" id="mToggle" aria-label="Ouvrir le guide cerf">
+    <svg viewBox="0 0 42 42" fill="none">
+      <circle cx="21" cy="21" r="18" fill="#D4A84A"/>
+      <circle cx="21" cy="23" r="12" fill="#F6F1E7"/>
+      <circle cx="16" cy="19" r="2.5" fill="#26333A"/><circle cx="15" cy="18" r="1" fill="#fff"/>
+      <circle cx="26" cy="19" r="2.5" fill="#26333A"/><circle cx="25" cy="18" r="1" fill="#fff"/>
+      <ellipse cx="21" cy="22" rx="3" ry="2" fill="#26333A"/>
+      <path d="M17 26 Q21 30 25 26" stroke="#26333A" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      <g stroke="#8B6914" stroke-width="2" fill="none" stroke-linecap="round">
+        <path d="M12 11 L8 3 L5 0"/><path d="M8 3 L11 1"/>
+        <path d="M30 11 L34 3 L37 0"/><path d="M34 3 L31 1"/>
+      </g>
+    </svg>
+  </button>
+</div>
+
+<!-- TOAST + CONFETTI -->
+
+
+
+<script>
+// MAQUETTE STATIQUE — pas d'interactivité, seulement l'affichage final
+// Les jauges et barres sont pré-remplies pour montrer l'état visuel cible.
+document.addEventListener('DOMContentLoaded', () => {
+  // Pré-remplir les jauges de vote (état final visible)
+  document.querySelectorAll('.vote-bar').forEach(b => b.classList.add('animated'));
+  // Pré-remplir la barre de progression
+  const pf = document.getElementById('pFill');
+  if(pf) pf.style.width = '72%';
+  const rc = document.getElementById('rCount');
+  if(rc) rc.textContent = '108';
+  // Ouvrir le panel mascotte pour montrer son contenu
+  const panel = document.getElementById('mPanel');
+  if(panel) panel.classList.add('open');
+  const toggle = document.getElementById('mToggle');
+  if(toggle) toggle.classList.add('read');
+  // Premier bouton de vote pré-sélectionné (pour montrer l'état voté)
+  const firstPour = document.querySelector('.v-pour');
+  if(firstPour) firstPour.classList.add('voted');
+});
+</script>
+
+</body>
+</html>

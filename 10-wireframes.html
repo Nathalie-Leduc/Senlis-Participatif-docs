@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframes — Senlis Participatif (v1.1 — joyeux)</title>
+<style>
+  :root { --ink:#333; --line:#999; --soft:#e8e8e8; --softer:#f4f4f4; --blue:#d0e6f0; --gold:#ffefc0; --green:#d4edda; --dark:#26333A; }
+  * { box-sizing:border-box; margin:0; }
+  body { font-family:system-ui, sans-serif; background:#fafafa; color:var(--ink); padding:24px; }
+  h1 { font-size:22px; margin-bottom:4px; }
+  .intro { color:#666; font-size:14px; margin-bottom:24px; max-width:75ch; line-height:1.6; }
+  .board { display:flex; flex-wrap:wrap; gap:32px; align-items:flex-start; }
+  .screen { width:300px; }
+  .screen h2 { font-size:14px; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+  .frame { border:2px solid var(--ink); border-radius:16px; background:#fff; padding:10px; min-height:540px; display:flex; flex-direction:column; gap:6px; }
+  .box { border:1.5px dashed var(--line); background:var(--softer); border-radius:8px; padding:8px; font-size:11px; color:#555; text-align:center; }
+  .solid { border-style:solid; }
+  .bg-blue { background:var(--blue); border-color:#8fc4da; }
+  .bg-gold { background:var(--gold); border-color:#d4a84a; }
+  .bg-green { background:var(--green); border-color:#6bae7b; }
+  .bg-dark { background:var(--dark); color:#fff; border-color:var(--dark); }
+  .tall { min-height:90px; display:flex; align-items:center; justify-content:center; }
+  .row { display:flex; gap:6px; } .row > * { flex:1; }
+  .pill { border-radius:999px; padding:6px; }
+  .wave { height:12px; background:linear-gradient(90deg, #a5c9d8, #c0d4e0, #a5c9d8); border-radius:0; border:none; margin:0 -10px; font-size:9px; display:flex; align-items:center; justify-content:center; color:#fff; }
+  .note { font-size:12px; color:#555; margin-top:8px; line-height:1.5; }
+  .n { display:inline-block; background:var(--ink); color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; line-height:16px; text-align:center; margin-right:4px; }
+  .tag { position:relative; }
+  .tag::after { content:attr(data-n); position:absolute; top:-7px; right:-7px; background:var(--ink); color:#fff; border-radius:50%; width:16px; height:16px; font-size:10px; line-height:16px; text-align:center; }
+  .mascot { font-size:22px; display:inline-block; }
+</style>
+</head>
+<body>
+<h1>Wireframes basse fidélité — Senlis Participatif (v1.1)</h1>
+<p class="intro">Mobile-first : chaque cadre = un écran smartphone. Mise à jour avec la direction artistique joyeuse : sections colorées, mascotte cerf, widget flottant, micro-interactions. Les fonds colorés indiquent les zones à couleur propre (<span style="background:var(--blue);padding:2px 6px;border-radius:4px;">bleu</span> propositions, <span style="background:var(--gold);padding:2px 6px;border-radius:4px;">doré</span> enquêtes, <span style="background:var(--green);padding:2px 6px;border-radius:4px;">vert</span> carte). Les pastilles numérotées renvoient aux annotations.</p>
+
+<div class="board">
+
+  <!-- ════ ACCUEIL ════ -->
+  <section class="screen">
+    <h2>1 · Accueil /</h2>
+    <div class="frame">
+      <div class="box solid row" style="align-items:center">
+        <span style="flex:0 0 auto">⬡ logo</span><span>—</span><span style="flex:0 0 auto">☰ menu</span>
+      </div>
+      <div class="box bg-blue tall tag" data-n="1" style="min-height:130px;">
+        <div>
+          HERO — dégradé bleu Nonette<br><br>
+          <span class="mascot">🦌</span> Mascotte cerf (grande)<br>
+          + bulle « Bienvenue à Senlis ! »<br><br>
+          H1 : « Votre ville. Votre voix. »<br>
+          stat pills : 312 participants · 2 propositions<br>
+          <div class="row" style="margin-top:6px">
+            <div class="box pill solid" style="background:#f0c45a;border-color:#d4a84a;font-weight:700;">Je participe !</div>
+            <div class="box pill" style="border-color:#fff;">Explorer la carte</div>
+          </div>
+        </div>
+      </div>
+      <div class="wave">〜 vague SVG ondulée 〜</div>
+      <div class="box tag" data-n="2">Comment ça marche ?<br>4 étapes colorées (Découvrez · Votez · Répondez · Impactez)</div>
+      <div class="wave">〜 vague 〜</div>
+      <div class="box bg-blue tag" data-n="3">PROPOSITIONS<br>2 cartes blanches, jauge animée au scroll, boutons vote</div>
+      <div class="wave">〜 vague 〜</div>
+      <div class="box bg-gold tag" data-n="4">ENQUÊTE EN COURS<br><span class="mascot" style="font-size:14px;">🦌📋</span> cerf + clipboard<br>barre de progression animée + CTA tilleul</div>
+      <div class="wave">〜 vague 〜</div>
+      <div class="box bg-green">CARTE — aperçu avec marqueurs animés</div>
+      <div class="wave">〜 vague 〜</div>
+      <div class="box bg-dark tag" data-n="5">CTA FINAL — fond sombre<br><span class="mascot" style="font-size:14px;">🦌</span> cerf flottant + « Chaque voix compte »<br>bouton doré « Créer mon compte »</div>
+      <div class="box">footer : mentions · confidentialité · 🦌</div>
+    </div>
+    <p class="note">
+    <span class="n">1</span>Le hero est immersif : dégradé bleu, mascotte à côté du texte (pas au-dessus), bulles flottantes décoratives, silhouette de toits de Senlis en bas.<br>
+    <span class="n">2</span>Section blanche avec 4 cartes colorées (bleu/doré/vert/brique) et icônes emoji, pas de numérotation séquentielle.<br>
+    <span class="n">3</span>Section sur fond Nonette light ; les cartes de proposition ont un rayon 32 px, un emoji en filigrane, et une jauge qui s'anime au scroll (IntersectionObserver).<br>
+    <span class="n">4</span>Section sur fond Doré light ; le cerf tient un clipboard ; la barre de progression a un curseur rond avec ombre.<br>
+    <span class="n">5</span>Section sombre avec cerf mini flottant (animation bob) ; CTA doré unique et final.
+    </p>
+  </section>
+
+  <!-- ════ LISTE PROPOSITIONS ════ -->
+  <section class="screen">
+    <h2>2 · /propositions</h2>
+    <div class="frame">
+      <div class="box solid">header compact</div>
+      <div class="box bg-blue" style="text-align:left">
+        <span class="mascot" style="font-size:14px;">🦌</span> mini-cerf inline + H2 : Propositions en concertation<br>
+        <span style="font-size:10px;color:#777;">« Votre avis façonne Senlis — votez maintenant ! »</span>
+      </div>
+      <div class="row">
+        <div class="box pill">Filtre : statut</div>
+        <div class="box pill">Tri : votes</div>
+      </div>
+      <div class="box tag" data-n="1" style="border-radius:16px;">
+        CARTE PROPOSITION (rayon 32px)<br>
+        emoji filigrane 🚶 · badge pulsant ● En concertation<br>
+        titre · résumé 2 lignes<br>
+        jauge animée + comptages<br>
+        <div class="row" style="margin-top:4px;">
+          <div class="box pill" style="border-color:#3A7A4D;font-size:10px;">✓ Pour</div>
+          <div class="box pill" style="font-size:10px;">◯ Neutre</div>
+          <div class="box pill" style="border-color:#A8442F;font-size:10px;">✗ Contre</div>
+        </div>
+      </div>
+      <div class="box" style="border-radius:16px;">CARTE PROPOSITION (même structure)</div>
+      <div class="box pill tag" data-n="2">Pagination « Voir plus »</div>
+    </div>
+    <p class="note"><span class="n">1</span>Chaque carte montre la jauge tricolore animée au scroll. Vote directement depuis la liste (pas besoin d'ouvrir le détail). Confettis au vote !<br>
+    <span class="n">2</span>Bouton « Voir plus » plutôt que numéros de page : plus simple au pouce et pour les seniors.</p>
+  </section>
+
+  <!-- ════ DÉTAIL PROPOSITION ════ -->
+  <section class="screen">
+    <h2>3 · /propositions/:slug</h2>
+    <div class="frame">
+      <div class="box solid">header compact</div>
+      <div class="box">badge pulsant ● « En concertation » · H1 titre<br>clôture : 30 sept. 2026</div>
+      <div class="box tall">CARTE du périmètre<br>(zone piétonne + parkings de report)</div>
+      <div class="box tag" data-n="1">JAUGE DE VOTE (animée)<br>184 pour · 36 neutres · 92 contre</div>
+      <div class="row tag" data-n="2">
+        <div class="box pill" style="border-color:#3A7A4D;">✓ POUR</div>
+        <div class="box pill">◯ NEUTRE</div>
+        <div class="box pill" style="border-color:#A8442F;">✗ CONTRE</div>
+      </div>
+      <div class="box" style="font-size:10px;">→ Confettis + toast « Merci ! Le cerf approuve 🦌 »</div>
+      <div class="box">Argumentaire (Markdown)<br>chiffres INSEE, sources…</div>
+      <div class="box tag" data-n="3">DÉBAT (Lot 2)<br>[ colonne POUR | colonne CONTRE ]<br>+ « Publier mon argument »</div>
+      <div class="box pill solid bg-gold">CTA : Répondre à l'enquête liée</div>
+    </div>
+    <p class="note"><span class="n">1</span>Les résultats avant les boutons : on s'informe, puis on vote.<br>
+    <span class="n">2</span>Trois cibles ≥ 48 px, rayon 14 px, icône + libellé + couleur. Effet hover : soulèvement + fond pastel. Mon vote actuel reste marqué (fond plein), modifiable.<br>
+    <span class="n">3</span>Deux colonnes en desktop, empilées en mobile (POUR puis CONTRE).</p>
+  </section>
+
+  <!-- ════ ENQUÊTE ════ -->
+  <section class="screen">
+    <h2>4 · /enquetes/:slug</h2>
+    <div class="frame">
+      <div class="box solid">header compact</div>
+      <div class="box bg-gold" style="text-align:left">
+        <span class="mascot" style="font-size:14px;">🦌📋</span> cerf clipboard<br>
+        H1 : Stationnement centre historique<br>
+        contexte 2 lignes · tags 🏠 Résidents 🏪 Commerçants ⏱️ ~3 min
+      </div>
+      <div class="box tag" data-n="1">Progression : barre gradient Doré → Tilleul<br>avec curseur rond (3/7)<br>compteur animé « 108 / 150 réponses »</div>
+      <div class="box tall tag" data-n="2">Q3 — Où garez-vous votre voiture<br>la plupart du temps ?<br><br>◯ Box ou garage privé<br>◯ Voirie payante<br>◯ Parking gratuit externe<br>◯ Autre</div>
+      <div class="box" style="font-size:10px">aide : « y compris véhicule de fonction »</div>
+      <div class="row">
+        <div class="box pill">← Précédent</div>
+        <div class="box pill solid tag" data-n="3" style="background:#3A7A4D;color:#fff;border-color:#3A7A4D;">Suivant →</div>
+      </div>
+    </div>
+    <p class="note"><span class="n">1</span>Barre de progression avec dégradé et curseur rond (plus visuel qu'une rangée de points). Compteur animé au chargement.<br>
+    <span class="n">2</span>Options en boutons radio pleine largeur, zone cliquable = toute la ligne, rayon 14 px.<br>
+    <span class="n">3</span>La soumission finale est unique et atomique (cf. diagramme de séquence UC-03). Toast de remerciement + confettis à la soumission.</p>
+  </section>
+
+  <!-- ════ ADMIN MODÉRATION ════ -->
+  <section class="screen">
+    <h2>5 · /admin/moderation (Lot 2)</h2>
+    <div class="frame">
+      <div class="box solid">header admin · « 4 en attente »</div>
+      <div class="row">
+        <div class="box pill solid">Commentaires (3)</div>
+        <div class="box pill">Propositions (1)</div>
+      </div>
+      <div class="box tall tag" data-n="1">COMMENTAIRE en attente<br>pseudo · position : CONTRE<br>« texte complet… »<br>sur : Piétonnisation du centre</div>
+      <div class="row tag" data-n="2">
+        <div class="box pill" style="border-color:#3A7A4D;">✓ Approuver</div>
+        <div class="box pill" style="border-color:#A8442F;">✗ Rejeter…</div>
+      </div>
+      <div class="box">COMMENTAIRE en attente</div>
+      <div class="box">COMMENTAIRE en attente</div>
+    </div>
+    <p class="note"><span class="n">1</span>Tout le contexte sur la carte : pas d'aller-retour pour décider.<br>
+    <span class="n">2</span>« Rejeter » ouvre un champ motif obligatoire (le <em>moderationNote</em> du schéma) : un refus s'explique toujours.<br>
+    Note : l'admin n'a pas la mascotte (interface utilitaire, pas besoin du guide).</p>
+  </section>
+
+  <!-- ════ WIDGET FLOTTANT ════ -->
+  <section class="screen">
+    <h2>6 · Widget guide-citoyen (overlay)</h2>
+    <div class="frame" style="min-height:400px;">
+      <div class="box" style="flex:1;opacity:.3;">contenu de la page en arrière-plan (assombri)</div>
+      <div class="box solid tag" data-n="1" style="border-radius:16px;text-align:left;">
+        <div style="background:#d4a84a;color:#fff;padding:6px 8px;border-radius:8px 8px 0 0;margin:-8px -8px 8px;text-align:center;">
+          <span class="mascot" style="font-size:14px;">🦌</span> <strong>Cerf-tifié utile !</strong><br>
+          <span style="font-size:10px;">Votre guide citoyen</span>
+        </div>
+        <div class="box" style="border-radius:12px 12px 12px 2px;background:#fdf9f0;text-align:left;font-size:10px;">
+          👋 Bienvenue ! Je suis le cerf de Senlis.
+        </div>
+        <div class="box" style="border-radius:12px 12px 12px 2px;background:#fdf9f0;text-align:left;font-size:10px;">
+          💡 Commencez par voter ou répondre à l'enquête !
+        </div>
+        <div class="row" style="margin-top:6px;">
+          <div class="box pill" style="border-color:#d4a84a;font-size:9px;">Comment voter ?</div>
+          <div class="box pill" style="border-color:#d4a84a;font-size:9px;">Mes données ?</div>
+        </div>
+      </div>
+      <div class="box solid pill tag" data-n="2" style="width:40px;height:40px;border-radius:50%;align-self:flex-end;display:flex;align-items:center;justify-content:center;border-color:#d4a84a;border-width:2px;">
+        <span class="mascot" style="font-size:18px;">🦌</span>
+      </div>
+    </div>
+    <p class="note"><span class="n">1</span>Panneau de 330 px, ouvert au clic sur le bouton flottant. Header doré, messages en bulles Pierre, boutons d'action rapide. Les réponses sont pré-écrites (pas d'IA), couvrant les questions courantes : fonctionnement du vote, protection des données, pourquoi participer.<br>
+    <span class="n">2</span>Bouton flottant 68 px avec badge de notification Brique si message non lu. Le bouton pulse doucement pour attirer l'attention au premier chargement, puis se stabilise.</p>
+  </section>
+
+</div>
+</body>
+</html>
