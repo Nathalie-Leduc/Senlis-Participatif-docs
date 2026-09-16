@@ -1,0 +1,104 @@
+flowchart LR
+ subgraph A["Parcours A — Habitant du centre"]
+        A1["Nb de véhicules du foyer"]
+        A2["Où sont garés les véhicules<br>(choix multiple)"]
+        A3{"Difficultés pour<br>se garer ?"}
+        A3b["Lesquelles ?"]
+        A4["Suggestion cadre de vie"]
+  end
+ subgraph B["Parcours B — Patron / gérant d'une activité"]
+        B1@{ label: "Type d'activité<br><i>+ note : transmettre aux salariés</i>" }
+        B2{"Réside dans<br>le centre ?"}
+        B3@{ label: "D'où venez-vous ?<br>(quartier ou ville)" }
+        B4["Quelle ville ?"]
+        B5{"Mobilité<br>principale"}
+        B5b["Précisez ce mode<br>de transport"]
+        B5c{"Covoiturage garé<br>à Senlis ?"}
+        B5d["Où garer<br>(choix multiple)"]
+        B6["Où garer le véhicule<br>(choix multiple)"]
+        B6b{"Difficultés pour<br>se garer ?"}
+        B6c["Lesquelles ?"]
+        B6d@{ label: "Freins d'accès sans<br>voiture (choix multiple)" }
+        B6e["Précisez cet<br>autre frein"]
+        B7{"Véhicules<br>professionnels ?"}
+        B8["Combien de véhicules pro"]
+        B9["Où garés — véhicules pro<br>(choix multiple)"]
+        B9b{"Difficultés pour<br>garer véh. pro ?"}
+        B9c["Lesquelles ?"]
+        B10["Suggestion stationnement"]
+  end
+ subgraph C["Parcours C — Salarié(e) d'une activité"]
+        C1@{ label: "Type d'activité" }
+        C2{"Réside dans<br>le centre ?"}
+        C3@{ label: "D'où venez-vous ?<br>(quartier ou ville)" }
+        C4["Quelle ville ?"]
+        C5{"Mobilité<br>principale"}
+        C5b["Précisez ce mode<br>de transport"]
+        C5c{"Covoiturage garé<br>à Senlis ?"}
+        C5d["Où garer<br>(choix multiple)"]
+        C6["Où garer le véhicule<br>(choix multiple)"]
+        C6b{"Difficultés pour<br>se garer ?"}
+        C6c["Lesquelles ?"]
+        C6d@{ label: "Freins d'accès sans<br>voiture (choix multiple)" }
+        C6e["Précisez cet<br>autre frein"]
+        C7["Suggestion trajet"]
+  end
+ subgraph D["Parcours D — Visiteur occasionnel"]
+        D1{"Vient en<br>voiture ?"}
+        D2["Où se gare-t-il<br>(choix multiple)"]
+        D2b{"Difficultés pour<br>se garer ?"}
+        D2c["Lesquelles ?"]
+        D2d@{ label: "Freins d'accès sans<br>voiture (choix multiple)" }
+        D2e["Précisez cet<br>autre frein"]
+        D3["Fréquence de venues"]
+        D4["Suggestion visites"]
+  end
+    Q0{{"Q0 — Quel est votre lien avec<br>le centre historique ?"}} -- Habitant --> A1 & A2 & A3 & A4
+    A3 -- Oui --> A3b
+    Q0 -- Patron/gérant --> B1 & B2 & B7 & B10
+    B2 -- Non --> B3 & B5
+    B3 -- Autre ville --> B4
+    B5 -- Autre --> B5b
+    B5 -- Covoiturage --> B5c
+    B5c -- Oui --> B5d
+    B5 -- Voiture --> B6 & B6b & B6d
+    B6b -- Oui --> B6c
+    B6d -- Autre frein --> B6e
+    B7 -- Oui --> B8 & B9 & B9b
+    B9b -- Oui --> B9c
+    Q0 -- Salarié --> C1 & C2 & C7
+    C2 -- Non --> C3 & C5
+    C3 -- Autre ville --> C4
+    C5 -- Autre --> C5b
+    C5 -- Covoiturage --> C5c
+    C5c -- Oui --> C5d
+    C5 -- Voiture --> C6 & C6b & C6d
+    C6b -- Oui --> C6c
+    C6d -- Autre frein --> C6e
+    Q0 -- Visiteur --> D1 & D3 & D4
+    D1 -- Oui --> D2 & D2b & D2d
+    D2b -- Oui --> D2c
+    D2d -- Autre frein --> D2e
+
+    B1@{ shape: rect}
+    B3@{ shape: rect}
+    B6d@{ shape: rect}
+    C1@{ shape: rect}
+    C3@{ shape: rect}
+    C6d@{ shape: rect}
+    D2d@{ shape: rect}
+     Q0:::gate
+     B2:::branch
+     B5:::branch
+     B5c:::branch
+     B6b:::branch
+     B7:::branch
+     B9b:::branch
+     C2:::branch
+     C5:::branch
+     C5c:::branch
+     C6b:::branch
+     D1:::branch
+     D2b:::branch
+    classDef gate fill:#1E5F7C,color:#fff,stroke:#1E5F7C
+    classDef branch fill:#E3EEF3,color:#26333A,stroke:#1E5F7C
