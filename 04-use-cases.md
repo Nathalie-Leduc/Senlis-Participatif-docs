@@ -1,6 +1,6 @@
 # Use cases — Senlis Participatif
 
-> Les use cases étoffent les user stories du cahier des charges : acteurs, préconditions, scénario nominal, alternatives et exceptions. Cinq cas couvrent les mécaniques clés du système.
+> Les use cases étoffent les user stories du cahier des charges : acteurs, préconditions, scénario nominal, alternatives et exceptions. Sept cas couvrent les mécaniques clés du système (UC-06 et UC-07 ajoutés le 23/09/2026 : double authentification admin, publication et segmentation des résultats).
 
 ---
 
@@ -15,8 +15,8 @@
 | **Postconditions** | Compte créé, email vérifié, citoyen apte à participer |
 
 **Scénario nominal**
-1. Le visiteur saisit email, pseudo et mot de passe
-2. Le système valide les données (format email, force du mot de passe, pseudo disponible)
+1. Le visiteur saisit pseudo, email, mot de passe (12 caractères, 4 familles — CNIL) et sa confirmation, puis sa **situation** (centre historique / autre quartier → lequel / hors Senlis) et, s'il travaille à Senlis, le quartier et son rôle (dirigeant·e ou salarié·e)
+2. Le système valide les données (Zod : format email, force du mot de passe, cohérence situation/quartier et travail)
 3. Le système crée le compte (`emailVerified = false`) avec le mot de passe haché en Argon2
 4. Le système génère un jeton `VERIFY_EMAIL`, en stocke l'empreinte (hash) et envoie le lien par email
 5. Le visiteur clique sur le lien dans l'heure
@@ -24,7 +24,7 @@
 7. Le citoyen est invité à se connecter
 
 **Alternatives / exceptions**
-- 2a. Email ou pseudo déjà pris → message explicite, retour au formulaire
+- 2a. Email ou pseudo déjà pris → `409` avec message explicite, retour au formulaire *(le cas du pseudo renvoie aujourd'hui une 500 — corrigé par S5A-02)*
 - 5a. Jeton expiré → proposition de renvoyer un email de vérification (rate limité)
 - 5b. Jeton déjà consommé → message « lien déjà utilisé », redirection connexion
 - \* Tentatives répétées d'inscription depuis une même IP → rate limiting (anti-spam de comptes)
@@ -49,7 +49,7 @@
 
 **Alternatives / exceptions**
 - 2a. Non connecté → invitation à se connecter (le vote n'est pas perdu : rejoué après connexion)
-- 2b. Email non vérifié → message expliquant pourquoi (intégrité des résultats) + lien de renvoi
+- 2b. Email non vérifié → `403 EMAIL_NOT_VERIFIED`, message expliquant pourquoi (intégrité des résultats) + lien de renvoi
 - 3a. Proposition `CLOSED` → 403, votes clos
 - 4a. Deux votes simultanés du même citoyen (double clic, deux onglets) → la contrainte `UNIQUE(userId, proposalId)` ne laisse passer qu'une ligne ; l'upsert absorbe le conflit
 
@@ -65,13 +65,13 @@
 | **Postconditions** | Un bulletin (`SurveyResponse`) et toutes ses réponses (`Answer`) enregistrés **atomiquement** |
 
 **Scénario nominal**
-1. Le citoyen ouvre l'enquête ; le système renvoie questions et options dans l'ordre
+1. Le citoyen ouvre l'enquête ; le système renvoie questions et options dans l'ordre. Les questions **conditionnelles** ne s'affichent que si l'option déclencheuse a été choisie ; celles qui correspondent à un champ déjà connu du profil (`syncsToProfile`) s'affichent préremplies, modifiables
 2. Le citoyen complète le questionnaire et soumet
 3. Le système authentifie (JWT + `emailVerified`)
 4. Le système valide le payload (Zod) : toutes les questions `required` couvertes, cohérence type/valeur (une option pour un choix unique, un nombre pour `NOMBRE`…), options appartenant bien à leurs questions
 5. Le système vérifie que l'enquête est `OPEN` (et dans sa fenêtre `opensAt`/`closesAt`)
 6. Le système ouvre une **transaction** : insertion du `SurveyResponse` puis de toutes les `Answer`
-7. La transaction est validée (COMMIT) ; réponse `201 Created`
+7. La transaction est validée (COMMIT) ; les réponses liées au profil mettent à jour le compte (hors transaction) ; réponse `201 Created`
 8. L'interface remercie et affiche, le cas échéant, le nombre de participants
 
 **Alternatives / exceptions**
@@ -124,3 +124,50 @@
 **Alternatives / exceptions**
 - 3a. Contenu inapproprié → `REJECTED` : le commentaire n'est **jamais** apparu publiquement (modération a priori)
 - \* Afflux inhabituel de commentaires → possibilité de suspendre temporairement les commentaires sur une proposition (mesure du registre des risques)
+
+---
+
+## UC-06 — Se connecter en tant qu'administratrice (double authentification) (Lot 1)
+
+| | |
+|---|---|
+| **Acteur principal** | Administratrice |
+| **Acteur secondaire** | Système d'envoi d'emails |
+| **Préconditions** | Compte au rôle `ADMIN`, email vérifié |
+| **Déclencheur** | Saisie de l'email et du mot de passe sur `/connexion` |
+| **Postconditions** | Session admin ouverte ; navigateur reconnu pendant 1 h |
+
+**Scénario nominal**
+1. L'administratrice saisit email et mot de passe
+2. Le système vérifie le mot de passe (Argon2) ; le compte étant `ADMIN`, il **ne délivre pas** de session mais un jeton de défi (10 min, sans le rôle) et envoie un code à 6 chiffres par email (empreinte SHA-256 stockée, `TWO_FACTOR_LOGIN`)
+3. L'administratrice recopie le code
+4. Le système vérifie le code (bon compte, non expiré, non utilisé) et le consomme
+5. Le système délivre la session (JWT) **et** un jeton « appareil de confiance » valable 1 h
+
+**Alternatives / exceptions**
+- 2a. Ce navigateur présente un jeton « appareil de confiance » valide pour ce compte → le code est sauté, **le mot de passe reste exigé**
+- 4a. Code faux ou déjà utilisé → `400 INVALID_CODE` (nombre d'essais limité par code : S5A-06)
+- 4b. Code ou jeton de défi expiré → retour à l'étape 1
+- \* Tentatives répétées → rate limiting (10 / 15 min / IP)
+
+---
+
+## UC-07 — Publier et analyser les résultats d'une enquête (Lot 1)
+
+| | |
+|---|---|
+| **Acteur principal** | Administratrice |
+| **Préconditions** | Enquête existante avec au moins une réponse |
+| **Déclencheur** | Ouverture de `/admin/enquetes/:id/stats` |
+| **Postconditions** | Résultats analysés ; éventuellement rendus publics |
+
+**Scénario nominal**
+1. L'administratrice ouvre la vue détaillée : résultats agrégés, réponses libres, écart entre l'audience visée et la situation déclarée des répondants
+2. Elle choisit une question à réponse unique pour **segmenter** (ex. « Où résidez-vous ? ») : chaque question est alors présentée avec la comparaison par segment juste en dessous
+3. Elle imprime ou exporte en PDF (impression navigateur, navigation et boutons masqués)
+4. Elle coche « Publier les résultats » : `/enquetes/:slug/resultats` devient accessible à tous
+
+**Alternatives / exceptions**
+- 2a. Question à choix multiple ou texte choisie pour segmenter → `400 INVALID_SEGMENT_QUESTION` (un répondant pourrait appartenir à plusieurs segments)
+- 2b. Segment de moins de 5 répondants → masqué à l'écran et à l'export (risque de ré-identification — S5-21)
+- 4a. Résultats non publiés → un visiteur reçoit un refus, même si l'enquête est close

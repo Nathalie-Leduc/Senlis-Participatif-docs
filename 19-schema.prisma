@@ -94,6 +94,44 @@ enum Audience {
   COMMERCANTS
 }
 
+// Situation déclarée du citoyen (auto-déclaratif, comme le pseudonymat —
+// aucune pièce justificative demandée, cohérent avec le reste du projet).
+// Sert à deux choses : confronter Survey.audience à qui répond vraiment,
+// et permettre le branchement de questions selon la situation déclarée
+// (ex. l'enquête stationnement, dont la 1re question oriente vers des
+// questions différentes pour un résident du centre vs. d'un autre quartier).
+enum Situation {
+  CENTRE_RESIDENT   // habite le centre historique
+  AUTRE_QUARTIER    // habite un autre quartier de Senlis
+  HORS_SENLIS       // ne réside pas à Senlis
+}
+
+// Les 6 quartiers IRIS (INSEE) de Senlis autres que le centre
+// historique — celui-ci est déjà couvert par Situation.CENTRE_RESIDENT,
+// pas la peine de le répéter ici. Uniquement pertinent quand
+// Situation = AUTRE_QUARTIER (menu en cascade côté formulaire) : les
+// citoyens du centre ou hors Senlis n'ont pas à préciser lequel de
+// ces 6 quartiers.
+enum Quartier {
+  CENTRE_HISTORIQUE // uniquement pour le lieu de TRAVAIL (voir User.travailleQuartier) —
+                    // pour la résidence, Situation.CENTRE_RESIDENT couvre déjà ce cas,
+                    // pas la peine de la répéter ici pour cet usage-là.
+  BRICHEBAY
+  BON_SECOURS
+  VAL_AUNETTE_GATELIERE
+  ZONE_INDUSTRIELLE
+  VILLEVERT
+  JARDINIERS
+}
+
+// COMMERCANT = dirige/gère l'activité, SALARIE = y travaille sans la
+// diriger — seulement significatif quand User.travailleQuartier est
+// renseigné (sinon la personne ne travaille pas à Senlis).
+enum TravailType {
+  COMMERCANT
+  SALARIE
+}
+
 enum QuestionType {
   CHOIX_UNIQUE   // boutons radio  → ex : "Où garez-vous votre voiture ?"
   CHOIX_MULTIPLE // cases à cocher → ex : "Quels jours utilisez-vous la voiture ?"
@@ -116,6 +154,31 @@ model User {
   // minimisation de l'exposition des données personnelles)
   pseudo       String   @unique
   role         Role     @default(CITIZEN)
+
+  // Nullable : les comptes créés AVANT ce champ (admin de seed, comptes
+  // de test déjà existants) n'ont pas à être cassés par une migration —
+  // mais le formulaire d'inscription, lui, l'exigera pour tout NOUVEAU
+  // compte (validé côté Zod, pas au niveau du schéma).
+  situation Situation?
+  // Renseigné UNIQUEMENT quand situation = AUTRE_QUARTIER (menu en
+  // cascade côté formulaire) — null pour tous les autres cas, y
+  // compris les comptes créés avant ce champ.
+  quartier  Quartier?
+
+  // Axe INDÉPENDANT de situation/quartier ci-dessus : où l'on RÉSIDE
+  // n'a rien à voir avec où l'on TRAVAILLE — une personne peut
+  // résider dans un quartier et travailler dans un autre, ou ne pas
+  // travailler à Senlis du tout. travailleQuartier reste null tant
+  // que la question n'a jamais été posée (comptes existants) OU que
+  // la personne a répondu ne pas travailler à Senlis — les deux cas
+  // sont indiscernables au niveau du champ, ce qui est acceptable ici
+  // (aucune action ne dépend de la distinction entre "jamais demandé"
+  // et "a répondu non").
+  travailleQuartier Quartier?
+  // Seulement significatif quand travailleQuartier est renseigné —
+  // sinon toujours null (pas de sens à préciser un type de travail
+  // pour quelqu'un qui ne travaille pas à Senlis).
+  travailType       TravailType?
 
   // Barrière anti-comptes jetables : l'email doit être vérifié (jeton envoyé
   // à l'inscription) avant de voter ou répondre. Des comptes bidons qui
@@ -240,6 +303,10 @@ model Survey {
   description String       // contexte affiché en tête du questionnaire
   audience    Audience     @default(TOUS)
   status      SurveyStatus @default(DRAFT)
+  // Distinct du statut OPEN/CLOSED : une enquête peut être clôturée sans
+  // que ses résultats soient déjà publics — l'admin décide du moment où
+  // les rendre visibles à tous (avant, seul l'admin les voit).
+  resultsPublished Boolean @default(false)
   opensAt     DateTime?
   closesAt    DateTime?
 
@@ -257,10 +324,41 @@ model Question {
   required Boolean      @default(true)
   order    Int          // position dans le questionnaire
 
+  // Indicateur de rendu léger, uniquement pour TEXTE_LIBRE — évite de
+  // créer un type de question à part entière (VILLE_FR) juste pour un
+  // widget de saisie différent. Le stockage/la validation/l'agrégation
+  // restent identiques à n'importe quel TEXTE_LIBRE ; seul le CLIENT
+  // change de rendu (suggestions de ville via l'API officielle
+  // geo.api.gouv.fr au lieu d'un simple champ texte).
+  uiHint String?
+
+  // Si renseigné, une réponse à cette question met AUSSI à jour le
+  // champ correspondant du profil du répondant (voir syncValue sur
+  // QuestionOption ci-dessous, et l'application réelle dans
+  // submitResponse). Réutilisable par n'importe quelle future
+  // enquête, pas seulement celle-ci — une seule valeur parmi les 4
+  // champs qui existent aujourd'hui sur User pour ça.
+  // Uniquement significatif sur une question CHOIX_UNIQUE : le
+  // validateur Zod l'interdit ailleurs (une réponse à choix multiple
+  // ou libre ne peut pas s'écrire proprement dans un champ à valeur
+  // unique).
+  syncsToProfile String? // 'situation' | 'quartier' | 'travailleQuartier' | 'travailType'
+
+  // Branchement conditionnel : si renseigné, cette question ne s'affiche
+  // QUE si le répondant a choisi cette option précise à une question
+  // antérieure (ex. l'enquête stationnement scindée en deux parcours
+  // selon la situation déclarée en 1re question). SetNull plutôt que
+  // Cascade : si l'option de déclenchement est supprimée, la question
+  // redevient simplement "toujours affichée" plutôt que d'être détruite
+  // en cascade — un admin qui retouche une question ne doit pas risquer
+  // de perdre une AUTRE question sans le vouloir.
+  showIfOptionId String?
+  showIfOption   QuestionOption? @relation("QuestionBranching", fields: [showIfOptionId], references: [id], onDelete: SetNull)
+
   surveyId String
   survey   Survey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
 
-  options QuestionOption[]
+  options QuestionOption[] @relation("QuestionOwnOptions")
   answers Answer[]
 
   // Pas deux questions au même rang dans une même enquête
@@ -272,10 +370,23 @@ model QuestionOption {
   label String // ex : "Box ou garage privé", "Voirie payante", "Parking gratuit externe"
   order Int
 
+  // Valeur exacte à écrire dans le champ profil visé par
+  // Question.syncsToProfile QUAND cette option précise est choisie —
+  // ex. "CENTRE_RESIDENT" si le libellé de l'option est "Je réside
+  // dans le centre historique". Un libellé d'enquête en français
+  // n'a aucune raison de correspondre mot pour mot à une valeur
+  // d'enum ; ce champ fait le pont entre les deux explicitement,
+  // plutôt que de deviner par correspondance de texte (fragile,
+  // casserait au moindre admin qui reformule un libellé).
+  syncValue String?
+
   questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  question   Question @relation("QuestionOwnOptions", fields: [questionId], references: [id], onDelete: Cascade)
 
   answers Answer[]
+  // Questions dont l'affichage dépend d'avoir choisi CETTE option
+  // (le côté "1" de la relation nommée QuestionBranching ci-dessus).
+  gatesQuestions Question[] @relation("QuestionBranching")
 
   @@unique([questionId, order])
 }
