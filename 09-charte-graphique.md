@@ -26,14 +26,14 @@ Fichier : `logo-senlis-participatif.svg`
 
 | Nom | Hex | Rôle | Contraste (vs fond d'usage) |
 |---|---|---|---|
-| **Ardoise** | `#26333A` | Texte principal, titres, trait du logo | 12,6:1 sur Pierre ✅ AAA |
+| **Ardoise** | `#26333A` | Texte principal, titres, trait du logo | 12,4:1 sur Pierre ✅ AAA |
 | **Pierre** | `#FDF9F0` | Fond de page (calcaire de Senlis), légèrement réchauffé | — |
 | **Blanc** | `#FFFFFF` | Cartes, formulaires, surfaces, hero backgrounds internes | — |
-| **Bleu Nonette** | `#1E5F7C` | Actions, liens, focus, barres du logo, section hero | 6,3:1 avec texte blanc ✅ AA |
-| **Vert tilleul** | `#3A7A4D` | Vote / arguments POUR, succès, section carte | 4,9:1 avec texte blanc ✅ AA |
-| **Brique** | `#A8442F` | Vote / arguments CONTRE, erreurs, pointe du logo | 6,0:1 avec texte blanc ✅ AA |
-| **Doré** | `#D4A84A` | Mascotte, section enquêtes, badges « en modération », accents chaleureux | 3,1:1 (utilisé en décoratif ou avec texte blanc sur fond large) |
-| **Gris pierre** | `#6B6257` | Texte secondaire, légendes | 5,1:1 sur Pierre ✅ AA |
+| **Bleu Nonette** | `#1E5F7C` | Actions, liens, focus, barres du logo, section hero | 7,0:1 avec texte blanc ✅ AAA · 6,7:1 sur Pierre |
+| **Vert tilleul** | `#3A7A4D` | Vote / arguments POUR, succès, section carte | 5,2:1 avec texte blanc ✅ AA |
+| **Brique** | `#A8442F` | Vote / arguments CONTRE, erreurs, pointe du logo | 5,9:1 avec texte blanc ✅ AA |
+| **Doré** | `#D4A84A` | Mascotte, section enquêtes, badges « en modération », accents chaleureux | ❌ 2,2:1 avec texte blanc — **jamais de texte blanc sur Doré**, même en grand · ✅ 5,9:1 avec texte Ardoise |
+| **Gris pierre** | `#6B6257` | Texte secondaire, légendes | 5,7:1 sur Pierre ✅ AA · 6,0:1 sur Blanc |
 
 ### Palette étendue « Joy Layer » (les déclinaisons pastel des sections)
 
@@ -43,9 +43,9 @@ Fichier : `logo-senlis-participatif.svg`
 | Tilleul light | `#E0F2E5` | Fond de la section Carte |
 | Doré light | `#FFF4DB` | Fond de la section Enquêtes |
 | Brique light | `#FCEAE6` | Fond de la section alertes / erreurs |
-| Doré bright | `#F0C45A` | Bouton CTA principal hero, accents solaires |
-| Tilleul bright | `#4CAF65` | Barre de progression, récompenses |
-| Nonette glow | `#2A8AB4` | Dégradé hero (point haut du gradient) |
+| Doré bright | `#F0C45A` | Bouton CTA principal hero, accents solaires — texte **Ardoise** obligatoire (7,9:1) |
+| Tilleul bright | `#4CAF65` | Barre de progression, récompenses — décoratif uniquement (2,75:1 avec du blanc : jamais de texte dessus) |
+| Nonette glow | `#2A8AB4` | Dégradé hero (point haut du gradient) — texte blanc seulement en grand (3,9:1 : ≥ 24 px, ou 18,5 px gras) |
 
 **Règles d'usage de la couleur**
 - Le Bleu Nonette reste la couleur d'action : *tout ce qui est cliquable est bleu, tout ce qui est bleu est cliquable*
@@ -61,8 +61,8 @@ Fichier : `logo-senlis-participatif.svg`
 
 | Rôle | Police | Usage |
 |---|---|---|
-| Display (titres) | **Fraunces** (Google Fonts, libre) — graisses 500, 700, 800 | H1-H2, chiffres-clés, bulles de la mascotte — un sérif à caractère, qui évoque l'imprimé civique sans poussière |
-| Texte courant | **Public Sans** (Google Fonts, libre) | Paragraphes, formulaires, navigation, widget guide — lisibilité maximale, conçue pour le service public (US Web Design System) |
+| Display (titres) | **Fraunces** (licence OFL, **auto-hébergée** — pas d'appel aux serveurs Google, voir audit 21 / S5A-03) — graisses 500, 700, 800 | H1-H2, chiffres-clés, bulles de la mascotte — un sérif à caractère, qui évoque l'imprimé civique sans poussière |
+| Texte courant | **Public Sans** (licence OFL, auto-hébergée) | Paragraphes, formulaires, navigation, widget guide — lisibilité maximale, conçue pour le service public (US Web Design System) |
 | Données | Public Sans (chiffres tabulaires) | Résultats, compteurs animés, tableaux, statistiques dans les pill badges |
 
 **Échelle typographique** (base élargie pour le public senior — 25,6 % de 60 ans et plus à Senlis) :
@@ -172,7 +172,7 @@ Fond Tilleul, texte blanc, rayon 16 px, ombre verte, apparition en slide-up avec
 
 ## 6. Accessibilité (rappels intégrés à la charte)
 
-- Contrastes : tout couple texte/fond fonctionnel de cette charte est ≥ 4,5:1 (AA) — vérifié ci-dessus
+- Contrastes : tout couple texte/fond fonctionnel de cette charte est ≥ 4,5:1 (AA) — **recalculé le 23/09/2026** selon la formule WCAG (luminance relative) ; les éléments graphiques porteurs de sens (jauges, icônes) visent ≥ 3:1 (RGAA 3.3)
 - Focus clavier : anneau Bleu Nonette de 3 px, jamais supprimé (`outline: 3px solid #1E5F7C; outline-offset: 2px`)
 - Skip link « Aller au contenu » en premier élément focusable de chaque page
 - **`prefers-reduced-motion` respecté** : aucune animation indispensable à la compréhension — la mascotte reste visible mais figée, les jauges sont à leur valeur finale immédiatement, les confettis ne se lancent pas, le widget s'ouvre sans animation

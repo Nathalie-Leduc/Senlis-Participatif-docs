@@ -15,6 +15,10 @@ flowchart TB
     pseudo
     mot de passe haché
     rôle
+    situation de résidence
+    quartier de résidence
+    quartier de travail
+    type de travail
     email vérifié
     préférences de notification"]
 
@@ -32,6 +36,7 @@ flowchart TB
     statut
     latitude / longitude
     périmètre GeoJSON
+    image
     note de modération
     dates (publication, clôture)"]
 
@@ -46,6 +51,7 @@ flowchart TB
     description
     audience
     statut
+    résultats publiés
     dates (ouverture, clôture)"]
 
     QUESTION["**QUESTION**
@@ -53,11 +59,14 @@ flowchart TB
     texte d'aide
     type
     obligatoire
-    ordre"]
+    ordre
+    indicateur de rendu
+    champ de profil synchronisé"]
 
     OPTION["**OPTION**
     libellé
-    ordre"]
+    ordre
+    valeur de synchronisation"]
 
     BULLETIN["**BULLETIN**
     date de soumission"]
@@ -79,6 +88,7 @@ flowchart TB
     aREGROUPE(["REGROUPE"])
     aCIBLE(["CIBLE"])
     aCHOISIT(["EST CHOISIE PAR"])
+    aCONDITIONNE(["CONDITIONNE L'AFFICHAGE DE"])
 
     UTILISATEUR ---|"0,n"| aPOSSEDE ---|"1,1"| JETON
     UTILISATEUR ---|"0,n"| aREDIGE ---|"0,1"| PROPOSITION
@@ -92,6 +102,7 @@ flowchart TB
     BULLETIN ---|"1,n"| aREGROUPE ---|"1,1"| REPONSE
     QUESTION ---|"0,n"| aCIBLE ---|"1,1"| REPONSE
     OPTION ---|"0,n"| aCHOISIT ---|"0,1"| REPONSE
+    OPTION ---|"0,n"| aCONDITIONNE ---|"0,1"| QUESTION
 ```
 
 **Lecture des cardinalités sensibles** (côté qui porte le sens métier) :
@@ -102,190 +113,226 @@ flowchart TB
 | BULLETIN `(0,1)` DÉPOSE | Même logique : un bulletin peut devenir anonyme |
 | UTILISATEUR `(0,n)` VOTER `(0,n)` PROPOSITION | Association plusieurs-à-plusieurs **porteuse** de l'attribut {valeur} — elle deviendra une table dans le MLD |
 | QUESTION `(1,1)` CONTIENT | Une question appartient à *exactement une* enquête — pas de question orpheline |
+| QUESTION `(0,1)` CONDITIONNE | Branchement : une question dépend *au plus d'une* option d'une question antérieure (limite assumée : pas de « ET » entre deux conditions) ; `0` = toujours affichée |
 | ENQUÊTE `(1,n)` CONTIENT | Une enquête contient *au moins une* question — règle métier (une enquête vide n'a pas de sens), vérifiée par l'API à l'ouverture |
 
 ---
 
 ## 2. MLD — Modèle Logique de Données
 
-Conventions : <u>souligné</u> = clé primaire · `#préfixe` = clé étrangère · attributs en anglais `snake_case` (ils deviendront les colonnes). Règles de passage appliquées : chaque entité → une relation ; l'association porteuse VOTER → la relation `VOTE` ; les associations `(x,1)` → migration de la clé du côté `(x,n)`.
+Conventions : <u>souligné</u> = clé primaire · `#préfixe` = clé étrangère · noms en anglais, écrits **comme dans la base réelle** (Prisma conserve le `camelCase` du schéma : pas de `@map`, donc pas de `snake_case`). Règles de passage appliquées : chaque entité → une relation ; l'association porteuse VOTER → la relation `Vote` ; les associations `(x,1)` → migration de la clé du côté `(x,n)`.
 
 ```text
-USER (id, email, pseudo, password_hash, role, email_verified,
-      notify_new_proposal, notify_survey_closed, created_at, updated_at)
+User (id, email, pseudo, passwordHash, role, situation, quartier,
+      travailleQuartier, travailType, emailVerified,
+      notifyNewProposal, notifySurveyClosed, createdAt, updatedAt)
      PK : id · UNIQUE : email · UNIQUE : pseudo
 
-AUTH_TOKEN (id, token_hash, type, expires_at, used_at, created_at, #user_id)
-     PK : id · FK : user_id → USER(id) · UNIQUE : token_hash
+AuthToken (id, tokenHash, type, expiresAt, usedAt, createdAt, #userId)
+     PK : id · FK : userId → User(id) · UNIQUE : tokenHash
 
-PROPOSAL (id, slug, title, summary, content, status, lat, lng, geo_json,
-          moderation_note, created_at, published_at, closes_at, #author_id)
-     PK : id · FK : author_id → USER(id) [NULLABLE] · UNIQUE : slug
+Proposal (id, slug, title, summary, content, status, lat, lng, geoJson,
+          imagePath, moderationNote, createdAt, publishedAt, closesAt, #authorId)
+     PK : id · FK : authorId → User(id) [NULLABLE] · UNIQUE : slug
 
-VOTE (id, value, created_at, updated_at, #user_id, #proposal_id)
-     PK : id · FK : user_id → USER(id) · FK : proposal_id → PROPOSAL(id)
-     UNIQUE : (user_id, proposal_id)          ← issue de l'association VOTER
+Vote (id, value, createdAt, updatedAt, #userId, #proposalId)
+     PK : id · FK : userId → User(id) · FK : proposalId → Proposal(id)
+     UNIQUE : (userId, proposalId)          ← issue de l'association VOTER
 
-COMMENT (id, content, stance, status, created_at, #author_id, #proposal_id)
-     PK : id · FK : author_id → USER(id) [NULLABLE]
-     FK : proposal_id → PROPOSAL(id)
+Comment (id, content, stance, status, createdAt, #authorId, #proposalId)
+     PK : id · FK : authorId → User(id) [NULLABLE]
+     FK : proposalId → Proposal(id)
 
-SURVEY (id, slug, title, description, audience, status,
-        opens_at, closes_at, created_at)
+Survey (id, slug, title, description, audience, status, resultsPublished,
+        opensAt, closesAt, createdAt)
      PK : id · UNIQUE : slug
 
-QUESTION (id, label, help_text, type, required, "order", #survey_id)
-     PK : id · FK : survey_id → SURVEY(id) · UNIQUE : (survey_id, "order")
+Question (id, label, helpText, type, required, "order", uiHint,
+          syncsToProfile, #surveyId, #showIfOptionId)
+     PK : id · FK : surveyId → Survey(id) · UNIQUE : (surveyId, "order")
+     FK : showIfOptionId → QuestionOption(id) [NULLABLE]   ← association CONDITIONNE
 
-QUESTION_OPTION (id, label, "order", #question_id)
-     PK : id · FK : question_id → QUESTION(id) · UNIQUE : (question_id, "order")
+QuestionOption (id, label, "order", syncValue, #questionId)
+     PK : id · FK : questionId → Question(id) · UNIQUE : (questionId, "order")
 
-SURVEY_RESPONSE (id, submitted_at, #survey_id, #user_id)
-     PK : id · FK : survey_id → SURVEY(id)
-     FK : user_id → USER(id) [NULLABLE] · UNIQUE : (user_id, survey_id)
+SurveyResponse (id, submittedAt, #surveyId, #userId)
+     PK : id · FK : surveyId → Survey(id)
+     FK : userId → User(id) [NULLABLE] · UNIQUE : (userId, surveyId)
 
-ANSWER (id, value_text, value_number, #response_id, #question_id, #option_id)
-     PK : id · FK : response_id → SURVEY_RESPONSE(id)
-     FK : question_id → QUESTION(id)
-     FK : option_id → QUESTION_OPTION(id) [NULLABLE]
-     UNIQUE : (response_id, question_id, option_id)
+Answer (id, valueText, valueNumber, #responseId, #questionId, #optionId)
+     PK : id · FK : responseId → SurveyResponse(id)
+     FK : questionId → Question(id)
+     FK : optionId → QuestionOption(id) [NULLABLE]
+     UNIQUE : (responseId, questionId, optionId)
 ```
 
-> 💡 Remarque le destin des cardinalités `(0,1)` du MCD : elles deviennent des clés étrangères **NULLABLE** (`author_id`, `user_id`, `option_id`). Le RGPD conceptuel est devenu une propriété logique.
+> 💡 Remarque le destin des cardinalités `(0,1)` du MCD : elles deviennent des clés étrangères **NULLABLE** (`authorId`, `userId`, `optionId`, `showIfOptionId`). Le RGPD conceptuel est devenu une propriété logique.
+>
+> 🔁 **Question ↔ QuestionOption forment un cycle** (une question possède des options, et peut dépendre de l'option d'une autre question). C'est pourquoi le constructeur d'enquête crée d'abord toutes les questions et options, *puis* renseigne `showIfOptionId` dans un second temps — on ne peut pas pointer vers une option qui n'existe pas encore.
 
 ---
 
 ## 3. MPD — Modèle Physique de Données (PostgreSQL)
 
-Ce que Prisma génère à partir de `schema.prisma` (`prisma migrate dev`), écrit ici à la main pour comprendre ce qui se passe sous le capot.
+Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 9 migrations du 15/06 au 22/09/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
+
+1. **Identifiants en `TEXT`**, pas en `UUID` : `@default(uuid())` génère l'UUID **dans Node** (Prisma), pas dans PostgreSQL (`gen_random_uuid()` n'est jamais appelé).
+2. **Noms entre guillemets en `camelCase`** (`"passwordHash"`) : sans guillemets, PostgreSQL mettrait tout en minuscules.
+3. **Dates en `TIMESTAMP(3)`** (millisecondes, sans fuseau — Prisma écrit toujours en UTC), `updatedAt` rempli par Prisma.
 
 ```sql
 -- Énumérations : des "menus fixes" refusés par la base hors liste
 CREATE TYPE "Role"           AS ENUM ('CITIZEN', 'ADMIN');
 CREATE TYPE "ProposalStatus" AS ENUM ('DRAFT','PENDING_REVIEW','PUBLISHED',
                                       'REJECTED','CLOSED','ARCHIVED');
-CREATE TYPE "VoteValue"      AS ENUM ('POUR', 'CONTRE', 'NEUTRE');
-CREATE TYPE "Stance"         AS ENUM ('POUR', 'CONTRE', 'NEUTRE');
 CREATE TYPE "CommentStatus"  AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+CREATE TYPE "Stance"         AS ENUM ('POUR', 'CONTRE', 'NEUTRE');
+CREATE TYPE "TokenType"      AS ENUM ('VERIFY_EMAIL', 'RESET_PASSWORD', 'TWO_FACTOR_LOGIN');
+CREATE TYPE "VoteValue"      AS ENUM ('POUR', 'CONTRE', 'NEUTRE');
 CREATE TYPE "SurveyStatus"   AS ENUM ('DRAFT', 'OPEN', 'CLOSED');
 CREATE TYPE "Audience"       AS ENUM ('TOUS', 'RESIDENTS', 'COMMERCANTS');
 CREATE TYPE "QuestionType"   AS ENUM ('CHOIX_UNIQUE','CHOIX_MULTIPLE',
                                       'NOMBRE','OUI_NON','TEXTE_LIBRE');
-CREATE TYPE "TokenType"      AS ENUM ('VERIFY_EMAIL', 'RESET_PASSWORD');
+CREATE TYPE "Situation"      AS ENUM ('CENTRE_RESIDENT', 'AUTRE_QUARTIER', 'HORS_SENLIS');
+CREATE TYPE "Quartier"       AS ENUM ('BRICHEBAY','BON_SECOURS','VAL_AUNETTE_GATELIERE',
+                                      'ZONE_INDUSTRIELLE','VILLEVERT','JARDINIERS',
+                                      'CENTRE_HISTORIQUE');
+CREATE TYPE "TravailType"    AS ENUM ('COMMERCANT', 'SALARIE');
 
 CREATE TABLE "User" (
-  id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email                TEXT NOT NULL UNIQUE,
-  password_hash        TEXT NOT NULL,
-  pseudo               TEXT NOT NULL UNIQUE,
-  role                 "Role" NOT NULL DEFAULT 'CITIZEN',
-  email_verified       BOOLEAN NOT NULL DEFAULT FALSE,
-  notify_new_proposal  BOOLEAN NOT NULL DEFAULT TRUE,
-  notify_survey_closed BOOLEAN NOT NULL DEFAULT TRUE,
-  created_at           TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at           TIMESTAMPTZ NOT NULL
+  "id"                 TEXT NOT NULL PRIMARY KEY,
+  "email"              TEXT NOT NULL,
+  "passwordHash"       TEXT NOT NULL,
+  "pseudo"             TEXT NOT NULL,
+  "role"               "Role" NOT NULL DEFAULT 'CITIZEN',
+  "situation"          "Situation",
+  "quartier"           "Quartier",
+  "travailleQuartier"  "Quartier",
+  "travailType"        "TravailType",
+  "emailVerified"      BOOLEAN NOT NULL DEFAULT false,
+  "notifyNewProposal"  BOOLEAN NOT NULL DEFAULT true,
+  "notifySurveyClosed" BOOLEAN NOT NULL DEFAULT true,
+  "createdAt"          TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt"          TIMESTAMP(3) NOT NULL
 );
+CREATE UNIQUE INDEX "User_email_key"  ON "User"("email");
+CREATE UNIQUE INDEX "User_pseudo_key" ON "User"("pseudo");
 
 CREATE TABLE "AuthToken" (
-  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  token_hash TEXT NOT NULL UNIQUE,
-  type       "TokenType" NOT NULL,
-  expires_at TIMESTAMPTZ NOT NULL,
-  used_at    TIMESTAMPTZ,
-  user_id    UUID NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  "id"        TEXT NOT NULL PRIMARY KEY,
+  "tokenHash" TEXT NOT NULL,
+  "type"      "TokenType" NOT NULL,
+  "expiresAt" TIMESTAMP(3) NOT NULL,
+  "usedAt"    TIMESTAMP(3),
+  "userId"    TEXT NOT NULL REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX "AuthToken_tokenHash_key" ON "AuthToken"("tokenHash");
 
 CREATE TABLE "Proposal" (
-  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  slug            TEXT NOT NULL UNIQUE,
-  title           TEXT NOT NULL,
-  summary         TEXT NOT NULL,
-  content         TEXT NOT NULL,
-  status          "ProposalStatus" NOT NULL DEFAULT 'DRAFT',
-  lat             DOUBLE PRECISION,
-  lng             DOUBLE PRECISION,
-  geo_json        JSONB,                -- périmètre Leaflet, JSONB = indexable
-  moderation_note TEXT,
-  author_id       UUID REFERENCES "User"(id) ON DELETE SET NULL,  -- RGPD
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-  published_at    TIMESTAMPTZ,
-  closes_at       TIMESTAMPTZ
+  "id"             TEXT NOT NULL PRIMARY KEY,
+  "slug"           TEXT NOT NULL,
+  "title"          TEXT NOT NULL,
+  "summary"        TEXT NOT NULL,
+  "content"        TEXT NOT NULL,
+  "status"         "ProposalStatus" NOT NULL DEFAULT 'DRAFT',
+  "lat"            DOUBLE PRECISION,
+  "lng"            DOUBLE PRECISION,
+  "geoJson"        JSONB,
+  "imagePath"      TEXT,
+  "authorId"       TEXT REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE,  -- RGPD
+  "moderationNote" TEXT,
+  "createdAt"      TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "publishedAt"    TIMESTAMP(3),
+  "closesAt"       TIMESTAMP(3)
 );
+CREATE UNIQUE INDEX "Proposal_slug_key" ON "Proposal"("slug");
 
 CREATE TABLE "Vote" (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  value       "VoteValue" NOT NULL,
-  user_id     UUID NOT NULL REFERENCES "User"(id)     ON DELETE CASCADE,
-  proposal_id UUID NOT NULL REFERENCES "Proposal"(id) ON DELETE CASCADE,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at  TIMESTAMPTZ NOT NULL,
-  CONSTRAINT vote_isoloir UNIQUE (user_id, proposal_id)  -- ⭐ un vote/personne
+  "id"         TEXT NOT NULL PRIMARY KEY,
+  "value"      "VoteValue" NOT NULL,
+  "userId"     TEXT NOT NULL REFERENCES "User"("id")     ON DELETE CASCADE ON UPDATE CASCADE,
+  "proposalId" TEXT NOT NULL REFERENCES "Proposal"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  "createdAt"  TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt"  TIMESTAMP(3) NOT NULL
 );
+-- ⭐ l'isoloir : un vote par personne et par proposition
+CREATE UNIQUE INDEX "Vote_userId_proposalId_key" ON "Vote"("userId", "proposalId");
 
 CREATE TABLE "Comment" (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  content     TEXT NOT NULL,
-  stance      "Stance" NOT NULL,
-  status      "CommentStatus" NOT NULL DEFAULT 'PENDING',
-  author_id   UUID REFERENCES "User"(id) ON DELETE SET NULL,      -- RGPD
-  proposal_id UUID NOT NULL REFERENCES "Proposal"(id) ON DELETE CASCADE,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  "id"         TEXT NOT NULL PRIMARY KEY,
+  "content"    TEXT NOT NULL,
+  "stance"     "Stance" NOT NULL,
+  "status"     "CommentStatus" NOT NULL DEFAULT 'PENDING',
+  "authorId"   TEXT REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE,      -- RGPD
+  "proposalId" TEXT NOT NULL REFERENCES "Proposal"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  "createdAt"  TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "Survey" (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  slug        TEXT NOT NULL UNIQUE,
-  title       TEXT NOT NULL,
-  description TEXT NOT NULL,
-  audience    "Audience" NOT NULL DEFAULT 'TOUS',
-  status      "SurveyStatus" NOT NULL DEFAULT 'DRAFT',
-  opens_at    TIMESTAMPTZ,
-  closes_at   TIMESTAMPTZ,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  "id"               TEXT NOT NULL PRIMARY KEY,
+  "slug"             TEXT NOT NULL,
+  "title"            TEXT NOT NULL,
+  "description"      TEXT NOT NULL,
+  "audience"         "Audience" NOT NULL DEFAULT 'TOUS',
+  "status"           "SurveyStatus" NOT NULL DEFAULT 'DRAFT',
+  "resultsPublished" BOOLEAN NOT NULL DEFAULT false,
+  "opensAt"          TIMESTAMP(3),
+  "closesAt"         TIMESTAMP(3),
+  "createdAt"        TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX "Survey_slug_key" ON "Survey"("slug");
 
 CREATE TABLE "Question" (
-  id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  label     TEXT NOT NULL,
-  help_text TEXT,
-  type      "QuestionType" NOT NULL,
-  required  BOOLEAN NOT NULL DEFAULT TRUE,
-  "order"   INTEGER NOT NULL,            -- mot réservé SQL → guillemets
-  survey_id UUID NOT NULL REFERENCES "Survey"(id) ON DELETE CASCADE,
-  CONSTRAINT question_rang UNIQUE (survey_id, "order")
+  "id"             TEXT NOT NULL PRIMARY KEY,
+  "label"          TEXT NOT NULL,
+  "helpText"       TEXT,
+  "type"           "QuestionType" NOT NULL,
+  "required"       BOOLEAN NOT NULL DEFAULT true,
+  "order"          INTEGER NOT NULL,          -- mot réservé SQL → guillemets
+  "uiHint"         TEXT,
+  "syncsToProfile" TEXT,
+  "showIfOptionId" TEXT,                       -- FK ajoutée après QuestionOption (cycle)
+  "surveyId"       TEXT NOT NULL REFERENCES "Survey"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+CREATE UNIQUE INDEX "Question_surveyId_order_key" ON "Question"("surveyId", "order");
 
 CREATE TABLE "QuestionOption" (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  label       TEXT NOT NULL,
-  "order"     INTEGER NOT NULL,
-  question_id UUID NOT NULL REFERENCES "Question"(id) ON DELETE CASCADE,
-  CONSTRAINT option_rang UNIQUE (question_id, "order")
+  "id"         TEXT NOT NULL PRIMARY KEY,
+  "label"      TEXT NOT NULL,
+  "order"      INTEGER NOT NULL,
+  "syncValue"  TEXT,
+  "questionId" TEXT NOT NULL REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
+CREATE UNIQUE INDEX "QuestionOption_questionId_order_key" ON "QuestionOption"("questionId", "order");
+
+-- Le branchement : ajouté une fois les deux tables créées
+ALTER TABLE "Question" ADD CONSTRAINT "Question_showIfOptionId_fkey"
+  FOREIGN KEY ("showIfOptionId") REFERENCES "QuestionOption"("id")
+  ON DELETE SET NULL ON UPDATE CASCADE;
 
 CREATE TABLE "SurveyResponse" (
-  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  survey_id    UUID NOT NULL REFERENCES "Survey"(id) ON DELETE CASCADE,
-  user_id      UUID REFERENCES "User"(id) ON DELETE SET NULL,  -- pseudonymisation
-  CONSTRAINT reponse_isoloir UNIQUE (user_id, survey_id)  -- ⭐ une réponse/enquête
+  "id"          TEXT NOT NULL PRIMARY KEY,
+  "submittedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "surveyId"    TEXT NOT NULL REFERENCES "Survey"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  "userId"      TEXT REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE  -- pseudonymisation
 );
+-- ⭐ une réponse par citoyen et par enquête (deux NULL sont distincts :
+--    les bulletins anonymisés ne se bloquent pas entre eux)
+CREATE UNIQUE INDEX "SurveyResponse_userId_surveyId_key" ON "SurveyResponse"("userId", "surveyId");
 
 CREATE TABLE "Answer" (
-  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  value_text   TEXT,
-  value_number DOUBLE PRECISION,
-  response_id  UUID NOT NULL REFERENCES "SurveyResponse"(id) ON DELETE CASCADE,
-  question_id  UUID NOT NULL REFERENCES "Question"(id)       ON DELETE CASCADE,
-  option_id    UUID REFERENCES "QuestionOption"(id)          ON DELETE CASCADE,
-  CONSTRAINT answer_unique UNIQUE (response_id, question_id, option_id)
+  "id"          TEXT NOT NULL PRIMARY KEY,
+  "valueText"   TEXT,
+  "valueNumber" DOUBLE PRECISION,
+  "responseId"  TEXT NOT NULL REFERENCES "SurveyResponse"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  "questionId"  TEXT NOT NULL REFERENCES "Question"("id")       ON DELETE CASCADE ON UPDATE CASCADE,
+  "optionId"    TEXT REFERENCES "QuestionOption"("id")          ON DELETE CASCADE ON UPDATE CASCADE
 );
-
--- Index de confort pour les requêtes fréquentes (listes et agrégats)
-CREATE INDEX idx_proposal_status   ON "Proposal"(status);
-CREATE INDEX idx_comment_proposal  ON "Comment"(proposal_id, status);
-CREATE INDEX idx_answer_question   ON "Answer"(question_id);
+CREATE UNIQUE INDEX "Answer_responseId_questionId_optionId_key"
+  ON "Answer"("responseId", "questionId", "optionId");
 ```
 
-> 🎓 Du MCD au MPD, observe la trajectoire d'une seule idée : « *un citoyen ne vote qu'une fois* ». Au MCD c'est une association VOTER `(0,n)-(0,n)` porteuse ; au MLD c'est la relation VOTE avec son `UNIQUE(user_id, proposal_id)` ; au MPD c'est la contrainte `vote_isoloir` que PostgreSQL oppose à toute insertion frauduleuse. Trois langages, une seule règle métier.
+> 📈 **Index non encore créés** (pistes d'optimisation, à ajouter via `@@index` dans `schema.prisma` si les volumes le justifient) : `Proposal(status)` pour les listes filtrées, `Comment(proposalId, status)` pour le Lot 2, `Answer(questionId)` pour les agrégats. PostgreSQL n'indexe **pas** automatiquement les clés étrangères.
+
+> 🎓 Du MCD au MPD, observe la trajectoire d'une seule idée : « *un citoyen ne vote qu'une fois* ». Au MCD c'est une association VOTER `(0,n)-(0,n)` porteuse ; au MLD c'est la relation `Vote` avec son `UNIQUE(userId, proposalId)` ; au MPD c'est l'index unique `Vote_userId_proposalId_key` que PostgreSQL oppose à toute insertion frauduleuse. Trois langages, une seule règle métier.
