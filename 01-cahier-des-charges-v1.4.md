@@ -220,6 +220,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 /mon-compte                          Profil, situation, mot de passe, suppression (RGPD) — notifications (Lot 2)
 /proposer                            Soumettre une proposition citoyenne (Lot 2)
 /admin/propositions                  Liste + /nouvelle + /:slug/modifier
+/admin/propositions/:id/stats        Votes répartis par profil des votants, impression / PDF
 /admin/enquetes                      Liste + /nouvelle + /:slug/modifier (constructeur, branchement)
 /admin/enquetes/:id/stats            Résultats détaillés, segmentation, impression / PDF
 /admin/comptes                       Promouvoir / rétrograder un admin
@@ -261,6 +262,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | PATCH | /proposals/:id | 👑 | Éditer / changer le statut |
 | POST | /proposals/:id/image | 👑 | Envoyer / remplacer l'image (multipart, 5 Mo max) |
 | DELETE | /proposals/:id | 👑 | Supprimer |
+| GET | /proposals/:id/stats | 👑 | Totaux + `?segmentBy=situation\|quartier\|travailleQuartier\|travailType` (groupes de moins de 5 votants masqués) |
 | PUT | /proposals/:id/vote | 🔐✉️ | Voter ou changer son vote (upsert) |
 | DELETE | /proposals/:id/vote | 🔐✉️ | Retirer son vote |
 | POST | /proposals/submit | 🔐 | Soumettre une proposition citoyenne → PENDING_REVIEW (Lot 2) |

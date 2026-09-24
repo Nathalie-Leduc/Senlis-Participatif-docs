@@ -22,6 +22,7 @@ flowchart TD
 
     HOME --> ADMP["👑 /admin/propositions<br/>liste"]
     ADMP --> ADMPF["👑 /admin/propositions/nouvelle<br/>/admin/propositions/:slug/modifier"]
+    ADMP --> ADMPS["👑 /admin/propositions/:id/stats<br/>votes par profil, impression / PDF"]
     HOME --> ADME["👑 /admin/enquetes<br/>liste"]
     ADME --> ADMEF["👑 /admin/enquetes/nouvelle<br/>/admin/enquetes/:slug/modifier<br/>constructeur + branchement"]
     ADME --> ADMS["👑 /admin/enquetes/:id/stats<br/>résultats détaillés, segmentation,<br/>impression / PDF"]
