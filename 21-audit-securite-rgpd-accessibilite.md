@@ -15,8 +15,8 @@
 | Domaine | Verdict | Points 🔴 | Issues |
 |---|---|:--:|---|
 | Sécurité applicative (OWASP / ANSSI) | Socle solide — faille de contrôle d'accès corrigée (S5A-01) | 0 | S5A-01, S5A-02, S5A-06, S5A-08 |
-| Données personnelles (RGPD / CNIL) | Bonne conception (pseudonymisation), information des personnes incomplète | 2 | S5A-03, S5A-04, S5A-05, S5-21 |
-| Cookies et consentement | ✅ Aucun bandeau nécessaire (une fois Google Fonts retiré) | 0 | S5A-03 |
+| Données personnelles (RGPD / CNIL) | Bonne conception (pseudonymisation), Google Fonts retiré ; information des personnes incomplète | 1 | S5A-03, S5A-04, S5A-05, S5-21 |
+| Cookies et consentement | ✅ Aucun bandeau nécessaire (Google Fonts retiré par S5A-03) | 0 | S5A-03 ✅ |
 | Accessibilité (RGAA) | Bonne base (skip link, widget, reduced-motion), critères de structure manquants | 0 | S5A-07 |
 | Mise en production | 3 points bloqueraient le site en ligne | 1 | S5A-08, S5-22, S5-24 |
 
@@ -78,11 +78,11 @@
 
 ## 4. Données personnelles (RGPD / CNIL)
 
-### 🔴 4.1 Google Fonts chargé depuis les serveurs de Google — S5A-03
+### ✅ 4.1 Google Fonts chargé depuis les serveurs de Google — S5A-03 — *corrigé le 25/09/2026*
 
 **Constat** : `client/index.html` charge Fraunces et Public Sans depuis `fonts.googleapis.com`. Chaque visiteur transmet son **adresse IP à Google (États-Unis)** sans base légale ni information — pratique sanctionnée en Europe (tribunal de Munich, 2022) et régulièrement épinglée par les autorités de protection des données.
 
-**Correctif** : polices auto-hébergées (`@fontsource/fraunces`, `@fontsource/public-sans`, licence OFL) — bonus : une requête DNS/TLS en moins, meilleur Lighthouse.
+**Correctif appliqué** : polices auto-hébergées via `@fontsource-variable/fraunces` et `@fontsource-variable/public-sans` (licence OFL), déclarées dans `client/src/styles/_fonts.scss` sous leurs noms historiques (aucune des 64 références existantes à modifier). Polices variables (un fichier pour toutes les graisses), sous-ensembles latin + latin-ext. Un test (`src/styles/fonts.test.js`) échoue si un serveur de polices tiers réapparaît dans `index.html` ou `src/`. Pour S5-24 : la future CSP pourra se limiter à `font-src 'self'`.
 
 ### 🔴 4.2 Politique de confidentialité inexacte et incomplète — S5A-04 (RGPD art. 12-14)
 
@@ -123,7 +123,7 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 | `localStorage.trustedDeviceToken` | Appareil de confiance 2FA (1 h) | ✅ Sécurité de l'authentification |
 | `localStorage` préférences d'accessibilité | Réglages choisis par l'utilisateur | ✅ Personnalisation de l'interface demandée par l'utilisateur |
 | `sessionStorage` vote en attente | Vote rejoué après connexion | ✅ Service expressément demandé |
-| Google Fonts | IP transmise à un tiers | ❌ → supprimé par S5A-03 |
+| ~~Google Fonts~~ | ~~IP transmise à un tiers~~ | ✅ supprimé (S5A-03) |
 | Tuiles OSM | IP transmise, pas de cookie | Pas un traceur ; à mentionner dans la politique |
 
 **Conclusion** : aucun bandeau de consentement n'est nécessaire. Ne **pas** en ajouter un « par précaution » : un bandeau inutile habitue les gens à cliquer sans lire.
