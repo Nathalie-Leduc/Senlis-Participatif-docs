@@ -14,7 +14,7 @@
 
 | Domaine | Verdict | Points 🔴 | Issues |
 |---|---|:--:|---|
-| Sécurité applicative (OWASP / ANSSI) | Socle solide, 1 faille de contrôle d'accès | 1 | S5A-01, S5A-02, S5A-06, S5A-08 |
+| Sécurité applicative (OWASP / ANSSI) | Socle solide — faille de contrôle d'accès corrigée (S5A-01) | 0 | S5A-01, S5A-02, S5A-06, S5A-08 |
 | Données personnelles (RGPD / CNIL) | Bonne conception (pseudonymisation), information des personnes incomplète | 2 | S5A-03, S5A-04, S5A-05, S5-21 |
 | Cookies et consentement | ✅ Aucun bandeau nécessaire (une fois Google Fonts retiré) | 0 | S5A-03 |
 | Accessibilité (RGAA) | Bonne base (skip link, widget, reduced-motion), critères de structure manquants | 0 | S5A-07 |
@@ -40,13 +40,13 @@
 
 ## 3. Sécurité applicative (OWASP / ANSSI)
 
-### 🔴 3.1 Rôle administrateur lu dans le JWT — S5A-01 (OWASP A01 Contrôle d'accès)
+### ✅ 3.1 Rôle administrateur lu dans le JWT — S5A-01 (OWASP A01 Contrôle d'accès) — *corrigé le 24/09/2026*
 
 **Constat** : `middlewares/auth.js > isAdmin` vérifie `req.user.role`, qui vient du JWT signé à la connexion et valable **7 h**. Depuis S5-19 (rétrograder un admin), un admin rétrogradé garde tous ses droits jusqu'à l'expiration de son jeton. De même, un compte supprimé garde un jeton valide.
 
 **Analogie** : retirer le badge de quelqu'un dans le registre sans désactiver la puce du badge — les portes s'ouvrent encore.
 
-**Correctif** : `isAdmin` relit le rôle en base (une requête indexée par clé primaire, comme `requireVerifiedEmail` le fait déjà pour l'email) ; `auth` rejette un `userId` qui n'existe plus ; `jwt.verify(..., { algorithms: ['HS256'] })` pour épingler l'algorithme. **Tests** : admin rétrogradé → 403 immédiat ; compte supprimé → 401.
+**Correctif appliqué** : `auth` et `optionalAuth` relisent le compte en base (une lecture par clé primaire, qui remplace celle que faisait déjà `requireVerifiedEmail` — même nombre de requêtes qu'avant sur les routes de participation) ; le rôle et `emailVerified` viennent de la base, jamais du jeton ; un compte supprimé → 401 (ou visiteur anonyme sur une route publique) ; signature et vérification épinglées en HS256. **Tests** (`api/tests/access-control.test.js`, 11 tests) : 7 d'entre eux échouent sur l'ancien code — la faille est démontrée, puis corrigée.
 
 ### 🟠 3.2 Erreurs de base de données renvoyées en 500 — S5A-02
 
