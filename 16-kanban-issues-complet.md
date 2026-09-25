@@ -139,7 +139,7 @@
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
 | **S5A-01** | **`fix(api): contrôle d'accès — rôle et existence du compte relus en base à chaque requête protégée + algorithme JWT épinglé (OWASP A01/A07)`** ✅ | **`lot:1` `type:bug` `zone:api` `prio:haute`** | **`fix/access-control-fresh-role`** | **0,5 j** | **J65** |
-| **S5A-02** | **`fix(api): robustesse — P2002/P2025/Multer traduits en 409/404/400, profil travail enregistré à l'inscription, tests users réactivés (users.tests.js → users.test.js)`** | **`lot:1` `type:bug` `zone:api` `prio:haute`** | **`fix/api-error-mapping`** | **0,5 j** | **J65** |
+| **S5A-02** | **`fix(api): robustesse — P2002/P2025/Multer traduits en 409/404/400, profil travail enregistré à l'inscription, tests users réactivés (users.tests.js → users.test.js)`** ✅ | **`lot:1` `type:bug` `zone:api` `prio:haute`** | **`fix/api-error-mapping`** | **0,5 j** | **J65** |
 | **S5A-03** | **`fix(client): polices auto-hébergées (fin des appels Google Fonts — CNIL) + retrait de nodemailer des dépendances client`** | **`lot:1` `type:bug` `zone:client` `prio:haute`** | **`fix/self-hosted-fonts`** | **0,5 j** | **J66** |
 | **S5A-04** | **`docs(client): politique de confidentialité et mentions légales exactes (bases légales, destinataires, durées, droits, CNIL) + registre des traitements`** | **`lot:1` `type:docs` `zone:client` `prio:haute`** | **`docs/legal-pages-accuracy`** | **1 j** | **J66–J67** |
 | **S5A-05** | **`feat(api+client): droits RGPD — export de mes données (accès/portabilité) + purge des comptes inactifs et des jetons expirés`** | **`lot:1` `type:feature` `zone:api` `zone:client`** | **`feat/gdpr-export-purge`** | **1 j** | **J67–J68** |

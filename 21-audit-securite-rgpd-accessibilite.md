@@ -48,12 +48,12 @@
 
 **Correctif appliqué** : `auth` et `optionalAuth` relisent le compte en base (une lecture par clé primaire, qui remplace celle que faisait déjà `requireVerifiedEmail` — même nombre de requêtes qu'avant sur les routes de participation) ; le rôle et `emailVerified` viennent de la base, jamais du jeton ; un compte supprimé → 401 (ou visiteur anonyme sur une route publique) ; signature et vérification épinglées en HS256. **Tests** (`api/tests/access-control.test.js`, 11 tests) : 7 d'entre eux échouent sur l'ancien code — la faille est démontrée, puis corrigée.
 
-### 🟠 3.2 Erreurs de base de données renvoyées en 500 — S5A-02
+### ✅ 3.2 Erreurs de base de données renvoyées en 500 — S5A-02 — *corrigé le 25/09/2026*
 
 - Pseudo déjà pris à l'inscription ou dans « Mon compte » → violation d'unicité Prisma `P2002` non traduite → **500** au lieu de 409.
 - Image > 5 Mo ou mauvais format → erreur Multer sans `status` → **500** au lieu de 400/413.
 
-**Correctif** : traduction centralisée dans `errorHandler.js` (`P2002` → 409, `P2025` → 404, `MulterError` → 400/413).
+**Correctif appliqué** : traduction centralisée dans `errorHandler.js` (`P2002` → 409 `EMAIL_TAKEN` / `PSEUDO_TAKEN` / `CONFLICT`, `P2025` → 404, `MulterError` → 400/413, JSON mal formé → 400, trop gros → 413) ; une 500 ne renvoie plus de code interne Prisma. Même issue : le profil travail est désormais enregistré à l'inscription, et `users.tests.js` (jamais exécuté) est renommé, avec un test garde-fou sur le nommage.
 
 ### 🟠 3.3 Durcissement de l'authentification — S5A-06 (OWASP A07, ASVS V2/V3, ANSSI)
 

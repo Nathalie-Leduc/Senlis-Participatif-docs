@@ -149,7 +149,7 @@ main      ── production (protégée : merge uniquement par PR, CI verte obli
 
 ### Tests
 - **API (prioritaire)** : tests d'intégration Vitest + Supertest sur une BDD de test dédiée (`.env.test`, migrée par `npm run migrate:test`) — cibles n°1 : les invariants métier (unicité du vote, transaction d'enquête, droits admin — y compris après rétrogradation —, effacement RGPD)
-- ⚠️ Vitest ne lit que les fichiers `*.test.js` / `*.spec.js` : un fichier `users.tests.js` est **ignoré silencieusement** (cas réel, corrigé par S5A-02)
+- ⚠️ Vitest ne lit que les fichiers `*.test.js` / `*.spec.js` : un fichier `users.tests.js` est **ignoré silencieusement** (cas réel, corrigé par S5A-02) — le test `tests/test-files-naming.test.js` échoue désormais si un fichier de `tests/` est mal nommé
 - **Client** : Vitest + Testing Library sur les composants à logique (VoteBar, SurveyForm, **MascotWidget**) — tester le *comportement*, pas le pixel
 - **Animations** : vérifier que `prefers-reduced-motion: reduce` neutralise bien toutes les animations (test d'accessibilité automatisé)
 - Seuil pragmatique : tout invariant du cahier des charges a son test ; pas de course au % de couverture

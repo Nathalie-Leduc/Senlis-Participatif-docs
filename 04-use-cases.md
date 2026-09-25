@@ -24,7 +24,7 @@
 7. Le citoyen est invité à se connecter
 
 **Alternatives / exceptions**
-- 2a. Email ou pseudo déjà pris → `409` avec message explicite, retour au formulaire *(le cas du pseudo renvoie aujourd'hui une 500 — corrigé par S5A-02)*
+- 2a. Email ou pseudo déjà pris → `409 EMAIL_TAKEN` / `PSEUDO_TAKEN` avec message explicite, retour au formulaire — y compris si deux inscriptions identiques arrivent au même instant (la contrainte d'unicité de la base tranche)
 - 5a. Jeton expiré → proposition de renvoyer un email de vérification (rate limité)
 - 5b. Jeton déjà consommé → message « lien déjà utilisé », redirection connexion
 - \* Tentatives répétées d'inscription depuis une même IP → rate limiting (anti-spam de comptes)
