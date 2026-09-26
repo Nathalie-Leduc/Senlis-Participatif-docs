@@ -29,6 +29,7 @@
 | 19 | [schema.prisma](19-schema.prisma) | Copie de référence du schéma — la source vivante est `api/prisma/schema.prisma` du dépôt de code |
 | 20 | Centre historique — parkings (`.mmd` / `.svg`) | Schéma des parkings de report |
 | 21 | [Audit sécurité, RGPD, accessibilité](21-audit-securite-rgpd-accessibilite.md) | OWASP, ANSSI, CNIL, RGAA : constats, gravité, correctifs, issues associées |
+| 22 | [Registre des traitements](22-registre-des-traitements.md) | RGPD art. 30 : une fiche par traitement (finalité, base légale, données, destinataires, durées, sécurité) |
 
 Annexes Word : workflow GitHub, installation de Prisma 7, résumé technique.
 

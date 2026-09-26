@@ -15,7 +15,7 @@
 | Domaine | Verdict | Points 🔴 | Issues |
 |---|---|:--:|---|
 | Sécurité applicative (OWASP / ANSSI) | Socle solide — faille de contrôle d'accès corrigée (S5A-01) | 0 | S5A-01, S5A-02, S5A-06, S5A-08 |
-| Données personnelles (RGPD / CNIL) | Bonne conception (pseudonymisation), Google Fonts retiré ; information des personnes incomplète | 1 | S5A-03, S5A-04, S5A-05, S5-21 |
+| Données personnelles (RGPD / CNIL) | Bonne conception (pseudonymisation), Google Fonts retiré, information des personnes exacte | 0 | S5A-03, S5A-04, S5A-05, S5-21 |
 | Cookies et consentement | ✅ Aucun bandeau nécessaire (Google Fonts retiré par S5A-03) | 0 | S5A-03 ✅ |
 | Accessibilité (RGAA) | Bonne base (skip link, widget, reduced-motion), critères de structure manquants | 0 | S5A-07 |
 | Mise en production | 3 points bloqueraient le site en ligne | 1 | S5A-08, S5-22, S5-24 |
@@ -84,7 +84,9 @@
 
 **Correctif appliqué** : polices auto-hébergées via `@fontsource-variable/fraunces` et `@fontsource-variable/public-sans` (licence OFL), déclarées dans `client/src/styles/_fonts.scss` sous leurs noms historiques (aucune des 64 références existantes à modifier). Polices variables (un fichier pour toutes les graisses), sous-ensembles latin + latin-ext. Un test (`src/styles/fonts.test.js`) échoue si un serveur de polices tiers réapparaît dans `index.html` ou `src/`. Pour S5-24 : la future CSP pourra se limiter à `font-src 'self'`.
 
-### 🔴 4.2 Politique de confidentialité inexacte et incomplète — S5A-04 (RGPD art. 12-14)
+### ✅ 4.2 Politique de confidentialité inexacte et incomplète — S5A-04 (RGPD art. 12-14) — *corrigé le 25/09/2026*
+
+> **Correctif appliqué** : toutes les informations légales sont centralisées dans `client/src/constants/legal.js` et lues par les deux pages. Chacune des lignes du tableau ci-dessous est corrigée ; un test (`LegalPages.test.jsx`) vérifie l'absence de placeholder, la présence des mentions obligatoires, et surtout la **concordance avec le code** (toute clé `localStorage`/`sessionStorage` écrite par l'application doit être déclarée, et aucun cookie posé). Registre des traitements : document `22-registre-des-traitements.md`. Mentions légales : mode « éditeur non professionnel » de la LCEN par défaut (identité communiquée à l'hébergeur).
 
 | Constat | Correction |
 |---|---|

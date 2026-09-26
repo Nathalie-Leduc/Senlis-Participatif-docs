@@ -20,7 +20,7 @@
 | 👀 Revue | PR ouverte, CI verte, auto-relecture à tête reposée (le lendemain si possible) |
 | ✅ Fait | Mergé sur `dev` + critères de la Definition of Done cochés |
 
-**Definition of Done** (à coller dans le README du projet) : code mergé · tests écrits **et réellement exécutés** (fichier nommé `*.test.js`, visible dans la sortie de Vitest) et verts · migration appliquée aussi à la base de test (`npm run migrate:test`) · validation Zod en place si entrée utilisateur · route admin protégée côté API · aucune nouvelle donnée personnelle sans mise à jour de la politique de confidentialité · accessible au clavier, erreurs reliées aux champs · responsive vérifié mobile · `prefers-reduced-motion` respecté si animation · documenté si nécessaire (README, dépôt docs).
+**Definition of Done** (à coller dans le README du projet) : code mergé · tests écrits **et réellement exécutés** (fichier nommé `*.test.js`, visible dans la sortie de Vitest) et verts · migration appliquée aussi à la base de test (`npm run migrate:test`) · validation Zod en place si entrée utilisateur · route admin protégée côté API · aucune nouvelle donnée personnelle, nouveau service tiers ou nouvelle clé `localStorage` sans mise à jour de `client/src/constants/legal.js` (le test de concordance le rappelle) et du registre `22` · accessible au clavier, erreurs reliées aux champs · responsive vérifié mobile · `prefers-reduced-motion` respecté si animation · documenté si nécessaire (README, dépôt docs).
 
 **Labels GitHub** :
 
