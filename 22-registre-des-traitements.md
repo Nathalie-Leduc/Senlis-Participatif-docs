@@ -59,10 +59,10 @@
 |---|---|
 | Finalité | Protéger les comptes et le service (force brute, abus) |
 | Base légale | Intérêt légitime (art. 6.1.f) |
-| Données | Adresse IP (rate limiting, journaux techniques de l'hébergeur), code de connexion admin (empreinte, 10 min), jeton « appareil de confiance » (1 h) |
+| Données | Adresse IP (rate limiting, journaux techniques de l'hébergeur — adresses email masquées dans les journaux applicatifs), code de connexion admin (empreinte, 10 min, 5 essais), jeton « appareil de confiance » (1 h), numéro de version des sessions |
 | Destinataires | Éditrice, Clever Cloud |
 | Durée | Codes et jetons : jusqu'à expiration ; journaux : 1 an au plus |
-| Évolution prévue | Journal des actions d'administration (S5A-06) |
+| Journal d'administration | Actions des comptes admin (connexions, rôles, propositions, enquêtes) — pseudo, date, objet visé ; conservé 6 mois (S5A-06) |
 
 ## Services tiers appelés par le navigateur (hors sous-traitance)
 
@@ -85,3 +85,4 @@
 |---|---|
 | 25/09/2026 | Création du registre (S5A-04) |
 | 26/09/2026 | Fiche 1 : purge automatique effective, dates de connexion (S5A-05) ; droit d'accès et de portabilité en libre-service |
+| 27/09/2026 | Fiche 4 : journal d'administration (6 mois), révocation des sessions, limite d'essais 2FA (S5A-06) |

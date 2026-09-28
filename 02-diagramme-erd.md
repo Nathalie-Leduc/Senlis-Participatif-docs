@@ -1,6 +1,6 @@
 # Diagramme ERD — Senlis Participatif
 
-> Schéma de la base de données (v1.3 — état au 26/09/2026, après la migration `add_inactivity_tracking` de S5A-05) — source de vérité : `api/prisma/schema.prisma` du dépôt de code (copie de référence : `19-schema.prisma`).
+> Schéma de la base de données (v1.4 — état au 27/09/2026, après la migration `add_auth_hardening` de S5A-06) — source de vérité : `api/prisma/schema.prisma` du dépôt de code (copie de référence : `19-schema.prisma`).
 > Légende : `||--o{` = un-à-plusieurs · `|o--o{` = la clé étrangère est **nullable** (pseudonymisation RGPD, ou lien optionnel : le lien peut être rompu sans perdre la donnée).
 >
 > **Ce qui a changé depuis la v1.1** (Sprint 3 et Sprint 5bis) : image de proposition (`imagePath`), code 2FA admin (`TWO_FACTOR_LOGIN`), profil déclaré du citoyen sur deux axes indépendants — résidence (`situation`, `quartier`) et travail (`travailleQuartier`, `travailType`) —, publication des résultats d'enquête soumise à l'admin (`resultsPublished`), branchement conditionnel de questions (`showIfOptionId`, relation réflexive QUESTION → QUESTION_OPTION), indicateur de rendu (`uiHint`) et synchronisation réponse → profil (`syncsToProfile` / `syncValue`).
@@ -10,6 +10,7 @@ erDiagram
     USER ||--o{ PROPOSAL : "rédige"
     USER ||--o{ VOTE : "émet"
     USER ||--o{ AUTH_TOKEN : "possède"
+    USER |o--o{ ADMIN_AUDIT_LOG : "agit (admin)"
     PROPOSAL ||--o{ VOTE : "reçoit"
     USER |o--o{ COMMENT : "argumente"
     PROPOSAL ||--o{ COMMENT : "débat sous"
@@ -39,6 +40,7 @@ erDiagram
         datetime updatedAt
         datetime lastLoginAt "nullable"
         datetime inactivityWarnedAt "nullable"
+        int tokenVersion
     }
     AUTH_TOKEN {
         uuid id PK
@@ -47,6 +49,17 @@ erDiagram
         enum type
         datetime expiresAt
         datetime usedAt "nullable"
+        int attempts
+    }
+    ADMIN_AUDIT_LOG {
+        uuid id PK
+        string action
+        uuid actorId FK "nullable"
+        string actorPseudo
+        string targetType "nullable"
+        string targetId "nullable"
+        json details "nullable"
+        datetime createdAt
     }
     PROPOSAL {
         uuid id PK
@@ -142,6 +155,7 @@ erDiagram
 |---|---|---|
 | User → Vote | CASCADE | Le vote est un acte strictement personnel |
 | User → AuthToken | CASCADE | Les jetons n'ont aucun sens sans le compte |
+| User → AdminAuditLog | SET NULL | Le journal d'administration survit à son auteur (pseudo recopié) — purgé après 6 mois |
 | User → Proposal | SET NULL | Une proposition publique survit, anonymisée |
 | User → Comment | SET NULL | On n'ampute pas un débat public |
 | User → SurveyResponse | SET NULL | Les statistiques agrégées survivent à la désinscription |

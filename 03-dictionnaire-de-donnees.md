@@ -1,6 +1,6 @@
 # Dictionnaire de données — Senlis Participatif
 
-> Dérivé de `schema.prisma` v1.2 — état au 23/09/2026 (10 entités, 12 énumérations). Convention : tous les identifiants sont des UUID **générés par Prisma côté application** (`@default(uuid())`) et stockés en `TEXT` ; toutes les dates sont des `DateTime` UTC (`TIMESTAMP(3)` en base).
+> Dérivé de `schema.prisma` v1.4 — état au 27/09/2026 (11 entités, 12 énumérations). Convention : tous les identifiants sont des UUID **générés par Prisma côté application** (`@default(uuid())`) et stockés en `TEXT` ; toutes les dates sont des `DateTime` UTC (`TIMESTAMP(3)` en base).
 
 ## USER — compte citoyen ou administratrice
 
@@ -19,6 +19,7 @@
 | notifyNewProposal | Boolean | défaut `true` | Préférence : être notifié des nouvelles propositions (Lot 2) |
 | lastLoginAt | DateTime | NULL | Dernière connexion réussie (après le code 2FA pour un admin). NULL pour les comptes antérieurs au champ → l'inactivité se compte depuis `createdAt` (S5A-05) |
 | inactivityWarnedAt | DateTime | NULL | Date de l'email d'avertissement avant suppression pour inactivité ; remis à NULL à la connexion suivante (S5A-05) |
+| tokenVersion | Int | défaut 0 | Numéro de « serrure » recopié dans chaque JWT (`tv`) ; incrémenté à chaque changement ou réinitialisation du mot de passe → toutes les sessions antérieures sont révoquées (S5A-06) |
 | notifySurveyClosed | Boolean | défaut `true` | Préférence : être notifié des clôtures d'enquête (Lot 2) |
 | createdAt / updatedAt | DateTime | auto | Traçabilité |
 
@@ -31,6 +32,7 @@
 | type | TokenType | NOT NULL | `VERIFY_EMAIL`, `RESET_PASSWORD` ou `TWO_FACTOR_LOGIN` |
 | expiresAt | DateTime | NOT NULL | Péremption : 60 min pour les liens email (`TOKEN_TTL_MINUTES`), 10 min pour le code 2FA (`TWO_FACTOR_TTL_MINUTES`) |
 | usedAt | DateTime | NULL | Renseigné à la consommation → jeton à usage unique |
+| attempts | Int | défaut 0 | Essais ratés sur un code 2FA : au 5e, le code est invalidé (S5A-06) |
 | userId | UUID | FK → USER, CASCADE | Propriétaire du jeton |
 | createdAt | DateTime | auto | Traçabilité |
 
@@ -140,6 +142,18 @@
 | — | — | **UNIQUE(responseId, questionId, optionId)** | Pas de double coche |
 
 > Règle d'intégrité applicative (validée par Zod, en complément des contraintes SQL) : **une seule** des trois valeurs (`optionId`, `valueText`, `valueNumber`) est renseignée, en cohérence avec le `type` de la question.
+
+## ADMIN_AUDIT_LOG — Journal des actions d'administration (S5A-06)
+
+| Attribut | Type | Contraintes | Description |
+|---|---|---|---|
+| id | UUID | PK | Identifiant |
+| action | String | NOT NULL | Code de l'action : `ADMIN_LOGIN`, `USER_ROLE_CHANGED`, `PROPOSAL_CREATED/UPDATED/IMAGE_UPLOADED/DELETED`, `SURVEY_CREATED/UPDATED/DELETED` |
+| actorId | UUID | FK → USER, NULL, SET NULL | L'admin qui a agi ; NULL si son compte a été supprimé depuis |
+| actorPseudo | String | NOT NULL | Pseudo recopié au moment de l'action (reste lisible après suppression du compte) |
+| targetType / targetId | String | NULL | Objet visé (ex. `Proposal` + son id) |
+| details | Json | NULL | Quelques informations utiles (titre, champs modifiés, rôle avant/après) — jamais de secret ni de contenu citoyen |
+| createdAt | DateTime | défaut now(), INDEX | Date de l'action ; purge après 6 mois |
 
 ## Énumérations
 

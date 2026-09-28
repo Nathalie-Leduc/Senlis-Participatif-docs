@@ -55,7 +55,9 @@
 
 **Correctif appliqué** : traduction centralisée dans `errorHandler.js` (`P2002` → 409 `EMAIL_TAKEN` / `PSEUDO_TAKEN` / `CONFLICT`, `P2025` → 404, `MulterError` → 400/413, JSON mal formé → 400, trop gros → 413) ; une 500 ne renvoie plus de code interne Prisma. Même issue : le profil travail est désormais enregistré à l'inscription, et `users.tests.js` (jamais exécuté) est renommé, avec un test garde-fou sur le nommage.
 
-### 🟠 3.3 Durcissement de l'authentification — S5A-06 (OWASP A07, ASVS V2/V3, ANSSI)
+### ✅ 3.3 Durcissement de l'authentification — S5A-06 (OWASP A07, ASVS V2/V3, ANSSI) — *corrigé le 27/09/2026*
+
+> **Correctif appliqué** : toutes les lignes du tableau ci-dessous sont traitées, y compris le hash factice au login (temps de réponse égalisé). En plus : empreinte du code 2FA liée au compte (évite une collision sur la colonne UNIQUE), consommation conditionnelle du code (une rafale simultanée ne contourne pas la limite), adresses email masquées dans les logs, rate limit sur `verify-email` et `reset-password`. Seule l'énumération à l'**inscription** (409 `EMAIL_TAKEN`) reste assumée pour l'ergonomie. Tests : `auth-hardening.test.js` (13), `audit-log.test.js` (7).
 
 | Constat | Risque | Correctif proposé |
 |---|---|---|
@@ -66,7 +68,7 @@
 | Aucune trace des actions admin (changement de rôle, suppression, publication) | Pas d'imputabilité (ANSSI, CNIL 2021-122 sur la journalisation) | Journal applicatif structuré, sans donnée superflue, conservé 6 mois |
 | Inscription : « email déjà utilisé » (409) et login plus rapide pour un email inconnu | Énumération des comptes | Accepté pour l'UX à l'inscription (documenté) ; hash factice au login pour égaliser les temps |
 
-### 🟡 3.4 Divers
+### 🟡 3.4 Divers *(rate limit et logs masqués : faits en S5A-06)*
 
 - `verify-email` et `reset-password` sans rate limit dédié (jetons de 256 bits : risque faible) → ajouter `authLimiter` (S5A-06).
 - `nodemailer` présent dans les dépendances **du client** : inutile, surface d'attaque supply-chain (S5A-03).

@@ -126,10 +126,10 @@ Conventions : <u>souligné</u> = clé primaire · `#préfixe` = clé étrangère
 User (id, email, pseudo, passwordHash, role, situation, quartier,
       travailleQuartier, travailType, emailVerified,
       notifyNewProposal, notifySurveyClosed, createdAt, updatedAt,
-      lastLoginAt, inactivityWarnedAt)
+      lastLoginAt, inactivityWarnedAt, tokenVersion)
      PK : id · UNIQUE : email · UNIQUE : pseudo
 
-AuthToken (id, tokenHash, type, expiresAt, usedAt, createdAt, #userId)
+AuthToken (id, tokenHash, type, expiresAt, usedAt, attempts, createdAt, #userId)
      PK : id · FK : userId → User(id) · UNIQUE : tokenHash
 
 Proposal (id, slug, title, summary, content, status, lat, lng, geoJson,
@@ -156,6 +156,9 @@ Question (id, label, helpText, type, required, "order", uiHint,
 QuestionOption (id, label, "order", syncValue, #questionId)
      PK : id · FK : questionId → Question(id) · UNIQUE : (questionId, "order")
 
+AdminAuditLog (id, action, actorPseudo, targetType, targetId, details, createdAt, #actorId)
+     PK : id · FK : actorId → User(id) [NULLABLE] · INDEX : createdAt
+
 SurveyResponse (id, submittedAt, #surveyId, #userId)
      PK : id · FK : surveyId → Survey(id)
      FK : userId → User(id) [NULLABLE] · UNIQUE : (userId, surveyId)
@@ -175,7 +178,7 @@ Answer (id, valueText, valueNumber, #responseId, #questionId, #optionId)
 
 ## 3. MPD — Modèle Physique de Données (PostgreSQL)
 
-Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 10 migrations du 15/06 au 25/09/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
+Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 11 migrations du 15/06 au 27/09/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
 
 1. **Identifiants en `TEXT`**, pas en `UUID` : `@default(uuid())` génère l'UUID **dans Node** (Prisma), pas dans PostgreSQL (`gen_random_uuid()` n'est jamais appelé).
 2. **Noms entre guillemets en `camelCase`** (`"passwordHash"`) : sans guillemets, PostgreSQL mettrait tout en minuscules.
@@ -216,7 +219,8 @@ CREATE TABLE "User" (
   "createdAt"          TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updatedAt"          TIMESTAMP(3) NOT NULL,
   "lastLoginAt"        TIMESTAMP(3),      -- S5A-05 : durée de conservation
-  "inactivityWarnedAt" TIMESTAMP(3)
+  "inactivityWarnedAt" TIMESTAMP(3),
+  "tokenVersion"       INTEGER NOT NULL DEFAULT 0   -- S5A-06 : révocation des sessions
 );
 CREATE UNIQUE INDEX "User_email_key"  ON "User"("email");
 CREATE UNIQUE INDEX "User_pseudo_key" ON "User"("pseudo");
@@ -227,6 +231,7 @@ CREATE TABLE "AuthToken" (
   "type"      "TokenType" NOT NULL,
   "expiresAt" TIMESTAMP(3) NOT NULL,
   "usedAt"    TIMESTAMP(3),
+  "attempts"  INTEGER NOT NULL DEFAULT 0,          -- S5A-06 : essais 2FA
   "userId"    TEXT NOT NULL REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -313,6 +318,19 @@ CREATE UNIQUE INDEX "QuestionOption_questionId_order_key" ON "QuestionOption"("q
 ALTER TABLE "Question" ADD CONSTRAINT "Question_showIfOptionId_fkey"
   FOREIGN KEY ("showIfOptionId") REFERENCES "QuestionOption"("id")
   ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- S5A-06 : main courante des actions d'administration (6 mois)
+CREATE TABLE "AdminAuditLog" (
+  "id"          TEXT NOT NULL PRIMARY KEY,
+  "action"      TEXT NOT NULL,
+  "actorId"     TEXT REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE,
+  "actorPseudo" TEXT NOT NULL,
+  "targetType"  TEXT,
+  "targetId"    TEXT,
+  "details"     JSONB,
+  "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX "AdminAuditLog_createdAt_idx" ON "AdminAuditLog"("createdAt");
 
 CREATE TABLE "SurveyResponse" (
   "id"          TEXT NOT NULL PRIMARY KEY,
