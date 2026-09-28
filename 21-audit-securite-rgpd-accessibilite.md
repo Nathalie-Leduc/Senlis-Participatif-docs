@@ -18,7 +18,7 @@
 | Données personnelles (RGPD / CNIL) | Bonne conception (pseudonymisation), Google Fonts retiré, information des personnes exacte | 0 | S5A-03, S5A-04, S5A-05, S5-21 |
 | Cookies et consentement | ✅ Aucun bandeau nécessaire (Google Fonts retiré par S5A-03) | 0 | S5A-03 ✅ |
 | Accessibilité (RGAA) | Bonne base + critères de structure corrigés ; déclaration publiée (« non conforme » faute d'audit complet) | 0 | S5A-07 ✅ |
-| Mise en production | 3 points bloqueraient le site en ligne | 1 | S5A-08, S5-22, S5-24 |
+| Mise en production | Corrigé (S5A-08) ; CSP/HSTS du site statique en S5-24 | 0 | S5A-08 ✅, S5-22, S5-24 |
 
 ---
 
@@ -71,8 +71,8 @@
 ### 🟡 3.4 Divers *(rate limit et logs masqués : faits en S5A-06)*
 
 - `verify-email` et `reset-password` sans rate limit dédié (jetons de 256 bits : risque faible) → ajouter `authLimiter` (S5A-06).
-- `nodemailer` présent dans les dépendances **du client** : inutile, surface d'attaque supply-chain (S5A-03).
-- Pas d'`npm audit` ni de Dependabot en CI (OWASP A06 Composants vulnérables) → S5A-08.
+- ~~`nodemailer` présent dans les dépendances **du client**~~ → retiré en S5A-03.
+- ~~Pas d'`npm audit` ni de Dependabot en CI (OWASP A06 Composants vulnérables)~~ → fait en S5A-08.
 - JWT en `localStorage` : exposé en cas de XSS. Compromis acceptable pour une API consommable par mobile, **à condition** d'avoir une CSP stricte sur le site statique (S5-24).
 - Logs `📧 Email envoyé à <adresse>` : donnée personnelle dans les journaux → masquer (`n***@domaine.fr`) (S5A-06).
 
@@ -152,7 +152,11 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 
 ---
 
-## 7. Mise en production — S5A-08 (et S5-22, S5-24)
+## 7. Mise en production — S5A-08 ✅ *corrigé le 28/09/2026* (restent S5-22, S5-24)
+
+> **Correctif appliqué** : les six premières lignes du tableau sont traitées (`trust proxy` configurable par `TRUST_PROXY`, `assetUrl` côté client, CORP `same-site`, tuiles `tile.openstreetmap.org`, docker-compose sur `127.0.0.1` avec le `.env` de l'API, Dockerfile réparé et non-root avec healthcheck). En plus : `prisma` et `dotenv` passés en dépendances de production (sinon `postinstall` et `migrate deploy` échouent chez l'hébergeur), `npm audit` en CI (bloquant sur « critique ») et Dependabot, ESLint client étendu aux `.jsx`, redirection après connexion blindée contre `//autre-site`. **Reste en S5-24** : en-têtes de sécurité (CSP, HSTS) du site statique, à régler avec l'hébergeur — la CSP pourra se limiter à `font-src 'self'` grâce à S5A-03.
+>
+> ⚠️ **Dépendances vulnérables connues au 28/09/2026** : 4 failles « élevées » et 3 « modérées », toutes dans l'outillage de la CLI Prisma 7.8 (`@prisma/dev`, `mysql2`, `deepmerge-ts`, `valibot`, `@hono/node-server`), jamais exécuté par l'API en fonctionnement. Seule correction proposée par npm : redescendre en Prisma 6 (rupture). Suivi : Dependabot + audit informatif en CI.
 
 | Constat | Effet en ligne | Correctif |
 |---|---|---|
@@ -168,5 +172,5 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 
 ## 8. Documentation
 
-- Swagger est annoncé (`README-api`, cahier des charges) mais **n'est pas implémenté** : cahier des charges v1.4 corrigé (« prévu »), README-api à corriger dans la PR de S5A-08.
-- README racine : `develop` → `dev`, Railway → Clever Cloud (même PR).
+- ✅ Swagger annoncé mais non implémenté : cahier des charges v1.4 et READMEs corrigés (« prévu »).
+- ✅ README racine : `dev`, Clever Cloud, démarrage rapide réaligné sur les npm workspaces (S5A-08).

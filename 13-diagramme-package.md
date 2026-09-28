@@ -16,7 +16,7 @@ flowchart TB
             CTX["contexts/<br/>AuthContext (useAuth), AccessibilityContext,<br/>ToastContext"]
             HOOKS["hooks/<br/>useCountUp, useIsVisible,<br/>**useScrollReveal**, usePageTitle"]
             CONST["constants/ + data/<br/>statuts, situations/quartiers,<br/>parkings de report"]
-            SRV_C["services/ + utils/<br/>api.js (unique porte vers /api/v1),<br/>routeAnnouncer, download, voteStats"]
+            SRV_C["services/ + utils/<br/>api.js (unique porte vers /api/v1),<br/>routeAnnouncer, download, voteStats, safeRedirect"]
             STYLES["styles/<br/>variables, mixins, global,<br/>**_animations, _mascot, _joy-layer**,<br/>_accessibility"]
             PUB["public/data/<br/>iris-senlis.geojson (jamais importé en JS)"]
             PAGES --> COMP --> HOOKS
@@ -46,8 +46,8 @@ flowchart TB
 
         subgraph INFRA ["infra & qualité"]
             direction TB
-            DOCKER["docker-compose.yml + api/Dockerfile<br/>(dev uniquement)"]
-            CI[".github/workflows/<br/>ci.yml (lint, tests, build)"]
+            DOCKER["docker-compose.yml + api/Dockerfile<br/>+ .dockerignore (dev uniquement)"]
+            CI[".github/<br/>ci.yml (lint, tests, build, audit)<br/>dependabot.yml"]
             TESTS["api/tests/ (Vitest + Supertest)<br/>client/src/**/*.test.jsx"]
             DOCS["README racine + api + client<br/>+ CHANGELOG"]
         end

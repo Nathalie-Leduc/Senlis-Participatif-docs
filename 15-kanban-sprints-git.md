@@ -166,7 +166,8 @@ jobs:
   client:
     steps: install → lint → vitest → vite build
 ```
-- CI verte = condition de merge (protection de branche sur `main` et `dev`) ; la CI écoute `main` et `dev`
+- CI verte = condition de merge (protection de branche sur `main` et `dev`) ; la CI écoute `main` et `dev` — jobs : API (lint + tests), client (lint `.js`/`.jsx` + tests + build), **audit** des dépendances de production (bloquant sur « critique », informatif sur « élevé »)
+- **Dependabot** (S5A-08) ouvre chaque lundi une PR groupée de mises à jour vers `dev` : on la merge seulement si la CI est verte
 - CD (Sprint 5ter) : Clever Cloud déploie automatiquement `main` — le merge *est* la mise en production
 
 ### Seed (`prisma/seed.js`)
