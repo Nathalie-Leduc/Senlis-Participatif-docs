@@ -17,7 +17,7 @@
 | Sécurité applicative (OWASP / ANSSI) | Socle solide — faille de contrôle d'accès corrigée (S5A-01) | 0 | S5A-01, S5A-02, S5A-06, S5A-08 |
 | Données personnelles (RGPD / CNIL) | Bonne conception (pseudonymisation), Google Fonts retiré, information des personnes exacte | 0 | S5A-03, S5A-04, S5A-05, S5-21 |
 | Cookies et consentement | ✅ Aucun bandeau nécessaire (Google Fonts retiré par S5A-03) | 0 | S5A-03 ✅ |
-| Accessibilité (RGAA) | Bonne base (skip link, widget, reduced-motion), critères de structure manquants | 0 | S5A-07 |
+| Accessibilité (RGAA) | Bonne base + critères de structure corrigés ; déclaration publiée (« non conforme » faute d'audit complet) | 0 | S5A-07 ✅ |
 | Mise en production | 3 points bloqueraient le site en ligne | 1 | S5A-08, S5-22, S5-24 |
 
 ---
@@ -136,7 +136,9 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 
 ---
 
-## 6. Accessibilité (RGAA 4.1) — S5A-07
+## 6. Accessibilité (RGAA 4.1) — S5A-07 ✅ *corrigé le 28/09/2026*
+
+> **Correctif appliqué** : toutes les lignes ci-dessous sont traitées. Titres via `usePageTitle` (un test échoue si une page l'oublie) ; annonce + focus au changement de page (`utils/routeAnnouncer.js`, zone `aria-live`) ; `FormError` + `errorProps` pour relier chaque erreur à son champ, focus sur le champ fautif ; champs d'enquête étiquetés ; pages `/accessibilite` et `/plan-du-site`, liens en pied de page. **État déclaré : « non conforme »** — c'est la mention que le RGAA impose tant qu'aucun audit complet (106 critères sur un échantillon) n'a été mené, même si l'essentiel est respecté ; passer à « partiellement » ou « totalement conforme » après un audit (constante `ACCESSIBILITY` dans `constants/legal.js`). Reste signalé dans la déclaration : carte Leaflet (alternative textuelle existante) et formulaires d'administration (erreur globale non reliée au champ).
 
 | Critère | Constat | Correctif |
 |---|---|---|

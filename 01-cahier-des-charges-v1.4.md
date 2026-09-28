@@ -226,7 +226,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 /admin/comptes                       Promouvoir / rétrograder un admin
 /admin/moderation                    File de modération (Lot 2)
 /mentions-legales · /confidentialite Pages légales
-/accessibilite · /plan-du-site       Déclaration d'accessibilité, plan du site (S5A-07)
+/accessibilite · /plan-du-site       Déclaration d'accessibilité (modèle RGAA), plan du site
 /*                                   Page 404 (mascotte « perdue »)
 ```
 

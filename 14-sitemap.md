@@ -30,7 +30,7 @@ flowchart TD
     HOME -.-> ADMM["👑 /admin/moderation<br/>(Lot 2)"]:::lot2
 
     HOME --> LEGAL["🔓 /mentions-legales<br/>/confidentialite"]
-    HOME -.-> A11Y["🔓 /accessibilite · /plan-du-site<br/>(S5A-07)"]:::lot2
+    HOME --> A11Y["🔓 /accessibilite · /plan-du-site<br/>déclaration RGAA, plan du site"]
     HOME --> NF["🔓 /* — page 404"]
 
     classDef lot2 stroke-dasharray:5 5
@@ -40,4 +40,4 @@ flowchart TD
 - **Profondeur maximale : 3 clics** depuis l'accueil pour toute action citoyenne (voter, répondre) — parcours courts, exigence du public senior.
 - **Tout le public est consultable sans compte** : on ne demande l'inscription qu'au moment de *participer* (voter, répondre), jamais pour *s'informer*. Un vote tenté sans être connecté est mémorisé (`sessionStorage`) puis rejoué après la connexion.
 - **La zone admin est un sous-arbre étanche** : préfixe `/admin`, garde de route côté front (`ProtectedRoute adminOnly`) doublée par le middleware `isAdmin` côté API — la vraie protection est toujours côté serveur.
-- Le footer porte les pages légales depuis chaque écran ; il portera aussi « Accessibilité » et « Plan du site » (RGAA 12.1 : deux systèmes de navigation).
+- Le footer porte, depuis chaque écran, les pages légales, la mention « Accessibilité : non conforme » (lien vers la déclaration) et le plan du site (RGAA 12.1 : deux systèmes de navigation).
