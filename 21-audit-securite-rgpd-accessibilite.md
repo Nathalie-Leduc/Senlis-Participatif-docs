@@ -101,7 +101,9 @@
 | Pas de registre des traitements (art. 30) | Un registre simple (1 fiche : « participation citoyenne ») — document à ajouter au dépôt docs |
 | Case « consentement » à l'inscription | La reformuler en « J'ai lu la politique de confidentialité » : la base légale est le contrat, pas le consentement (sinon le retrait du consentement devrait supprimer le compte) |
 
-### 🟠 4.3 Droits d'accès, de portabilité, et durées de conservation — S5A-05
+### ✅ 4.3 Droits d'accès, de portabilité, et durées de conservation — S5A-05 — *corrigé le 26/09/2026*
+
+> **Correctif appliqué** : bouton « Télécharger mes données » dans Mon compte (`GET /auth/me/export`, JSON complet avec libellés lisibles, sans secret) ; `npm run purge` (service `retention.js`) — jetons effacés 24 h après expiration, comptes citoyens inactifs 3 ans supprimés 30 jours après un avertissement effectivement envoyé, jamais un admin ; migration `add_inactivity_tracking`. Tâche planifiée quotidienne à brancher en S5-22 (Clever Cloud).
 
 - Aucun export des données (art. 15 et 20) → `GET /auth/me/export` (JSON : profil, votes, réponses) + bouton dans « Mon compte ».
 - Durée de conservation annoncée mais **aucune purge** → script `npm run purge` (comptes inactifs depuis 3 ans après un email d'avertissement, `AuthToken` expirés depuis > 24 h), lancé par un cron Clever Cloud.

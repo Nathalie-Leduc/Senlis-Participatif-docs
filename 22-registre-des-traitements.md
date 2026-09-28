@@ -23,10 +23,10 @@
 | Finalité | Créer et sécuriser un compte, vérifier l'adresse email, permettre la réinitialisation du mot de passe, garantir « une personne = un compte » |
 | Base légale | Exécution du service demandé (art. 6.1.b) |
 | Personnes concernées | Habitants, actifs et visiteurs de Senlis qui s'inscrivent |
-| Données | Pseudo, email, empreinte Argon2 du mot de passe, rôle, email vérifié (oui/non), préférences de notification, dates de création et de modification |
+| Données | Pseudo, email, empreinte Argon2 du mot de passe, rôle, email vérifié (oui/non), préférences de notification, dates de création, de modification, de dernière connexion et d'avertissement d'inactivité |
 | Destinataires | Éditrice ; sous-traitants : Clever Cloud (hébergement), Brevo (emails) |
 | Transferts hors UE | Aucun |
-| Durée | Jusqu'à la suppression du compte, ou 3 ans sans connexion après un email d'avertissement (purge automatique : S5A-05) |
+| Durée | Jusqu'à la suppression du compte, ou 3 ans sans connexion : email d'avertissement puis suppression 30 jours plus tard (`npm run purge`, quotidien — jamais sans avertissement envoyé, jamais un admin). Jetons email : effacés 24 h après expiration |
 | Sécurité | HTTPS, Argon2id, jetons email à usage unique (empreinte SHA-256, 1 h), rate limiting, rôle relu en base à chaque requête |
 
 ## Fiche 2 — Profil déclaré et ciblage des enquêtes
@@ -84,3 +84,4 @@
 | Date | Modification |
 |---|---|
 | 25/09/2026 | Création du registre (S5A-04) |
+| 26/09/2026 | Fiche 1 : purge automatique effective, dates de connexion (S5A-05) ; droit d'accès et de portabilité en libre-service |

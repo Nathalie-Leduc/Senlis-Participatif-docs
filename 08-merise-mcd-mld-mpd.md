@@ -125,7 +125,8 @@ Conventions : <u>souligné</u> = clé primaire · `#préfixe` = clé étrangère
 ```text
 User (id, email, pseudo, passwordHash, role, situation, quartier,
       travailleQuartier, travailType, emailVerified,
-      notifyNewProposal, notifySurveyClosed, createdAt, updatedAt)
+      notifyNewProposal, notifySurveyClosed, createdAt, updatedAt,
+      lastLoginAt, inactivityWarnedAt)
      PK : id · UNIQUE : email · UNIQUE : pseudo
 
 AuthToken (id, tokenHash, type, expiresAt, usedAt, createdAt, #userId)
@@ -174,7 +175,7 @@ Answer (id, valueText, valueNumber, #responseId, #questionId, #optionId)
 
 ## 3. MPD — Modèle Physique de Données (PostgreSQL)
 
-Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 9 migrations du 15/06 au 22/09/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
+Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 10 migrations du 15/06 au 25/09/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
 
 1. **Identifiants en `TEXT`**, pas en `UUID` : `@default(uuid())` génère l'UUID **dans Node** (Prisma), pas dans PostgreSQL (`gen_random_uuid()` n'est jamais appelé).
 2. **Noms entre guillemets en `camelCase`** (`"passwordHash"`) : sans guillemets, PostgreSQL mettrait tout en minuscules.
@@ -213,7 +214,9 @@ CREATE TABLE "User" (
   "notifyNewProposal"  BOOLEAN NOT NULL DEFAULT true,
   "notifySurveyClosed" BOOLEAN NOT NULL DEFAULT true,
   "createdAt"          TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt"          TIMESTAMP(3) NOT NULL
+  "updatedAt"          TIMESTAMP(3) NOT NULL,
+  "lastLoginAt"        TIMESTAMP(3),      -- S5A-05 : durée de conservation
+  "inactivityWarnedAt" TIMESTAMP(3)
 );
 CREATE UNIQUE INDEX "User_email_key"  ON "User"("email");
 CREATE UNIQUE INDEX "User_pseudo_key" ON "User"("pseudo");

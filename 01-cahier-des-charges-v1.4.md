@@ -249,7 +249,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | PATCH | /auth/me | 🔐 | Modifier pseudo / email / situation / travail |
 | PUT | /auth/me/password | 🔐 | Modifier le mot de passe (doit différer de l'actuel) |
 | DELETE | /auth/me | 🔐 | Suppression de compte (votes supprimés, contributions anonymisées) |
-| GET | /auth/me/export | 🔐 | Export de mes données (S5A-05, prévu) |
+| GET | /auth/me/export | 🔐 | Export de mes données en JSON — droits d'accès et de portabilité (S5A-05) |
 | PATCH | /auth/me/notifications | 🔐 | Préférences de notification (Lot 2) |
 
 **Propositions**

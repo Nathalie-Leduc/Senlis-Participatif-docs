@@ -17,6 +17,8 @@
 | travailType | TravailType | NULL | `COMMERCANT` (dirige/gère) ou `SALARIE` — significatif seulement si `travailleQuartier` est renseigné |
 | emailVerified | Boolean | défaut `false` | Email confirmé par jeton — condition pour voter et répondre |
 | notifyNewProposal | Boolean | défaut `true` | Préférence : être notifié des nouvelles propositions (Lot 2) |
+| lastLoginAt | DateTime | NULL | Dernière connexion réussie (après le code 2FA pour un admin). NULL pour les comptes antérieurs au champ → l'inactivité se compte depuis `createdAt` (S5A-05) |
+| inactivityWarnedAt | DateTime | NULL | Date de l'email d'avertissement avant suppression pour inactivité ; remis à NULL à la connexion suivante (S5A-05) |
 | notifySurveyClosed | Boolean | défaut `true` | Préférence : être notifié des clôtures d'enquête (Lot 2) |
 | createdAt / updatedAt | DateTime | auto | Traçabilité |
 

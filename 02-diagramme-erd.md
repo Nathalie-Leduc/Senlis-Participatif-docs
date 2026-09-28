@@ -1,6 +1,6 @@
 # Diagramme ERD — Senlis Participatif
 
-> Schéma de la base de données (v1.2 — état au 23/09/2026, après la migration `add_sync_to_profile`) — source de vérité : `api/prisma/schema.prisma` du dépôt de code (copie de référence : `19-schema.prisma`).
+> Schéma de la base de données (v1.3 — état au 26/09/2026, après la migration `add_inactivity_tracking` de S5A-05) — source de vérité : `api/prisma/schema.prisma` du dépôt de code (copie de référence : `19-schema.prisma`).
 > Légende : `||--o{` = un-à-plusieurs · `|o--o{` = la clé étrangère est **nullable** (pseudonymisation RGPD, ou lien optionnel : le lien peut être rompu sans perdre la donnée).
 >
 > **Ce qui a changé depuis la v1.1** (Sprint 3 et Sprint 5bis) : image de proposition (`imagePath`), code 2FA admin (`TWO_FACTOR_LOGIN`), profil déclaré du citoyen sur deux axes indépendants — résidence (`situation`, `quartier`) et travail (`travailleQuartier`, `travailType`) —, publication des résultats d'enquête soumise à l'admin (`resultsPublished`), branchement conditionnel de questions (`showIfOptionId`, relation réflexive QUESTION → QUESTION_OPTION), indicateur de rendu (`uiHint`) et synchronisation réponse → profil (`syncsToProfile` / `syncValue`).
@@ -37,6 +37,8 @@ erDiagram
         boolean notifySurveyClosed
         datetime createdAt
         datetime updatedAt
+        datetime lastLoginAt "nullable"
+        datetime inactivityWarnedAt "nullable"
     }
     AUTH_TOKEN {
         uuid id PK
