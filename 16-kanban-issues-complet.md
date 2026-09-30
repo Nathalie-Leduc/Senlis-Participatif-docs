@@ -1,6 +1,6 @@
-# Backlog complet — 78 issues planifiées sur 20 semaines
+# Backlog complet — 91 issues planifiées sur 22 semaines
 
-> Rythme : **5 jours / semaine**, 96 jours au total. Chaque issue = une carte du kanban GitHub Projects, un *milestone* = un sprint. Les jours (J1 → J96) sont indicatifs : ils supposent des journées pleines — si tu développes à mi-temps, double le calendrier, pas le contenu.
+> Rythme : **5 jours / semaine**, 110 jours au total. Chaque issue = une carte du kanban GitHub Projects, un *milestone* = un sprint. Les jours (J1 → J110) sont indicatifs : ils supposent des journées pleines — si tu développes à mi-temps, double le calendrier, pas le contenu.
 >
 > **Mise à jour v1.1** : +6 issues `joy:palier-*` (mascotte, animations, sections colorées) intégrées aux sprints existants sans modifier le calendrier — les issues design sont courtes (0,5 à 1,5 j) et se glissent dans les marges de chaque sprint.
 >
@@ -23,6 +23,8 @@
 > **Mise à jour v1.10** (23/09/2026) : audit sécurité / RGPD / accessibilité avant la mise en ligne (voir `21-audit-securite-rgpd-accessibilite.md`). Nouveau bloc **Sprint 5 audit** (8 issues, S5A-01 à S5A-08), placé **après S5-21 et avant la mise en ligne réelle (Sprint 5ter)** : on ne met pas en ligne un site qui laisse ses droits d'admin à un compte rétrogradé ou qui envoie l'IP de ses visiteurs à Google. +7 jours de travail (88 → 96 j au calendrier, S5-21 et S5A se chevauchant d'un jour), répercutés sur les sprints 5ter, 6 et 7. Au passage : cases ✅ ajoutées aux sprints 0 à 4 (tous livrés, tag `v0.3.0` pour la carte), S5-16 coché (livré mais oublié), S5-21 complété le 24/09 (volet propositions + seuil de confidentialité de 5 personnes, ajouté à ses critères par l'audit), `develop` → `dev` dans les règles, calendrier semaines/jours réaligné. Pour le Lot 2 : les préférences de notification devront passer à `false` par défaut (RGPD art. 25, protection des données par défaut) — noté dans S7-04.
 >
 > **Ajout v1.10 (28/09/2026, pendant S5A-07)** : deux constats versés dans S5A-08 plutôt que corrigés au passage — (1) la config ESLint du client n'a pas de clé `files` : les fichiers `.jsx` sont ignorés (« File ignored because no matching configuration »), donc aucune page n'est réellement lintée ; l'activer demande `eslint-plugin-react` (sinon 137 faux « unused-vars » sur les composants utilisés en JSX) ; (2) `Connexion.jsx` accepte un `?redirect=` commençant par `//` (URL « protocole-relative ») — pas de fuite, `pushState` lève une erreur, mais à refuser explicitement.
+>
+> **Mise à jour v1.11** (30/09/2026) : **retours de recette** de Nath avant la mise en ligne (document `23-retours-recette-2026-09-30.md`). Nouveau bloc **Sprint 5 recette** (13 issues, S5R-01 → S5R-13, 14 jours) inséré entre le Sprint 5 audit (✅ terminé) et la mise en ligne réelle (Sprint 5ter), qui glisse de 14 jours ; Sprints 6 et 7 décalés d'autant (96 → 110 jours). Bug majeur diagnostiqué : la page de vérification d'email envoyait le jeton **deux fois** (StrictMode de React en développement) et affichait « jeton invalide » alors que l'adresse était bien vérifiée. Dix propositions d'évolution classées **Lot 3** (à présenter à la mairie), listées en fin de backlog.
 >
 > **Légende** : ✅ livré (mergé sur `dev`) · 🔶 partiellement livré · sans marque = à faire.
 >
@@ -151,41 +153,63 @@
 
 🎯 *Fin de sprint : plus aucun point 🔴 de l'audit ouvert — le site peut être mis en ligne sans exposer ni ses visiteurs ni sa future relation avec la mairie.*
 
-## 🌍 Sprint 5ter — Mise en ligne réelle *(Semaines 15–16 · J72–J76)*
+## 🧪 Sprint 5 recette — Retours de tests avant mise en ligne *(Semaines 15–17 · J72–J85)*
+
+> Issu de la recette du 30/09/2026 (`23-retours-recette-2026-09-30.md`) : chaque issue reprend un ou plusieurs retours, le document donne le détail et les réponses aux questions posées. Ordre = ordre de traitement : d'abord ce qui bloque un citoyen, ensuite l'enquête, puis les outils d'administration.
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| **S5-22** | **`chore(infra): nom de domaine + déploiement chez un hébergeur souverain (Clever Cloud, France) — OVH pour le domaine`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/domain-hosting`** | **1 j** | **J72–J73** |
-| **S5-23** | **`chore(infra): sauvegarde automatisée quotidienne de PostgreSQL (cron), stockage isolé, rétention 30 jours`** | **`lot:1` `type:infra` `zone:bdd` `prio:haute`** | **`chore/db-backups`** | **1 j** | **J73–J74** |
-| **S5-24** | **`chore(infra): chiffrement des flux (TLS partout, HSTS, CSP sur le site statique) + chiffrement des données sensibles au repos`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/encryption-transit-rest`** | **0,5 j** | **J74** |
-| **S5-25** | **`chore: communication de lancement — QR codes commerçants, réseaux locaux, approche des élus (mairie)`** | **`lot:1` `type:doc` `zone:comm`** | **`chore/launch-comms`** | **1 j** | **J75–J76** |
+| **S5R-01** | **`fix(api+client): vérification d'email fiable — un seul envoi du jeton, jeton déjà consommé par un compte vérifié = succès, renvoi de l'email de vérification, saisie de l'inscription conservée`** | **`lot:1` `type:bug` `zone:api` `zone:client` `prio:haute`** | **`fix/email-verification-flow`** | **1 j** | **J72** |
+| **S5R-02** | **`fix(client): formulaires d'authentification — erreur sous chaque champ dès la sortie du champ, format d'email + suggestion de faute de frappe, œil à la connexion, quartier et rôle obligatoires si « je travaille à Senlis »`** | **`lot:1` `type:bug` `zone:client` `prio:haute`** | **`fix/auth-forms-inline-errors`** | **1 j** | **J73** |
+| **S5R-03** | **`fix(client): module d'accessibilité — panneau défilant et bouton Fermer toujours atteignable, interlignage sur 3 niveaux + espacements lettres/mots/paragraphes (WCAG 1.4.12)`** | **`lot:1` `type:bug` `zone:client` `prio:haute`** | **`fix/a11y-widget-spacing`** | **0,5 j** | **J74** |
+| **S5R-04** | **`fix(client): accueil fidèle à la maquette — un seul cerf, guide « Cerf-tifié utile » avec questions fréquentes`** | **`lot:1` `type:design` `zone:client`** | **`fix/home-mascot-guide`** | **1 j** | **J74–J75** |
+| **S5R-05** | **`feat(api+bdd+client): moteur d'enquête v2 — total de questions adapté au parcours, conditions multiples (OU), fin anticipée, bornes min/max d'un nombre, nombre de choix max lié à une réponse, profil « travaille à Senlis » explicite`** | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client` `prio:haute`** | **`feat/survey-engine-v2`** | **2 j** | **J75–J77** |
+| **S5R-06** | **`feat(data): enquête stationnement v3 — parcours par profil, questions clés obligatoires, « Autre → laquelle ? », questions propres au centre historique, visiteurs venant en centre-ville`** | **`lot:1` `type:feature` `zone:bdd`** | **`feat/parking-survey-v3`** | **1 j** | **J77–J78** |
+| **S5R-07** | **`feat(api+bdd+client): public visé d'une enquête par critères de profil (résidence, quartier, travail, rôle, hors Senlis)`** | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client`** | **`feat/survey-audience-profiles`** | **1 j** | **J78–J79** |
+| **S5R-08** | **`feat(api+client): résultats d'enquête lisibles — filtre par public puis par question, graphiques, export CSV et JSON (secret statistique conservé)`** | **`lot:1` `type:feature` `zone:api` `zone:client` `prio:haute`** | **`feat/survey-results-charts-export`** | **2 j** | **J79–J81** |
+| **S5R-09** | **`feat(client): création d'enquête simplifiée — aides sous chaque champ, exemples, modèle prêt à l'emploi, dupliquer une question`** | **`lot:1` `type:feature` `zone:client`** | **`feat/survey-builder-help`** | **1 j** | **J81–J82** |
+| **S5R-10** | **`feat(api+bdd+client): zone d'une proposition — toute la ville ou quartiers IRIS ; coordonnées et GeoJSON sous « Avancé » ; aides de saisie`** | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client`** | **`feat/proposal-zone-quartiers`** | **1 j** | **J82–J83** |
+| **S5R-11** | **`feat(client): carte « Explorer » — propositions ET enquêtes ouvertes par quartier, emplacements réels des parkings (extraction figée)`** | **`lot:1` `type:feature` `zone:client`** | **`feat/explore-map-quartiers`** | **1,5 j** | **J83–J85** |
+| **S5R-12** | **`fix(client): navigation admin — bouton « Voir » dans les listes admin, pages publiques Propositions/Enquêtes retirées du menu admin`** | **`lot:1` `type:bug` `zone:client`** | **`fix/admin-navigation`** | **0,5 j** | **J85** |
+| **S5R-13** | **`docs: audit complété NIST (SP 800-63B, CSF 2.0) + procédure de mise à jour des contours IRIS`** | **`lot:1` `type:docs`** | **`docs/nist-iris-procedure`** | **0,5 j** | **J85** |
+
+🎯 *Fin de sprint : un premier citoyen s'inscrit, vérifie son adresse et répond à l'enquête stationnement sans accroc ; l'administratrice lit et exporte des résultats clairs.*
+
+## 🌍 Sprint 5ter — Mise en ligne réelle *(Semaine 18 · J86–J90)*
+
+| ID | Issue | Labels | Branche | Estim. | Jours |
+|---|---|---|---|:--:|:--:|
+| **S5-22** | **`chore(infra): nom de domaine + déploiement chez un hébergeur souverain (Clever Cloud, France) — OVH pour le domaine`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/domain-hosting`** | **1 j** | **J86–J87** |
+| **S5-23** | **`chore(infra): sauvegarde automatisée quotidienne de PostgreSQL (cron), stockage isolé, rétention 30 jours`** | **`lot:1` `type:infra` `zone:bdd` `prio:haute`** | **`chore/db-backups`** | **1 j** | **J87–J88** |
+| **S5-24** | **`chore(infra): chiffrement des flux (TLS partout, HSTS, CSP sur le site statique) + chiffrement des données sensibles au repos`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/encryption-transit-rest`** | **0,5 j** | **J88** |
+| **S5-25** | **`chore: communication de lancement — QR codes commerçants, réseaux locaux, approche des élus (mairie)`** | **`lot:1` `type:doc` `zone:comm`** | **`chore/launch-comms`** | **1 j** | **J89–J90** |
 
 🎯 *Fin de sprint : **Lot 1 réellement en ligne**, hébergé en France chez un prestataire souverain, sauvegardé quotidiennement et chiffré — avec une enquête stationnement qui répond enfin correctement à son cas d'usage — lancement accompagné de QR codes commerçants, réseaux locaux, et d'une prise de contact avec les élus municipaux.*
 
-## 💬 Sprint 6 — Commentaires & modération *(Semaines 16–18 · J77–J86)*
+## 💬 Sprint 6 — Commentaires & modération *(Semaines 19–20 · J91–J100)*
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| S6-01 | `feat(api): commentaires — stance pour/contre/neutre, statut PENDING` | `lot:2` `type:feature` `zone:api` | `feat/comments-api` | 1,5 j | J77–J78 |
-| S6-02 | `feat(api): endpoints de modération (approbation / rejet + motif)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/moderation-api` | 1,5 j | J78–J79 |
-| S6-03 | `feat(client): débat en colonnes pour/contre (empilées en mobile)` | `lot:2` `type:feature` `zone:client` | `feat/client-debate-columns` | 2 j | J80–J81 |
-| S6-04 | `feat(client): formulaire « Publier mon argument » + état "en modération"` | `lot:2` `type:feature` `zone:client` | `feat/client-comment-form` | 1,5 j | J82–J83 |
-| S6-05 | `feat(client): file de modération admin (contexte complet + motif obligatoire)` | `lot:2` `type:feature` `zone:client` | `feat/client-moderation` | 2,5 j | J83–J85 |
-| S6-06 | `test(api): modération a priori — rien ne se publie sans validation` | `lot:2` `type:test` `zone:api` | `test/moderation` | 1 j | J86 |
+| S6-01 | `feat(api): commentaires — stance pour/contre/neutre, statut PENDING` | `lot:2` `type:feature` `zone:api` | `feat/comments-api` | 1,5 j | J91–J92 |
+| S6-02 | `feat(api): endpoints de modération (approbation / rejet + motif)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/moderation-api` | 1,5 j | J92–J93 |
+| S6-03 | `feat(client): débat en colonnes pour/contre (empilées en mobile)` | `lot:2` `type:feature` `zone:client` | `feat/client-debate-columns` | 2 j | J94–J95 |
+| S6-04 | `feat(client): formulaire « Publier mon argument » + état "en modération"` | `lot:2` `type:feature` `zone:client` | `feat/client-comment-form` | 1,5 j | J96–J97 |
+| S6-05 | `feat(client): file de modération admin (contexte complet + motif obligatoire)` | `lot:2` `type:feature` `zone:client` | `feat/client-moderation` | 2,5 j | J97–J99 |
+| S6-06 | `test(api): modération a priori — rien ne se publie sans validation` | `lot:2` `type:test` `zone:api` | `test/moderation` | 1 j | J100 |
 
 🎯 *Fin de sprint : le débat structuré est ouvert, sous contrôle.*
 
-## 📣 Sprint 7 — Propositions citoyennes & notifications *(Semaines 18–20 · J87–J96)*
+## 📣 Sprint 7 — Propositions citoyennes & notifications *(Semaines 21–22 · J101–J110)*
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| S7-01 | `feat(api): soumission citoyenne → PENDING_REVIEW + modération des propositions` | `lot:2` `type:feature` `zone:api` | `feat/citizen-proposals` | 2 j | J87–J88 |
-| S7-02 | `feat(client): page /proposer — formulaire + localisation sur la carte` | `lot:2` `type:feature` `zone:client` | `feat/client-propose` | 2 j | J89–J90 |
-| S7-03 | `feat(api): notifications broadcast Brevo + lien de désinscription (obligation légale)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/notifications-broadcast` | 2 j | J91–J92 |
-| S7-04 | `feat(client): préférences de notification dans /mon-compte — désactivées par défaut (RGPD art. 25, migration notify* → false)` | `lot:2` `type:feature` `zone:client` `zone:bdd` | `feat/client-notif-prefs` | 1 j | J93 |
-| **S7-05** | **`feat(client): palier 3 — widget cerf contextuel par page, confettis résultats, mascotte 404 « perdue dans la forêt »`** | **`lot:2` `type:design` `zone:client` `joy:palier-3`** | **`feat/joy-palier-3`** | **1 j** | **J94** |
-| S7-06 | `test(api): parcours Lot 2 — soumission, notification, désinscription` | `lot:2` `type:test` `zone:api` | `test/lot2-flows` | 0,5 j | J94 |
-| S7-07 | `chore: recette finale complète + release v2.0.0 — MVP complet 🎉` | `lot:2` `type:infra` `prio:haute` | `chore/release-v2` | 1,5 j | J95–J96 |
+| S7-01 | `feat(api): soumission citoyenne → PENDING_REVIEW + modération des propositions` | `lot:2` `type:feature` `zone:api` | `feat/citizen-proposals` | 2 j | J101–J102 |
+| S7-02 | `feat(client): page /proposer — formulaire + localisation sur la carte` | `lot:2` `type:feature` `zone:client` | `feat/client-propose` | 2 j | J103–J104 |
+| S7-03 | `feat(api): notifications broadcast Brevo + lien de désinscription (obligation légale)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/notifications-broadcast` | 2 j | J105–J106 |
+| S7-04 | `feat(client): préférences de notification dans /mon-compte — désactivées par défaut (RGPD art. 25, migration notify* → false)` | `lot:2` `type:feature` `zone:client` `zone:bdd` | `feat/client-notif-prefs` | 1 j | J107 |
+| **S7-05** | **`feat(client): palier 3 — widget cerf contextuel par page, confettis résultats, mascotte 404 « perdue dans la forêt »`** | **`lot:2` `type:design` `zone:client` `joy:palier-3`** | **`feat/joy-palier-3`** | **1 j** | **J108** |
+| S7-06 | `test(api): parcours Lot 2 — soumission, notification, désinscription` | `lot:2` `type:test` `zone:api` | `test/lot2-flows` | 0,5 j | J108 |
+| S7-07 | `chore: recette finale complète + release v2.0.0 — MVP complet 🎉` | `lot:2` `type:infra` `prio:haute` | `chore/release-v2` | 1,5 j | J109–J110 |
 
 🎯 *Fin de sprint : **MVP complet en ligne**, dossier prêt pour la mairie.*
 
@@ -193,12 +217,31 @@
 
 ## 📦 Backlog non planifié — à chiffrer plus tard
 
-> Identifié en revoyant le contenu de l'enquête stationnement (v1.6/v1.7), mais volontairement **hors calendrier** : l'ampleur réelle (comparable à l'ensemble S5-11→S5-17 réunis) mérite une conception à part avant d'y mettre une estimation ou des jours précis. Pas de branche ni d'ID dans la séquence J1→J96 tant que ce n'est pas chiffré.
+> Identifié en revoyant le contenu de l'enquête stationnement (v1.6/v1.7), mais volontairement **hors calendrier** : l'ampleur réelle (comparable à l'ensemble S5-11→S5-17 réunis) mérite une conception à part avant d'y mettre une estimation ou des jours précis. Pas de branche ni d'ID dans la séquence J1→J110 tant que ce n'est pas chiffré.
 
 | ID | Issue | Pourquoi ce n'est pas encore chiffré |
 |---|---|---|
 | **BACKLOG-01** | `feat(api+client): détail de stationnement PAR VÉHICULE dans le moteur d'enquête (répétition d'un bloc de questions selon une réponse NOMBRE antérieure)` | Touche le modèle de données (suivre à quelle répétition appartient chaque réponse), le parcours répondant (génération dynamique de blocs), l'agrégation des résultats (regrouper avant de calculer les pourcentages), le constructeur admin (nouvelle interface de configuration), et son interaction avec le branchement déjà en place — un chantier à concevoir en détail avant de pouvoir l'estimer sérieusement. |
 | **BACKLOG-02** | `feat(api+client): hiérarchie complète des rôles — admin mairie, salariés mairie, maisons de quartier (admins + délégués), circuit de validation avant publication` | Remplace le modèle binaire CITOYEN/ADMIN actuel par de vraies permissions granulaires (créer ≠ publier), vérifiées dans chaque contrôleur admin. Ajoute une entité "maison de quartier" qui n'existe pas encore. Ajoute un état intermédiaire "en attente de validation mairie" avec notification réelle. Ajoute un système d'invitation/délégation de droits (personne ne peut s'auto-déclarer salarié mairie). Comparable en ampleur à tout le moteur de branchement des enquêtes réuni — à concevoir en détail (notamment : le contenu d'une maison de quartier reste-t-il cloisonné, ou tout le monde voit tout une fois publié ?) avant de pouvoir l'estimer sérieusement. Un premier palier simple (promouvoir/rétrograder un compte admin, sans la hiérarchie) est déjà livré en S5-19. |
+
+## 🏛️ Propositions Lot 3 — issues de la recette du 30/09/2026 (à présenter à la mairie)
+
+> Évolutions de fond qui dépendent d'un budget, d'un service tiers ou d'un choix de la future responsable de traitement. Pas de branche ni de jours tant que la mairie ne les a pas retenues. Détail et remarques : `23-retours-recette-2026-09-30.md`, §5.
+
+| ID | Proposition |
+|---|---|
+| L3-01 | Site multilingue (traduction assistée par IA, ex. Mistral) |
+| L3-02 | Aide à la rédaction : orthographe et grammaire (IA), en suggestion |
+| L3-03 | Lecture à voix haute plus naturelle (voix neuronales) |
+| L3-04 | Le cerf comme curseur de la lecture au survol |
+| L3-05 | Trouver son quartier depuis son adresse, non conservée (API Adresse de l'État) |
+| L3-06 | Zonage plus fin qu'un quartier IRIS (zones dessinées par l'administratrice) |
+| L3-07 | Second email avant la suppression d'un compte inactif |
+| L3-08 | Connexion simplifiée : FranceConnect, QR code |
+| L3-09 | Notifications ciblées selon le profil, annonce des résultats |
+| L3-10 | Tableau de bord d'administration (connexions, emails envoyés) |
+
+> Lien avec **BACKLOG-01** : S5R-05 apporte une version simple de la demande « pas plus de places de stationnement cochées que de véhicules » (nombre de choix max lié à une réponse). Le détail **par véhicule** reste BACKLOG-01.
 
 ## 📅 Vue calendrier
 
@@ -218,12 +261,14 @@
 | 12 | S5bis Revue enquêtes | S5-16 → S5-18 | Constructeur, enquête stationnement v2, ville avec suggestions |
 | 13 | S5bis + S5 audit | S5-19 → S5-21, S5A-01 → S5A-02 | Comptes admin, appareil de confiance, résultats segmentés · **failles critiques corrigées** |
 | 14 | S5 audit | S5A-03 → S5A-07 | Polices locales, pages légales exactes, droits RGPD, auth durcie, RGAA |
-| 15 | S5 audit + S5ter | S5A-08, S5-22 → S5-25 | Préparation prod, domaine, hébergement, sauvegardes, chiffrement |
-| 16 | S5ter + S6 | S5-25, S6-01 → S6-03 | **🚀 Lot 1 réellement en ligne** · API commentaires |
-| 17 | S6 Commentaires | S6-03 → S6-05 | Débat en colonnes, formulaire, file de modération |
-| 18 | S6 + S7 | S6-06, S7-01 → S7-02 | Modération testée · propositions citoyennes |
-| 19 | S7 Participation | S7-03 → S7-07 | Notifications, préférences, palier 3 |
-| 20 | S7 Participation | S7-07 | **🎉 Release v2.0.0 — MVP complet + palier 3** |
+| 15 | S5 audit + S5 recette | S5A-08, S5R-01 → S5R-04 | Préparation prod · **vérification d'email fiable**, formulaires, accessibilité, accueil |
+| 16 | S5 recette | S5R-04 → S5R-09 | Moteur d'enquête v2, enquête stationnement v3, public visé, résultats et export |
+| 17 | S5 recette | S5R-09 → S5R-13 | Création d'enquête, zones de proposition, carte, navigation admin, NIST |
+| 18 | S5ter | S5-22 → S5-25 | **🚀 Lot 1 réellement en ligne** — domaine, hébergement, sauvegardes, chiffrement, lancement |
+| 19 | S6 Commentaires | S6-01 → S6-03 | API commentaires, modération, débat en colonnes |
+| 20 | S6 Commentaires | S6-04 → S6-06 | Formulaire, file de modération, modération testée |
+| 21 | S7 Participation | S7-01 → S7-04 | Propositions citoyennes, notifications, préférences |
+| 22 | S7 Participation | S7-05 → S7-07 | **🎉 Release v2.0.0 — MVP complet + palier 3** |
 
 ## Règles de fonctionnement (rappel)
 

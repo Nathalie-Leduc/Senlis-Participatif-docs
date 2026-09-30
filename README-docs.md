@@ -23,13 +23,14 @@
 | 13 | [Diagramme de packages](13-diagramme-package.md) | Organisation réelle du monorepo et dépendances |
 | 14 | [Sitemap](14-sitemap.md) | Arborescence de navigation par niveau d'accès |
 | 15 | [Kanban, sprints & Git](15-kanban-sprints-git.md) | Méthode : colonnes, labels, branches (`dev`), Definition of Done, livraison en zip |
-| 16 | [Backlog complet des issues](16-kanban-issues-complet.md) | v1.10 — 78 issues sur 20 semaines, avec état ✅ / 🔶 et le bloc « Sprint 5 audit » |
+| 16 | [Backlog complet des issues](16-kanban-issues-complet.md) | v1.11 — 91 issues sur 22 semaines, avec état ✅ / 🔶, les blocs « Sprint 5 audit » et « Sprint 5 recette », et les propositions Lot 3 |
 | 17 | [Prototype joyeux](17-senlis-participatif-joyeux.html) | Prototype interactif de référence pour la direction artistique |
 | 18 | [Logo](18-logo-senlis-participatif.svg) | Logo vectoriel |
 | 19 | [schema.prisma](19-schema.prisma) | Copie de référence du schéma — la source vivante est `api/prisma/schema.prisma` du dépôt de code |
 | 20 | Centre historique — parkings (`.mmd` / `.svg`) | Schéma des parkings de report |
 | 21 | [Audit sécurité, RGPD, accessibilité](21-audit-securite-rgpd-accessibilite.md) | OWASP, ANSSI, CNIL, RGAA : constats, gravité, correctifs, issues associées |
 | 22 | [Registre des traitements](22-registre-des-traitements.md) | RGPD art. 30 : une fiche par traitement (finalité, base légale, données, destinataires, durées, sécurité) |
+| 23 | [Retours de recette du 30/09/2026](23-retours-recette-2026-09-30.md) | Triage des tests avant mise en ligne : corrections (Sprint 5 recette), réponses aux questions, propositions Lot 3 |
 
 Annexes Word : workflow GitHub, installation de Prisma 7, résumé technique.
 

@@ -118,7 +118,10 @@ main      ── production (protégée : merge uniquement par PR, CI verte obli
 - [ ] Résultats segmentés + export : volet propositions et seuil de confidentialité restants (S5-21)
 
 ### 🛡️ Sprint 5 audit — avant mise en ligne *(1,5 sem)* `lot:1`
-- [ ] Les 8 issues S5A-01 → S5A-08 issues de l'audit `21-audit-securite-rgpd-accessibilite.md` : contrôle d'accès, erreurs API, polices auto-hébergées, pages légales exactes, droits RGPD, durcissement auth, RGAA, préparation prod
+- [x] Les 8 issues S5A-01 → S5A-08 issues de l'audit `21-audit-securite-rgpd-accessibilite.md` : contrôle d'accès, erreurs API, polices auto-hébergées, pages légales exactes, droits RGPD, durcissement auth, RGAA, préparation prod
+
+### 🧪 Sprint 5 recette — retours de tests *(3 sem)* `lot:1`
+- [ ] Les 13 issues S5R-01 → S5R-13 issues de la recette du 30/09/2026 (`23-retours-recette-2026-09-30.md`) : vérification d'email fiable, formulaires, module d'accessibilité, cerf guide, moteur d'enquête v2 et enquête stationnement v3, public visé, résultats lisibles et exportables, création d'enquête simplifiée, zones de proposition, carte, navigation admin, NIST
 
 ### 🌍 Sprint 5ter — Mise en ligne réelle *(1 sem)* `lot:1`
 - [ ] Domaine OVH + Clever Cloud (API Node.js, PostgreSQL managé, site statique avec fallback SPA)
