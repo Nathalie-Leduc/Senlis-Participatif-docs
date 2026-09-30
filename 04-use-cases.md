@@ -25,8 +25,9 @@
 
 **Alternatives / exceptions**
 - 2a. Email ou pseudo déjà pris → `409 EMAIL_TAKEN` / `PSEUDO_TAKEN` avec message explicite, retour au formulaire — y compris si deux inscriptions identiques arrivent au même instant (la contrainte d'unicité de la base tranche)
-- 5a. Jeton expiré → proposition de renvoyer un email de vérification (rate limité)
-- 5b. Jeton déjà consommé → message « lien déjà utilisé », redirection connexion
+- 2b. Adresse déjà utilisée par un compte jamais confirmé (lien perdu) → proposition de se connecter ou de **recevoir un nouveau lien** (S5R-01)
+- 5a. Lien cliqué deux fois (ou envoyé deux fois par le navigateur) → « Votre adresse est déjà vérifiée », jamais une erreur (S5R-01)
+- 5b. Lien expiré (60 min) ou remplacé → formulaire « Renvoyer le lien » ; la réponse est identique que l'adresse soit inscrite ou non (anti-énumération)
 - \* Tentatives répétées d'inscription depuis une même IP → rate limiting (anti-spam de comptes)
 
 ---

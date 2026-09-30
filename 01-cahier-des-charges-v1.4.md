@@ -240,7 +240,8 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | Méthode | Route | Accès | Description |
 |---|---|---|---|
 | POST | /auth/register | 🔓 | Inscription (Zod, Argon2id, situation déclarée) — rate limité |
-| POST | /auth/verify-email | 🔓 | Confirmation d'email par jeton à usage unique |
+| POST | /auth/verify-email | 🔓 | Confirmation d'email par jeton à usage unique — un lien déjà utilisé par un compte vérifié répond « déjà vérifiée » |
+| POST | /auth/resend-verification | 🔓 | Nouveau lien de vérification (réponse identique que le compte existe ou non) — rate limité |
 | POST | /auth/login | 🔓 | Connexion → JWT, ou jeton de défi 2FA pour un admin — rate limité |
 | POST | /auth/2fa/verify | 🔓 | Code 2FA admin → JWT + jeton « appareil de confiance » (1 h) — rate limité |
 | POST | /auth/forgot-password | 🔓 | Demande de réinitialisation (réponse identique que le compte existe ou non) — rate limité |
