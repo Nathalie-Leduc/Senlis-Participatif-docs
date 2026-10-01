@@ -12,11 +12,11 @@ flowchart TB
         subgraph CLIENT ["client/ — React 19 + Vite"]
             direction TB
             PAGES["pages/<br/>Accueil, Propositions, PropositionDetail,<br/>Enquetes, EnqueteDetail, EnqueteRepondre, EnqueteResultats,<br/>Inscription, Connexion, MonCompte, pages légales,<br/>Admin* (propositions, enquêtes, stats, comptes)"]
-            COMP["components/<br/>Header, MapView + LazyMapView, ProposalCard,<br/>VoteButtons, PasswordInput, PasswordStrengthMeter,<br/>ProtectedRoute, AccessibilityWidget, FormError,<br/>**Mascot, MascotWidget, Confetti, Toast**"]
+            COMP["components/<br/>Header, MapView + LazyMapView, ProposalCard,<br/>VoteButtons, PasswordInput, PasswordStrengthMeter,<br/>ProtectedRoute, AccessibilityWidget, FormError,<br/>FieldError, EmailSuggestion, ResendVerification,<br/>**Mascot, MascotWidget, Confetti, Toast**"]
             CTX["contexts/<br/>AuthContext (useAuth), AccessibilityContext,<br/>ToastContext"]
-            HOOKS["hooks/<br/>useCountUp, useIsVisible,<br/>**useScrollReveal**, usePageTitle"]
+            HOOKS["hooks/<br/>useCountUp, useIsVisible,<br/>**useScrollReveal**, usePageTitle,<br/>useFieldValidation"]
             CONST["constants/ + data/<br/>statuts, situations/quartiers,<br/>parkings de report"]
-            SRV_C["services/ + utils/<br/>api.js (unique porte vers /api/v1),<br/>routeAnnouncer, download, voteStats, safeRedirect"]
+            SRV_C["services/ + utils/<br/>api.js (unique porte vers /api/v1),<br/>routeAnnouncer, download, voteStats, safeRedirect,<br/>formValidation, registerDraft, verifyEmailOnce"]
             STYLES["styles/<br/>variables, mixins, global,<br/>**_animations, _mascot, _joy-layer**,<br/>_accessibility"]
             PUB["public/data/<br/>iris-senlis.geojson (jamais importé en JS)"]
             PAGES --> COMP --> HOOKS
