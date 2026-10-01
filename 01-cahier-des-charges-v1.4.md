@@ -239,7 +239,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 **Auth**
 | Méthode | Route | Accès | Description |
 |---|---|---|---|
-| POST | /auth/register | 🔓 | Inscription (Zod, Argon2id, situation déclarée) — rate limité |
+| POST | /auth/register | 🔓 | Inscription (Zod, Argon2id, situation déclarée, domaine de l'email vérifié par DNS) — rate limité |
 | POST | /auth/verify-email | 🔓 | Confirmation d'email par jeton à usage unique — un lien déjà utilisé par un compte vérifié répond « déjà vérifiée » |
 | POST | /auth/resend-verification | 🔓 | Nouveau lien de vérification (réponse identique que le compte existe ou non) — rate limité |
 | POST | /auth/login | 🔓 | Connexion → JWT, ou jeton de défi 2FA pour un admin — rate limité |

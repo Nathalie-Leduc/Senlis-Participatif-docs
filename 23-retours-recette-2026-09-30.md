@@ -62,7 +62,7 @@ La personne croit alors que la vérification a échoué, clique « Réessayer l'
 |---|:--:|---|
 | Jeton de vérification invalide, email jamais validé, champs à ressaisir | 🔧 **prioritaire** | S5R-01 (voir §1.1) |
 | Œil pour afficher le mot de passe à la connexion | 🔧 | S5R-02 (le composant existe déjà à l'inscription) |
-| Vérification de l'adresse email (@ obligatoire, domaine…) | 🔧 | S5R-02 — voir §4.3 |
+| Vérification de l'adresse email (@ obligatoire, domaine…) | 🔧 | S5R-02 (format + suggestion) — voir §4.3 ; **S5R-02b** (vérification DNS du domaine, ajoutée le 02/10) |
 | Messages d'erreur à côté du champ concerné, pas en haut ; dès la saisie de l'email | 🔧 | S5R-02 — message sous chaque champ, vérifié dès qu'on quitte le champ |
 | « Je travaille à Senlis » coché → quartier et rôle obligatoires, avec message | 🔧 | S5R-02 |
 | Aide pour trouver son quartier (lien vers la carte, adresse non conservée) | 🏛️ | L3-05 (voir §4.4 : peut remonter en Lot 1 si souhaité) |
@@ -127,13 +127,13 @@ La personne croit alors que la vérification a échoué, clique « Réessayer l'
 
 Les issues sont numérotées dans l'ordre où elles seront traitées :
 
-1. **Ce qui bloque un citoyen dès la première visite** : S5R-01 (vérification d'email), S5R-02 (formulaires), S5R-03 (module d'accessibilité).
+1. **Ce qui bloque un citoyen dès la première visite** : S5R-01 (vérification d'email), S5R-02 (formulaires), S5R-03 (module d'accessibilité), puis S5R-02b (vérification DNS du domaine de l'email, ajoutée le 02/10).
 2. **Ce qui se voit en premier** : S5R-04 (accueil et cerf guide).
 3. **L'enquête, cœur du projet** : S5R-05 (moteur), puis S5R-06 (contenu), qui en dépend.
 4. **Les outils de l'administratrice** : S5R-07 (public visé), S5R-08 (résultats), S5R-09 (création), S5R-10 (propositions).
 5. **La carte, la navigation admin et la documentation** : S5R-11, S5R-12, S5R-13.
 
-Total estimé : **14 jours**. La mise en ligne réelle (Sprint 5ter) est décalée d'autant — c'est le prix d'une première impression réussie auprès des Senlisiens et de la mairie.
+Total estimé : **14,5 jours** (S5R-02b comprise). La mise en ligne réelle (Sprint 5ter) est décalée d'autant — c'est le prix d'une première impression réussie auprès des Senlisiens et de la mairie.
 
 ---
 
@@ -150,6 +150,8 @@ Le critère RGAA 10.12 (WCAG 1.4.12) n'exige pas que le site **propose** un rég
 ### 4.3 Peut-on vérifier le domaine de l'adresse email (gmail.com, free.fr…) ?
 
 On vérifie le **format** (un « @ », un domaine avec un point, pas d'espace). En revanche, une liste de domaines « autorisés » bloquerait des adresses légitimes (orange.fr, laposte.net, domaines professionnels, adresses de la mairie…) : il en existe des milliers. La bonne pratique est double : **suggérer une correction** pour les fautes de frappe courantes (« gmial.com → vouliez-vous dire gmail.com ? ») et laisser l'**email de vérification** faire la vraie preuve — une adresse qui ne reçoit pas le lien ne sera jamais vérifiée.
+
+**Complément (02/10/2026, S5R-02b)** : une vérification DNS côté API refusera en plus les domaines **certainement** incapables de recevoir du courrier (domaine inexistant, ou « null MX »). Elle teste les MX puis l'adresse principale du domaine (« MX implicite », RFC 5321), s'arrête au bout de 2 secondes et **accepte** l'adresse en cas de panne DNS : on ne bloque jamais quelqu'un de bonne foi parce que le réseau hésite. Elle ne remplace ni la suggestion de faute de frappe (beaucoup de domaines-pièges ont un serveur de messagerie), ni l'email de vérification.
 
 ### 4.4 Trouver son quartier à partir de son adresse
 
