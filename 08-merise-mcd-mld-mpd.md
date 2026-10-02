@@ -102,7 +102,7 @@ flowchart TB
     BULLETIN ---|"1,n"| aREGROUPE ---|"1,1"| REPONSE
     QUESTION ---|"0,n"| aCIBLE ---|"1,1"| REPONSE
     OPTION ---|"0,n"| aCHOISIT ---|"0,1"| REPONSE
-    OPTION ---|"0,n"| aCONDITIONNE ---|"0,1"| QUESTION
+    OPTION ---|"0,n"| aCONDITIONNE ---|"0,n"| QUESTION
 ```
 
 **Lecture des cardinalités sensibles** (côté qui porte le sens métier) :
@@ -113,7 +113,7 @@ flowchart TB
 | BULLETIN `(0,1)` DÉPOSE | Même logique : un bulletin peut devenir anonyme |
 | UTILISATEUR `(0,n)` VOTER `(0,n)` PROPOSITION | Association plusieurs-à-plusieurs **porteuse** de l'attribut {valeur} — elle deviendra une table dans le MLD |
 | QUESTION `(1,1)` CONTIENT | Une question appartient à *exactement une* enquête — pas de question orpheline |
-| QUESTION `(0,1)` CONDITIONNE | Branchement : une question dépend *au plus d'une* option d'une question antérieure (limite assumée : pas de « ET » entre deux conditions) ; `0` = toujours affichée |
+| QUESTION `(0,n)` CONDITIONNE | Une question peut dépendre de **plusieurs** options de questions antérieures, et s'affiche si l'une est choisie (OU — S5R-05) ; `0` = toujours affichée. Association **plusieurs-à-plusieurs** → devient la relation `QuestionCondition` au MLD |
 | ENQUÊTE `(1,n)` CONTIENT | Une enquête contient *au moins une* question — règle métier (une enquête vide n'a pas de sens), vérifiée par l'API à l'ouverture |
 
 ---
@@ -126,7 +126,7 @@ Conventions : <u>souligné</u> = clé primaire · `#préfixe` = clé étrangère
 User (id, email, pseudo, passwordHash, role, situation, quartier,
       travailleQuartier, travailType, emailVerified,
       notifyNewProposal, notifySurveyClosed, createdAt, updatedAt,
-      lastLoginAt, inactivityWarnedAt, tokenVersion)
+      lastLoginAt, inactivityWarnedAt, tokenVersion, travailleASenlis)
      PK : id · UNIQUE : email · UNIQUE : pseudo
 
 AuthToken (id, tokenHash, type, expiresAt, usedAt, attempts, createdAt, #userId)
@@ -149,11 +149,15 @@ Survey (id, slug, title, description, audience, status, resultsPublished,
      PK : id · UNIQUE : slug
 
 Question (id, label, helpText, type, required, "order", uiHint,
-          syncsToProfile, #surveyId, #showIfOptionId)
+          syncsToProfile, minValue, maxValue, #surveyId, #maxChoicesFromId)
      PK : id · FK : surveyId → Survey(id) · UNIQUE : (surveyId, "order")
-     FK : showIfOptionId → QuestionOption(id) [NULLABLE]   ← association CONDITIONNE
+     FK : maxChoicesFromId → Question(id) [NULLABLE]   ← limite de cases (S5R-05)
 
-QuestionOption (id, label, "order", syncValue, #questionId)
+QuestionCondition (#questionId, #optionId)        ← association CONDITIONNE (0,n)-(0,n)
+     PK : (questionId, optionId)
+     FK : questionId → Question(id) · FK : optionId → QuestionOption(id)
+
+QuestionOption (id, label, "order", syncValue, endsSurvey, #questionId)
      PK : id · FK : questionId → Question(id) · UNIQUE : (questionId, "order")
 
 AdminAuditLog (id, action, actorPseudo, targetType, targetId, details, createdAt, #actorId)
@@ -170,15 +174,15 @@ Answer (id, valueText, valueNumber, #responseId, #questionId, #optionId)
      UNIQUE : (responseId, questionId, optionId)
 ```
 
-> 💡 Remarque le destin des cardinalités `(0,1)` du MCD : elles deviennent des clés étrangères **NULLABLE** (`authorId`, `userId`, `optionId`, `showIfOptionId`). Le RGPD conceptuel est devenu une propriété logique.
+> 💡 Remarque le destin des cardinalités du MCD. Une association `(0,n)-(0,n)` comme CONDITIONNE devient une **relation à part entière** (`QuestionCondition`), dont la clé est le couple des deux clés étrangères. Et les cardinalités `(0,1)` : elles deviennent des clés étrangères **NULLABLE** (`authorId`, `userId`, `optionId`, `maxChoicesFromId`). Le RGPD conceptuel est devenu une propriété logique.
 >
-> 🔁 **Question ↔ QuestionOption forment un cycle** (une question possède des options, et peut dépendre de l'option d'une autre question). C'est pourquoi le constructeur d'enquête crée d'abord toutes les questions et options, *puis* renseigne `showIfOptionId` dans un second temps — on ne peut pas pointer vers une option qui n'existe pas encore.
+> 🔁 **Question ↔ QuestionOption forment un cycle** (une question possède des options, et peut dépendre de l'option d'une autre question). C'est pourquoi le constructeur d'enquête crée d'abord toutes les questions et options, *puis* enregistre les conditions (`QuestionCondition`) et les limites de cases dans un second temps (`services/surveyBuilder.js`) — on ne peut pas pointer vers une option qui n'existe pas encore.
 
 ---
 
 ## 3. MPD — Modèle Physique de Données (PostgreSQL)
 
-Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 11 migrations du 15/06 au 27/09/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
+Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 12 migrations du 15/06 au 03/10/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
 
 1. **Identifiants en `TEXT`**, pas en `UUID` : `@default(uuid())` génère l'UUID **dans Node** (Prisma), pas dans PostgreSQL (`gen_random_uuid()` n'est jamais appelé).
 2. **Noms entre guillemets en `camelCase`** (`"passwordHash"`) : sans guillemets, PostgreSQL mettrait tout en minuscules.
@@ -220,7 +224,8 @@ CREATE TABLE "User" (
   "updatedAt"          TIMESTAMP(3) NOT NULL,
   "lastLoginAt"        TIMESTAMP(3),      -- S5A-05 : durée de conservation
   "inactivityWarnedAt" TIMESTAMP(3),
-  "tokenVersion"       INTEGER NOT NULL DEFAULT 0   -- S5A-06 : révocation des sessions
+  "tokenVersion"       INTEGER NOT NULL DEFAULT 0,  -- S5A-06 : révocation des sessions
+  "travailleASenlis"   BOOLEAN                      -- S5R-05 : oui / non / NULL = jamais demandé
 );
 CREATE UNIQUE INDEX "User_email_key"  ON "User"("email");
 CREATE UNIQUE INDEX "User_pseudo_key" ON "User"("pseudo");
@@ -300,7 +305,9 @@ CREATE TABLE "Question" (
   "order"          INTEGER NOT NULL,          -- mot réservé SQL → guillemets
   "uiHint"         TEXT,
   "syncsToProfile" TEXT,
-  "showIfOptionId" TEXT,                       -- FK ajoutée après QuestionOption (cycle)
+  "minValue"       DOUBLE PRECISION,           -- S5R-05 : bornes d'un NOMBRE
+  "maxValue"       DOUBLE PRECISION,
+  "maxChoicesFromId" TEXT REFERENCES "Question"("id") ON DELETE SET NULL ON UPDATE CASCADE,
   "surveyId"       TEXT NOT NULL REFERENCES "Survey"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE UNIQUE INDEX "Question_surveyId_order_key" ON "Question"("surveyId", "order");
@@ -310,14 +317,17 @@ CREATE TABLE "QuestionOption" (
   "label"      TEXT NOT NULL,
   "order"      INTEGER NOT NULL,
   "syncValue"  TEXT,
+  "endsSurvey" BOOLEAN NOT NULL DEFAULT false,   -- S5R-05 : fin anticipée
   "questionId" TEXT NOT NULL REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE UNIQUE INDEX "QuestionOption_questionId_order_key" ON "QuestionOption"("questionId", "order");
 
--- Le branchement : ajouté une fois les deux tables créées
-ALTER TABLE "Question" ADD CONSTRAINT "Question_showIfOptionId_fkey"
-  FOREIGN KEY ("showIfOptionId") REFERENCES "QuestionOption"("id")
-  ON DELETE SET NULL ON UPDATE CASCADE;
+-- S5R-05 : conditions d'affichage (plusieurs par question = OU)
+CREATE TABLE "QuestionCondition" (
+  "questionId" TEXT NOT NULL REFERENCES "Question"("id")       ON DELETE CASCADE ON UPDATE CASCADE,
+  "optionId"   TEXT NOT NULL REFERENCES "QuestionOption"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "QuestionCondition_pkey" PRIMARY KEY ("questionId", "optionId")
+);
 
 -- S5A-06 : main courante des actions d'administration (6 mois)
 CREATE TABLE "AdminAuditLog" (

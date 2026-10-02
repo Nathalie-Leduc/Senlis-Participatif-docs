@@ -35,7 +35,7 @@
 |---|---|
 | Finalité | Proposer à chacun les enquêtes qui le concernent ; produire des résultats agrégés par type de public |
 | Base légale | Exécution du service (art. 6.1.b) ; statistiques agrégées : intérêt légitime (art. 6.1.f) — mise en balance : données auto-déclaratives, peu intrusives, jamais publiées individuellement, groupes < 5 masqués ; droit d'opposition ouvert |
-| Données | Situation de résidence, quartier de résidence, quartier de travail, rôle (commerçant·e / salarié·e) |
+| Données | Situation de résidence, quartier de résidence, travaille à Senlis (oui / non / non renseigné), quartier de travail, rôle (commerçant·e / salarié·e) |
 | Destinataires | Éditrice ; résultats **agrégés** : public et, le cas échéant, élus municipaux |
 | Transferts hors UE | Aucun |
 | Durée | Celle du compte |

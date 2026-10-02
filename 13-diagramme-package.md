@@ -16,7 +16,7 @@ flowchart TB
             CTX["contexts/<br/>AuthContext (useAuth), AccessibilityContext,<br/>ToastContext"]
             HOOKS["hooks/<br/>useCountUp, useIsVisible,<br/>**useScrollReveal**, usePageTitle,<br/>useFieldValidation"]
             CONST["constants/ + data/<br/>statuts, situations/quartiers,<br/>parkings de report"]
-            SRV_C["services/ + utils/<br/>api.js (unique porte vers /api/v1),<br/>routeAnnouncer, download, voteStats, safeRedirect,<br/>formValidation, registerDraft, verifyEmailOnce"]
+            SRV_C["services/ + utils/<br/>api.js (unique porte vers /api/v1),<br/>routeAnnouncer, download, voteStats, safeRedirect,<br/>formValidation, registerDraft, verifyEmailOnce,<br/>surveyFlow"]
             STYLES["styles/<br/>variables, mixins, global,<br/>**_animations, _mascot, _joy-layer**,<br/>_accessibility"]
             PUB["public/data/<br/>iris-senlis.geojson (jamais importé en JS)"]
             PAGES --> COMP --> HOOKS
@@ -33,8 +33,8 @@ flowchart TB
             ROUTES["routes/<br/>health, auth, proposals, surveys,<br/>stats, users (admin)<br/><i>comments : Lot 2</i>"]
             MIDDLE["middlewares/<br/>auth (auth, optionalAuth, isAdmin,<br/>requireVerifiedEmail), validate (Zod),<br/>upload (Multer), errorHandler"]
             CTRL["controllers/<br/>auth, proposals, surveys,<br/>stats, users"]
-            SRV_A["services/<br/>email.js (Nodemailer), token.js<br/>(jetons + codes 2FA)"]
-            LIB["lib/<br/>prisma, jwt, slug,<br/>imageProcessing (Sharp), validateEnv"]
+            SRV_A["services/<br/>email.js (Nodemailer), token.js (jetons + codes 2FA),<br/>audit, retention, surveyBuilder"]
+            LIB["lib/<br/>prisma, jwt, slug, privacy, emailDomain,<br/>imageProcessing (Sharp), validateEnv,<br/>surveyFlow"]
             VALID["validators/<br/>auth, proposals, surveys, users (Zod)"]
             PRISMA["prisma/<br/>schema.prisma, migrations/,<br/>seed.js (démo), seed-prod.js (réel)"]
             ROUTES --> MIDDLE --> CTRL --> SRV_A

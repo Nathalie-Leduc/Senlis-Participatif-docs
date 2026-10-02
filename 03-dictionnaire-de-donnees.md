@@ -1,6 +1,6 @@
 # Dictionnaire de données — Senlis Participatif
 
-> Dérivé de `schema.prisma` v1.4 — état au 27/09/2026 (11 entités, 12 énumérations). Convention : tous les identifiants sont des UUID **générés par Prisma côté application** (`@default(uuid())`) et stockés en `TEXT` ; toutes les dates sont des `DateTime` UTC (`TIMESTAMP(3)` en base).
+> Dérivé de `schema.prisma` v1.4 — état au 27/09/2026 (12 entités, 12 énumérations). Convention : tous les identifiants sont des UUID **générés par Prisma côté application** (`@default(uuid())`) et stockés en `TEXT` ; toutes les dates sont des `DateTime` UTC (`TIMESTAMP(3)` en base).
 
 ## USER — compte citoyen ou administratrice
 
@@ -19,6 +19,7 @@
 | notifyNewProposal | Boolean | défaut `true` | Préférence : être notifié des nouvelles propositions (Lot 2) |
 | lastLoginAt | DateTime | NULL | Dernière connexion réussie (après le code 2FA pour un admin). NULL pour les comptes antérieurs au champ → l'inactivité se compte depuis `createdAt` (S5A-05) |
 | inactivityWarnedAt | DateTime | NULL | Date de l'email d'avertissement avant suppression pour inactivité ; remis à NULL à la connexion suivante (S5A-05) |
+| travailleASenlis | Boolean | NULL | « Travaille à Senlis » dit explicitement : oui / non / NULL = jamais demandé (S5R-05). Un quartier de travail renseigné implique « oui » ; « non » efface quartier et rôle de travail |
 | tokenVersion | Int | défaut 0 | Numéro de « serrure » recopié dans chaque JWT (`tv`) ; incrémenté à chaque changement ou réinitialisation du mot de passe → toutes les sessions antérieures sont révoquées (S5A-06) |
 | notifySurveyClosed | Boolean | défaut `true` | Préférence : être notifié des clôtures d'enquête (Lot 2) |
 | createdAt / updatedAt | DateTime | auto | Traçabilité |
@@ -103,8 +104,9 @@
 | required | Boolean | défaut `true` | Réponse obligatoire ou non |
 | order | Int | NOT NULL | Position dans le questionnaire |
 | uiHint | String | NULL | Indicateur de rendu, seulement pour `TEXTE_LIBRE` — ex. `VILLE_FR` : suggestions de communes via l'API officielle `geo.api.gouv.fr` (stockage et agrégation inchangés) |
-| syncsToProfile | String | NULL | `situation` \| `quartier` \| `travailleQuartier` \| `travailType` — la réponse met aussi à jour ce champ du profil (après le COMMIT, jamais à sa place). Réservé à `CHOIX_UNIQUE` (Zod) ; `OUI_NON` sert au seul préremplissage |
-| showIfOptionId | UUID | FK → QUESTION_OPTION, NULL, SET NULL | Branchement : la question ne s'affiche que si cette option d'une question **antérieure** a été choisie (une seule condition par question) |
+| syncsToProfile | String | NULL | `situation` \| `quartier` \| `travailleQuartier` \| `travailType` \| `travailleASenlis` (Oui/Non, S5R-05) — la réponse met aussi à jour ce champ du profil (après le COMMIT, jamais à sa place). Réservé à `CHOIX_UNIQUE` (Zod) ; `OUI_NON` sert au seul préremplissage |
+| minValue / maxValue | Float | NULL | NOMBRE uniquement : bornes de la réponse (ex. au moins 1 véhicule professionnel) — vérifiées par l'API et le navigateur (S5R-05) |
+| maxChoicesFromId | UUID | FK → QUESTION, NULL, SET NULL | CHOIX_MULTIPLE uniquement : pas plus de cases que la réponse à cette question « Nombre » précédente (S5R-05) |
 | surveyId | UUID | FK → SURVEY, CASCADE | Enquête parente |
 | — | — | **UNIQUE(surveyId, order)** | Pas deux questions au même rang |
 
@@ -115,7 +117,8 @@
 | id | UUID | PK | Identifiant unique |
 | label | String | NOT NULL | Libellé (« Box ou garage privé », « Voirie payante »…) |
 | order | Int | NOT NULL | Position d'affichage |
-| syncValue | String | NULL | Valeur d'enum exacte écrite dans le profil quand cette option est choisie (ex. `CENTRE_RESIDENT`) — pont explicite entre un libellé français et une valeur technique |
+| syncValue | String | NULL | Valeur d'enum exacte écrite dans le profil quand cette option est choisie (ex. `CENTRE_RESIDENT`) — pont explicite entre un libellé français et une valeur technique ; `'true'` / `'false'` pour « travaille à Senlis » |
+| endsSurvey | Boolean | défaut false | Choisir cette option termine l'enquête : plus aucune question n'est posée après (CHOIX_UNIQUE, OUI_NON — S5R-05) |
 | questionId | UUID | FK → QUESTION, CASCADE | Question parente |
 | — | — | **UNIQUE(questionId, order)** | Pas deux options au même rang |
 
@@ -142,6 +145,15 @@
 | — | — | **UNIQUE(responseId, questionId, optionId)** | Pas de double coche |
 
 > Règle d'intégrité applicative (validée par Zod, en complément des contraintes SQL) : **une seule** des trois valeurs (`optionId`, `valueText`, `valueNumber`) est renseignée, en cohérence avec le `type` de la question.
+
+## QUESTION_CONDITION — condition d'affichage d'une question (S5R-05)
+
+| Attribut | Type | Contraintes | Description |
+|---|---|---|---|
+| questionId | UUID | PK (composée), FK → QUESTION, CASCADE | La question conditionnée |
+| optionId | UUID | PK (composée), FK → QUESTION_OPTION, CASCADE | L'option (d'une question **antérieure**) qui la fait apparaître |
+
+> Plusieurs lignes pour une même question = « OU » : elle s'affiche si l'une des options a été choisie. Aucune ligne = question toujours affichée. Remplace l'ancien champ `QUESTION.showIfOptionId` (une seule condition possible).
 
 ## ADMIN_AUDIT_LOG — Journal des actions d'administration (S5A-06)
 
