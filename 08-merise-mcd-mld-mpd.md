@@ -49,7 +49,7 @@ flowchart TB
     slug
     titre
     description
-    audience
+    public visé (critères de profil)
     statut
     résultats publiés
     dates (ouverture, clôture)"]
@@ -144,7 +144,8 @@ Comment (id, content, stance, status, createdAt, #authorId, #proposalId)
      PK : id · FK : authorId → User(id) [NULLABLE]
      FK : proposalId → Proposal(id)
 
-Survey (id, slug, title, description, audience, status, resultsPublished,
+Survey (id, slug, title, description, audienceSituations, audienceQuartiers,
+        audienceWorkQuartiers, audienceWorkTypes, status, resultsPublished,
         opensAt, closesAt, createdAt)
      PK : id · UNIQUE : slug
 
@@ -182,7 +183,7 @@ Answer (id, valueText, valueNumber, #responseId, #questionId, #optionId)
 
 ## 3. MPD — Modèle Physique de Données (PostgreSQL)
 
-Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 12 migrations du 15/06 au 03/10/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
+Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 13 migrations du 15/06 au 03/10/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
 
 1. **Identifiants en `TEXT`**, pas en `UUID` : `@default(uuid())` génère l'UUID **dans Node** (Prisma), pas dans PostgreSQL (`gen_random_uuid()` n'est jamais appelé).
 2. **Noms entre guillemets en `camelCase`** (`"passwordHash"`) : sans guillemets, PostgreSQL mettrait tout en minuscules.
@@ -198,7 +199,6 @@ CREATE TYPE "Stance"         AS ENUM ('POUR', 'CONTRE', 'NEUTRE');
 CREATE TYPE "TokenType"      AS ENUM ('VERIFY_EMAIL', 'RESET_PASSWORD', 'TWO_FACTOR_LOGIN');
 CREATE TYPE "VoteValue"      AS ENUM ('POUR', 'CONTRE', 'NEUTRE');
 CREATE TYPE "SurveyStatus"   AS ENUM ('DRAFT', 'OPEN', 'CLOSED');
-CREATE TYPE "Audience"       AS ENUM ('TOUS', 'RESIDENTS', 'COMMERCANTS');
 CREATE TYPE "QuestionType"   AS ENUM ('CHOIX_UNIQUE','CHOIX_MULTIPLE',
                                       'NOMBRE','OUI_NON','TEXTE_LIBRE');
 CREATE TYPE "Situation"      AS ENUM ('CENTRE_RESIDENT', 'AUTRE_QUARTIER', 'HORS_SENLIS');
@@ -287,7 +287,11 @@ CREATE TABLE "Survey" (
   "slug"             TEXT NOT NULL,
   "title"            TEXT NOT NULL,
   "description"      TEXT NOT NULL,
-  "audience"         "Audience" NOT NULL DEFAULT 'TOUS',
+  -- S5R-07 : public visé par critères de profil (listes vides = tout le monde)
+  "audienceSituations"    "Situation"[]   DEFAULT ARRAY[]::"Situation"[],
+  "audienceQuartiers"     "Quartier"[]    DEFAULT ARRAY[]::"Quartier"[],
+  "audienceWorkQuartiers" "Quartier"[]    DEFAULT ARRAY[]::"Quartier"[],
+  "audienceWorkTypes"     "TravailType"[] DEFAULT ARRAY[]::"TravailType"[],
   "status"           "SurveyStatus" NOT NULL DEFAULT 'DRAFT',
   "resultsPublished" BOOLEAN NOT NULL DEFAULT false,
   "opensAt"          TIMESTAMP(3),

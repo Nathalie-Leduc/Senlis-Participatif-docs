@@ -1,6 +1,6 @@
 # Diagramme ERD — Senlis Participatif
 
-> Schéma de la base de données (v1.5 — état au 03/10/2026, après la migration `survey_engine_v2` de S5R-05) — source de vérité : `api/prisma/schema.prisma` du dépôt de code (copie de référence : `19-schema.prisma`).
+> Schéma de la base de données (v1.6 — état au 03/10/2026, après la migration `survey_audience_profiles` de S5R-07) — source de vérité : `api/prisma/schema.prisma` du dépôt de code (copie de référence : `19-schema.prisma`).
 > Légende : `||--o{` = un-à-plusieurs · `|o--o{` = la clé étrangère est **nullable** (pseudonymisation RGPD, ou lien optionnel : le lien peut être rompu sans perdre la donnée).
 >
 > **Ce qui a changé depuis la v1.1** (Sprint 3 et Sprint 5bis) : image de proposition (`imagePath`), code 2FA admin (`TWO_FACTOR_LOGIN`), profil déclaré du citoyen sur deux axes indépendants — résidence (`situation`, `quartier`) et travail (`travailleQuartier`, `travailType`) —, publication des résultats d'enquête soumise à l'admin (`resultsPublished`), branchement conditionnel de questions (`showIfOptionId`, relation réflexive QUESTION → QUESTION_OPTION), indicateur de rendu (`uiHint`) et synchronisation réponse → profil (`syncsToProfile` / `syncValue`).
@@ -99,7 +99,10 @@ erDiagram
         string slug UK
         string title
         text description
-        enum audience
+        enum_array audienceSituations
+        enum_array audienceQuartiers
+        enum_array audienceWorkQuartiers
+        enum_array audienceWorkTypes
         enum status
         boolean resultsPublished
         datetime opensAt "nullable"

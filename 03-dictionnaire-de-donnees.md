@@ -87,7 +87,10 @@
 | slug | String | UNIQUE, NOT NULL | Identifiant d'URL |
 | title | String | NOT NULL | Titre (« Stationnement et déplacements dans le centre historique ») |
 | description | Text | NOT NULL | Contexte affiché en tête du questionnaire |
-| audience | Audience | défaut `TOUS` | Cible : `TOUS` / `RESIDENTS` / `COMMERCANTS` |
+| audienceSituations | Situation[] | défaut `[]` | Public visé, famille RÉSIDENCE : situations visées (S5R-07) |
+| audienceQuartiers | Quartier[] | défaut `[]` | Pour « autre quartier » : lesquels (vide = tous les autres quartiers) |
+| audienceWorkQuartiers | Quartier[] | défaut `[]` | Public visé, famille TRAVAIL : quartiers de travail (vide = n'importe où) |
+| audienceWorkTypes | TravailType[] | défaut `[]` | Rôles visés : dirigeant·e, salarié·e (vide = tous). Toutes les listes vides = tout le monde ; les deux familles se combinent par un OU (voir `lib/audience.js`) |
 | status | SurveyStatus | défaut `DRAFT` | `DRAFT` → `OPEN` → `CLOSED` |
 | resultsPublished | Boolean | défaut `false` | Distinct du statut : l'admin décide quand les résultats deviennent publics (avant : visibles par l'admin seul) |
 | opensAt / closesAt | DateTime | NULL | Fenêtre de collecte |
@@ -177,7 +180,6 @@
 | Stance | POUR, CONTRE, NEUTRE | Position d'un argument (Lot 2) |
 | CommentStatus | PENDING, APPROVED, REJECTED | Modération a priori (Lot 2) |
 | SurveyStatus | DRAFT, OPEN, CLOSED | Cycle de vie d'une enquête |
-| Audience | TOUS, RESIDENTS, COMMERCANTS | Ciblage d'une enquête |
 | QuestionType | CHOIX_UNIQUE, CHOIX_MULTIPLE, NOMBRE, OUI_NON, TEXTE_LIBRE | Type de saisie d'une question |
 | TokenType | VERIFY_EMAIL, RESET_PASSWORD, TWO_FACTOR_LOGIN | Nature d'un jeton email (lien ou code 2FA admin) |
 | Situation | CENTRE_RESIDENT, AUTRE_QUARTIER, HORS_SENLIS | Résidence déclarée (`CENTRE_COMMERCANT` retiré le 22/09/2026 : redondant avec l'axe travail) |
