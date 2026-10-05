@@ -32,6 +32,7 @@
 | 22 | [Registre des traitements](22-registre-des-traitements.md) | RGPD art. 30 : une fiche par traitement (finalité, base légale, données, destinataires, durées, sécurité) |
 | 23 | [Retours de recette du 30/09/2026](23-retours-recette-2026-09-30.md) | Triage des tests avant mise en ligne : corrections (Sprint 5 recette), réponses aux questions, propositions Lot 3 |
 | 24 | [Dépannage terminal, Git, npm, VS Code](24-depannage-terminal-vscode.md) | Problèmes réellement rencontrés pendant le projet : symptôme, cause, solution, prévention |
+| 25 | [Enquête stationnement v3](25-enquete-stationnement-v3.md) | Parcours par profil, réponse à chaque point de la recette, liste des 39 questions avec leurs conditions |
 
 Annexes Word : workflow GitHub, installation de Prisma 7, résumé technique.
 
