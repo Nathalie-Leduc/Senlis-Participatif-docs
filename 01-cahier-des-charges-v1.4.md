@@ -69,7 +69,7 @@ Le projet est porté à titre personnel, hors de tout cadre institutionnel, avec
 
 **Administratrice**
 - Créer / éditer / publier / clore une proposition (point géolocalisé + périmètre GeoJSON)
-- Créer une enquête : questions typées (choix unique, choix multiple, nombre, oui/non, texte libre), audience ciblée (tous / résidents / commerçants)
+- Créer une enquête : questions typées (choix unique, choix multiple, nombre, oui/non, texte libre), public visé par critères de profil (résidence, quartier, travail, rôle, hors Senlis — S5R-07)
 - Ouvrir / clore une enquête, consulter les résultats agrégés (comptages par option, moyennes)
 - Conditionner l'affichage d'une question à une réponse antérieure (branchement), relier une question au profil du répondant
 - Décider **quand** les résultats deviennent publics ; consulter une vue détaillée, segmentée par profil de répondant, imprimable en PDF
@@ -326,7 +326,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 
 **Administrateur**
 - En tant qu'admin, je peux rédiger et publier une proposition géolocalisée afin de lancer une concertation.
-- En tant qu'admin, je peux construire un questionnaire sur mesure (types de questions variés, audience ciblée) sans modification du code afin de lancer de nouvelles enquêtes rapidement.
+- En tant qu'admin, je peux construire un questionnaire sur mesure (types de questions variés, public visé par critères de profil) sans modification du code afin de lancer de nouvelles enquêtes rapidement.
 - En tant qu'admin, je peux consulter les résultats agrégés afin de produire un argumentaire chiffré à présenter à la mairie.
 - En tant qu'admin, je peux segmenter les résultats par profil de répondant (habitant du centre, actif à Senlis, visiteur) et les imprimer en PDF, afin de montrer à la mairie que chaque public a été entendu.
 - En tant qu'admin, je décide du moment où les résultats deviennent publics, afin de les vérifier avant diffusion.
