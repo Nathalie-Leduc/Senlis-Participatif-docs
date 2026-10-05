@@ -284,7 +284,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | GET | /surveys/admin | 👑 | Liste admin, tous statuts |
 | GET | /surveys/:slug | 🔓 | Détail : questions + options (+ « déjà répondu » si connecté) |
 | GET | /surveys/:slug/results | 🔓/👑 | Résultats agrégés — publics seulement si `resultsPublished` |
-| GET | /surveys/:id/stats | 👑 | Résultats détaillés, `?segmentBy=<questionId>` |
+| GET | /surveys/:id/stats | 👑 | Résultats détaillés ; public analysé : `?scope=target` (public visé) ou `?scope=custom&situations=…&quartiers=…&workQuartiers=…&workTypes=…` — groupes et questions de moins de 5 personnes masqués, jamais de texte libre brut dans une vue filtrée (S5R-08) ; `?segmentBy=<questionId>` conservé |
 | POST | /surveys | 👑 | Créer une enquête (questions, options, branchement imbriqués) |
 | PATCH | /surveys/:id | 👑 | Éditer / ouvrir / clore / publier les résultats |
 | DELETE | /surveys/:id | 👑 | Supprimer |
