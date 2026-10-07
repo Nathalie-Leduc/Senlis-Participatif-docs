@@ -48,7 +48,9 @@
 | content | Text | NOT NULL | Argumentaire complet en Markdown (chiffres, sources) |
 | status | ProposalStatus | défaut `DRAFT` | Cycle de vie (cf. diagramme d'activité) |
 | lat / lng | Float | NULL | Point d'ancrage du marqueur sur la carte |
-| geoJson | Json | NULL | Périmètre dessiné (polygone GeoJSON, format natif Leaflet) |
+| geoJson | Json | NULL | Réglage avancé : tracé libre (GeoJSON, format natif Leaflet) — effaçable (`null`) depuis S5R-10 |
+| zoneWholeCity | Boolean | défaut false | Zone concernée : toute la ville (S5R-10) |
+| zoneQuartiers | Quartier[] | défaut `[]` | Zone concernée : quartiers IRIS (centre historique compris), contours affichés depuis `iris-senlis.geojson` ; exclusif avec `zoneWholeCity` (S5R-10) |
 | imagePath | String | NULL | Chemin **relatif** de l'image (`/uploads/proposals/<uuid>.webp`), jamais l'URL complète — recompressée en WebP 1200 px par Sharp (métadonnées EXIF/GPS supprimées au passage) |
 | authorId | UUID | FK → USER, NULL, SET NULL | Auteur — anonymisé si le compte est supprimé |
 | moderationNote | String | NULL | Motif communiqué à l'auteur en cas de rejet (Lot 2) |

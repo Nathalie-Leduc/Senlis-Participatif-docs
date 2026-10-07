@@ -132,7 +132,7 @@ User (id, email, pseudo, passwordHash, role, situation, quartier,
 AuthToken (id, tokenHash, type, expiresAt, usedAt, attempts, createdAt, #userId)
      PK : id · FK : userId → User(id) · UNIQUE : tokenHash
 
-Proposal (id, slug, title, summary, content, status, lat, lng, geoJson,
+Proposal (id, slug, title, summary, content, status, zoneWholeCity, zoneQuartiers, lat, lng, geoJson,
           imagePath, moderationNote, createdAt, publishedAt, closesAt, #authorId)
      PK : id · FK : authorId → User(id) [NULLABLE] · UNIQUE : slug
 
@@ -183,7 +183,7 @@ Answer (id, valueText, valueNumber, #responseId, #questionId, #optionId)
 
 ## 3. MPD — Modèle Physique de Données (PostgreSQL)
 
-Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 13 migrations du 15/06 au 03/10/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
+Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent les migrations Prisma (`api/prisma/migrations/`, 14 migrations du 15/06 au 04/10/2026), cumulées. Trois différences avec un SQL « écrit à la main » à connaître :
 
 1. **Identifiants en `TEXT`**, pas en `UUID` : `@default(uuid())` génère l'UUID **dans Node** (Prisma), pas dans PostgreSQL (`gen_random_uuid()` n'est jamais appelé).
 2. **Noms entre guillemets en `camelCase`** (`"passwordHash"`) : sans guillemets, PostgreSQL mettrait tout en minuscules.
@@ -252,6 +252,8 @@ CREATE TABLE "Proposal" (
   "lat"            DOUBLE PRECISION,
   "lng"            DOUBLE PRECISION,
   "geoJson"        JSONB,
+  "zoneWholeCity"  BOOLEAN NOT NULL DEFAULT false,             -- S5R-10 : zone concernée
+  "zoneQuartiers"  "Quartier"[] DEFAULT ARRAY[]::"Quartier"[],
   "imagePath"      TEXT,
   "authorId"       TEXT REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE,  -- RGPD
   "moderationNote" TEXT,
