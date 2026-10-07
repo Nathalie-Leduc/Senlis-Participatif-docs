@@ -31,6 +31,7 @@ flowchart TD
 
     HOME --> LEGAL["🔓 /mentions-legales<br/>/confidentialite"]
     HOME --> A11Y["🔓 /accessibilite · /plan-du-site<br/>déclaration RGAA, plan du site"]
+    HOME --> CARTE["🔓 /carte<br/>carte « Explorer » : propositions, enquêtes, parkings par quartier (S5R-11)"]
     HOME --> NF["🔓 /* — page 404"]
 
     classDef lot2 stroke-dasharray:5 5
