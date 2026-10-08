@@ -174,7 +174,7 @@
 | **S5R-09** | **`feat(client): création d'enquête simplifiée — aides sous chaque champ, exemples, modèle prêt à l'emploi, dupliquer une question`** ✅ | **`lot:1` `type:feature` `zone:client`** | **`feat/survey-builder-help`** | **1 j** | **J82** |
 | **S5R-10** | **`feat(api+bdd+client): zone d'une proposition — toute la ville ou quartiers IRIS ; coordonnées et GeoJSON sous « Avancé » ; aides de saisie`** ✅ | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client`** | **`feat/proposal-zone-quartiers`** | **1 j** | **J83** |
 | **S5R-11** | **`feat(client): carte « Explorer » — propositions ET enquêtes ouvertes par quartier, emplacements réels des parkings (extraction figée)`** ✅ | **`lot:1` `type:feature` `zone:client`** | **`feat/explore-map-quartiers`** | **1,5 j** | **J84–J85** |
-| **S5R-12** | **`fix(client): navigation admin — bouton « Voir » dans les listes admin, pages publiques Propositions/Enquêtes retirées du menu admin`** | **`lot:1` `type:bug` `zone:client`** | **`fix/admin-navigation`** | **0,5 j** | **J85** |
+| **S5R-12** | **`fix(client): navigation admin — bouton « Voir » dans les listes admin, pages publiques Propositions/Enquêtes retirées du menu admin ; bandeau « Aperçu d'un brouillon » ; police du site pour les champs et boutons (`font: inherit`)`** ✅ | **`lot:1` `type:bug` `zone:client`** | **`fix/admin-navigation`** | **0,5 j** | **J85** |
 | **S5R-13** | **`docs: audit complété NIST (SP 800-63B, CSF 2.0) + procédure de mise à jour des contours IRIS`** | **`lot:1` `type:docs`** | **`docs/nist-iris-procedure`** | **0,5 j** | **J86** |
 
 🎯 *Fin de sprint : un premier citoyen s'inscrit, vérifie son adresse et répond à l'enquête stationnement sans accroc ; l'administratrice lit et exporte des résultats clairs.*

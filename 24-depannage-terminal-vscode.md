@@ -13,7 +13,7 @@
 | # | Domaine | Problème |
 |:--:|---|---|
 | 1 | Git / SSH | `UNPROTECTED PRIVATE KEY FILE` — `Permission denied (publickey)` |
-| 2 | Git | `object file … is empty` — `reference is not a tree` |
+| 2 | Git | `object file … is empty` — `reference is not a tree` (et sa récidive du 07/10) |
 | 3 | Git | Fichier à supprimer qu'un zip ne peut pas supprimer |
 | 4 | Git | Conflit sur `package-lock.json` |
 | 5 | GitHub | PR ouverte vers la mauvaise branche |
@@ -80,6 +80,33 @@ git fsck --full                                      # 5. vérifier (les « dang
 **Plan B** (si le A échoue) : renommer le dossier, refaire un `git clone`, puis recopier ce que GitHub n'a pas — `api/.env`, `api/.env.test`, `client/.env`, `api/uploads/`.
 
 **Prévention** — Surveiller l'espace disque (`df -h`) ; ne pas éteindre la machine virtuelle pendant une commande Git ; pousser régulièrement (`git push`), pour que GitHub ait toujours une copie à jour.
+
+**Récidive (07/10/2026)** — Deux différences avec le premier cas :
+
+1. **Deux repères abîmés** : `dev` ET sa copie `origin/dev` pointaient vers l'objet vide (le commit de fusion de la PR #115). `git fetch --refetch` ne suffit plus, car Git croit déjà posséder ce commit et ne le redemande pas. Il faut d'abord rayer les deux repères :
+   ```bash
+   git update-ref -d refs/remotes/origin/dev
+   git update-ref -d refs/heads/dev
+   git fetch origin
+   git checkout -B dev origin/dev
+   git fsck --full
+   ```
+2. **Des fichiers du dossier de travail vidés** : 17 fichiers à 0 octet (`wc -c` → 0), vus par Git comme « modifiés » (`git diff --stat` : uniquement des suppressions) et cause de tests en échec (« No test suite found », « is not a function »). Comme ils sont déjà commités, on les restaure tels qu'ils sont dans le commit :
+   ```bash
+   git restore -- .      # le point final = « tout le dossier courant »
+   ```
+
+**Cause retenue** — Disque local (`/dev/sda2`, 66 %) : ni disque plein, ni dossier partagé. Reste l'arrêt ou la mise en pause de la machine virtuelle pendant une écriture (dont le rangement que Git lance en arrière-plan : « Auto packing the repository in background »).
+
+**Protections activées** (une seule fois par dépôt) :
+```bash
+git config core.fsync objects,reference   # écriture réelle sur le disque avant de dire « c'est fait »
+git config core.fsyncMethod fsync
+git config gc.autoDetach false            # plus de rangement en arrière-plan
+```
+Dans VS Code : `files.autoSave` sur `onFocusChange` (et non `afterDelay`). `git.autofetch` est déjà à `false` par défaut.
+
+**Réflexe de fin de séance** — `git push` de la branche en cours, fermeture de VS Code, puis seulement fermeture de la machine virtuelle.
 
 ---
 
