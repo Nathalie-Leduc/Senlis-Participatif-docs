@@ -32,6 +32,8 @@
 >
 > **Décisions du 09/10/2026** : options conditionnelles confirmées ; centre séparé en « Centre historique » et « Quartier Saint-Vincent » (couleurs inchangées) ; voix neuronales Azure (offre gratuite) ; parkings gérés par l'administration (plan 2023 + guide Indigo 2025) ; enquête v3.1 relue en entier — +3 jours. S5R2-09 et S5R2-10 validées ; ajout de **S5R2-11**, rôle « Admin-test » limité aux brouillons (+1,5 j, arrondi à 2) , et de **S5R2-12**, modèles en premier dans les formulaires d'enquête et de proposition (+1 j) : mise en ligne à **J110**.
 >
+> **S5R2-01 livrée** (09/10/2026) : `POST /surveys/:id/test` (validation partagée avec la vraie réponse via `evaluateSubmission`), bouton « 🧪 Tester l'enquête » pour l'admin à la place de « Répondre », bandeau « Mode test », pas de pré-remplissage depuis le profil de l'admin, récapitulatif du chemin et « Recommencer le test » ; une vraie réponse d'un admin est refusée (403 `ADMIN_CANNOT_RESPOND`).
+>
 > **Légende** : ✅ livré (mergé sur `dev`) · 🔶 partiellement livré · sans marque = à faire.
 >
 > **Gabarit d'issue** (à enregistrer comme template GitHub) : *Contexte* (lien cahier des charges) · *Critères d'acceptation* (cases à cocher) · *Definition of Done rappelée*.
@@ -190,7 +192,7 @@
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| **S5R2-01** | **`feat(api+client): mode test de l'admin — « Tester l'enquête », validation complète par l'API sans rien enregistrer (ni réponse, ni profil), parcours récapitulé, tests illimités ; vraie réponse d'un admin refusée`** | **`lot:1` `type:feature` `zone:api` `zone:client`** | **`feat/admin-survey-test-mode`** | **1 j** | **J86** |
+| **S5R2-01** | **`feat(api+client): mode test de l'admin — « Tester l'enquête », validation complète par l'API sans rien enregistrer (ni réponse, ni profil), parcours récapitulé, tests illimités ; vraie réponse d'un admin refusée`** ✅ | **`lot:1` `type:feature` `zone:api` `zone:client`** | **`feat/admin-survey-test-mode`** | **1 j** | **J86** |
 | **S5R2-11** | **`feat(api+bdd+client): rôle « Admin-test » (EDITOR) pour la mairie ou un partenaire — accès à l'administration limité aux BROUILLONS : créer, modifier, supprimer et tester (mode test) propositions et enquêtes ; jamais publier, clôturer, voir les réponses réelles, gérer les comptes ; 2FA comme un admin ; actions journalisées ; promotion depuis « Comptes »`** | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client` `prio:haute`** | **`feat/editor-role`** | **1,5 j** | **J87–J88** |
 | **S5R2-12** | **`feat(client): modèles en premier — « Partir d'un modèle » placé en tête du formulaire d'enquête (avant le titre), et modèles de proposition (aménagement de l'espace public, mobilité et stationnement, végétalisation, animation ou événement) en tête du formulaire de proposition : titre, accroche et argumentaire structuré (contexte, ce qui changerait, pour qui, questions ouvertes) préremplis`** | **`lot:1` `type:feature` `zone:client`** | **`feat/templates-first`** | **1 j** | **J89** |
 | **S5R2-02** | **`feat(api+bdd+client): options conditionnelles — une option n'apparaît que si l'une de certaines réponses précédentes a été choisie (OU) ; API, moteur navigateur, constructeur`** | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client`** | **`feat/conditional-options`** | **1,5 j** | **J90–J91** |
