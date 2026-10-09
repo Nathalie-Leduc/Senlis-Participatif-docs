@@ -188,9 +188,10 @@ Le reste (débat et modération, propositions citoyennes, notifications, multili
 | Quartiers | **Couleurs inchangées** ; le centre est séparé en deux : Centre-Sud → **« Centre historique »**, Centre-Est – Saint-Vincent → **« Quartier Saint-Vincent »**. L'enquête stationnement porte **uniquement** sur le Centre historique | S5R2-06 révisée (1 → 2 j), placée **avant** l'enquête v3.1 | 2 j |
 | Voix au survol | **Azure AI Speech, offre gratuite**, avant la mise en ligne : « sinon quel intérêt ? Une personne handicapée a déjà le Narrateur de Windows » | S5R2-07 révisée (1 → 2 j) | 2 j |
 | Rôle « Admin-test » | Un rôle pour la mairie ou d'autres partenaires, qui ne peut **créer, modifier, supprimer et tester que des brouillons** | Nouvelle issue **S5R2-11**, juste après le mode test | 1,5 j |
+| Modèles | Oubli de la recette : **le choix des modèles en premier**, dans les enquêtes et les propositions | Nouvelle issue **S5R2-12** | 1 j |
 | Parkings | Combiner le **plan 2023** (noms, places) et le **guide Indigo 2025** (zones, tarifs à jour), ou pouvoir ajouter noms et places soi-même | S5R2-05 révisée : **parkings gérés par l'administration** (2 → 3 j) | 3 j |
 
-**Nouveau total** : 17,5 jours de Sprint 5 recette 2 (avec S5R-13, S5R2-09, S5R2-10 — **validées** — et le nouveau S5R2-11), 5,5 jours de Sprint 5ter → **mise en ligne à J109** (semaine 22).
+**Nouveau total** : 18,5 jours de Sprint 5 recette 2 (avec S5R-13, S5R2-09, S5R2-10 — **validées** — et les nouvelles S5R2-11 et S5R2-12), 5,5 jours de Sprint 5ter → **mise en ligne à J110** (semaine 22).
 
 ### 8.1 Le centre en deux quartiers (S5R2-06)
 
@@ -268,3 +269,13 @@ La mairie pourra ensuite tenir ces informations à jour elle-même : un argument
 - côté interface : le menu de gestion s'affiche, mais les boutons « Publier », « Résultats », « Supprimer » d'un élément publié et « Comptes » n'apparaissent pas ; un bandeau rappelle « Mode Admin-test : vous pouvez préparer et tester des brouillons ; la publication est faite par l'administration ».
 
 C'est une **première brique** du chantier « rôles complets » de l'offre mairie (F1), qui s'en trouve réduit.
+
+### 8.5 Les modèles en premier (S5R2-12)
+
+**Constat** : dans le formulaire d'enquête, « Partir d'un modèle » arrive après le titre, la description, le public visé et le statut — on remplit tout cela avant de découvrir qu'un modèle aurait pu le faire. Et le formulaire de proposition n'a pas de modèle du tout.
+
+**Analogie** : choisir le patron avant de couper le tissu, pas après.
+
+- **Enquêtes** : « Partir d'un modèle » devient le **premier bloc** du formulaire de création (titre et description du modèle remplis d'office, comme aujourd'hui quand ils sont vides).
+- **Propositions** : quatre modèles, en tête du formulaire de création — *aménagement de l'espace public*, *mobilité et stationnement*, *végétalisation*, *animation ou événement* — plus « Page blanche ». Chacun préremplit un exemple de titre et d'accroche, et un **argumentaire structuré** en quatre parties (contexte ; ce qui changerait ; pour qui ; questions encore ouvertes), à compléter. Même mise en valeur du modèle choisi et même confirmation avant de remplacer un texte déjà saisi que pour les enquêtes (S5R-09).
+- En **modification** d'un élément existant, les modèles ne s'affichent pas.
