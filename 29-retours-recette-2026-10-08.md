@@ -177,3 +177,94 @@ Tout ce qui suit la mise en ligne devient une **offre** à présenter et facture
 | Mascotte de la page 404 (extrait de S7-05) | La page d'erreur est vue dès le premier lien cassé ; cohérence de l'identité | 0,5 j |
 
 Le reste (débat et modération, propositions citoyennes, notifications, multilingue, FranceConnect, rôles, tableau de bord…) suppose un budget ou un choix de la future responsable de traitement : il attend la décision de la mairie.
+
+---
+
+## 8. Décisions du 09/10/2026
+
+| Sujet | Décision de Nath | Conséquence | Estim. |
+|---|---|---|:--:|
+| Bus régional | **Options conditionnelles**, avant la mise en ligne. L'enquête doit être la meilleure possible : c'est elle qui sera présentée à la mairie | S5R2-02 confirmée ; S5R2-03 devient une **relecture complète** de l'enquête (0,5 → 1 j) | 1,5 j + 1 j |
+| Quartiers | **Couleurs inchangées** ; le centre est séparé en deux : Centre-Sud → **« Centre historique »**, Centre-Est – Saint-Vincent → **« Quartier Saint-Vincent »**. L'enquête stationnement porte **uniquement** sur le Centre historique | S5R2-06 révisée (1 → 2 j), placée **avant** l'enquête v3.1 | 2 j |
+| Voix au survol | **Azure AI Speech, offre gratuite**, avant la mise en ligne : « sinon quel intérêt ? Une personne handicapée a déjà le Narrateur de Windows » | S5R2-07 révisée (1 → 2 j) | 2 j |
+| Rôle « Admin-test » | Un rôle pour la mairie ou d'autres partenaires, qui ne peut **créer, modifier, supprimer et tester que des brouillons** | Nouvelle issue **S5R2-11**, juste après le mode test | 1,5 j |
+| Parkings | Combiner le **plan 2023** (noms, places) et le **guide Indigo 2025** (zones, tarifs à jour), ou pouvoir ajouter noms et places soi-même | S5R2-05 révisée : **parkings gérés par l'administration** (2 → 3 j) | 3 j |
+
+**Nouveau total** : 17,5 jours de Sprint 5 recette 2 (avec S5R-13, S5R2-09, S5R2-10 — **validées** — et le nouveau S5R2-11), 5,5 jours de Sprint 5ter → **mise en ligne à J109** (semaine 22).
+
+### 8.1 Le centre en deux quartiers (S5R2-06)
+
+- **Données** : un nouveau quartier `SAINT_VINCENT` ; `CENTRE_HISTORIQUE` désigne désormais le seul Centre historique (ex-Centre-Sud). Les autres quartiers et leurs couleurs ne changent pas.
+- **Contours** : l'INSEE ne découpe pas le centre, et le plan de 2018 est un PDF sans coordonnées. Un **outil admin de tracé** (clic sur la carte, sommet par sommet, avec le plan municipal en surimpression semi-transparente et réglable) produit les deux contours, enregistrés dans le fichier des quartiers. Les contours officiels du service SIG, s'ils sont obtenus plus tard, les remplaceront sans rien changer d'autre.
+- **Profils existants** : une personne qui a déclaré habiter « le centre historique » habite peut-être Saint-Vincent. On ne peut pas le deviner : son profil reste « centre historique », et l'enquête lui fait confirmer sa situation (préremplie, modifiable).
+- **Enquête stationnement** : « Où résidez-vous ? Le Centre historique / un autre quartier de Senlis (dont Saint-Vincent) / une autre ville » ; le public visé et les questions « centre » ne concernent plus que le Centre historique.
+
+### 8.2 Voix neuronales Azure (S5R2-07)
+
+**L'offre gratuite** (F0) d'Azure AI Speech comprend **0,5 million de caractères de synthèse neuronale par mois**. Avec une lecture moyenne de 150 caractères, c'est environ 3 300 lectures par mois, davantage avec le cache (titres et boutons reviennent souvent).
+
+**Architecture** — le navigateur ne parle jamais directement à Azure :
+
+```
+Navigateur ──(texte)──▶ API Senlis /api/v1/tts ──(clé secrète)──▶ Azure (région France Centre)
+           ◀──(audio)──                         ◀──(audio MP3)──
+```
+
+- la **clé Azure** reste dans les variables d'environnement de l'API, jamais dans le code du site (n'importe qui pourrait la lire et épuiser le quota) ;
+- **cache** côté API : un même texte n'est synthétisé qu'une fois ;
+- **limite** par visiteur et longueur maximale d'un texte (anti-abus) ;
+- **repli** automatique sur les voix du navigateur si Azure ne répond pas ou si le quota du mois est atteint.
+
+**RGPD** — Microsoft devient **sous-traitant** : le texte lu lui est envoyé. La lecture est donc limitée au **contenu public** : jamais les pages « Mon compte » ni l'administration, jamais le contenu d'un champ de saisie. Région **France Centre** ; registre des traitements et politique de confidentialité mis à jour.
+
+**À faire par Nath** (15 min, avant S5R2-07) : créer un compte Azure (gratuit ; une carte bancaire est demandée pour vérifier l'identité, rien n'est débité en F0), puis une ressource « Speech » en offre **F0**, région **France Central**, et noter sa **clé** et sa **région** pour le fichier `.env` de l'API.
+
+Pourquoi la lecture au survol reste utile à côté du Narrateur : elle ne vise pas d'abord les personnes aveugles (qui ont leur lecteur d'écran), mais celles qui **lisent difficilement** — dyslexie, illettrisme, fatigue visuelle, grand âge, francophones débutants — et n'utilisent aucun outil d'assistance.
+
+### 8.3 Parkings gérés par l'administration (S5R2-05)
+
+Les deux documents de la Ville se complètent :
+
+| | Plan 2023-09 | Guide Indigo 2025 |
+|---|---|---|
+| Noms des parkings | ✅ (16 nommés) | — |
+| Nombre de places | ✅ par parking | Totaux seulement (100 rouges, 350 vertes, ~1 350 gratuites, 40 PMR) |
+| Zones et tarifs | Anciens | ✅ **À jour** (zone rouge 2 h 30, zone verte 4 h 30, 1 h gratuite à partir de mi-mars, abonnements résidents et professionnels) |
+| Bornes de recharge | ✅ | ✅ existantes **et en projet** (44 au total) |
+
+**Réponse** : les deux, et la main à l'administration.
+
+- une **table `Parking`** : nom, places, régime (gratuit, zone rouge, zone verte, parking de la gare, durée limitée), recharge (aucune / existante / en projet), places PMR, remarque, coordonnées ;
+- un **écran admin « Parkings »** : liste, ajout, modification, suppression, **placement par clic sur la carte** — plus besoin d'OpenStreetMap ni d'un fichier à éditer ;
+- des **données initiales** croisant les deux documents (noms et places du plan 2023, régime du guide 2025) ; les coordonnées se placent ensuite avec l'écran admin (une trentaine de parkings, quelques minutes) ;
+- une **légende des tarifs 2025** sous la carte (zones, gratuité, abonnements, PMR), avec la source et la mention « tarifs indicatifs ».
+
+La mairie pourra ensuite tenir ces informations à jour elle-même : un argument de plus pour la présentation.
+
+### 8.4 Rôle « Admin-test » (S5R2-11)
+
+**Besoin** : laisser la mairie (ou une maison de quartier, un partenaire) **préparer et essayer** des propositions et des enquêtes, sans risque pour le site en ligne.
+
+**Analogie** : la cuisine d'un restaurant. L'apprenti prépare et goûte autant qu'il veut ; seul le chef envoie l'assiette en salle.
+
+| Action | Citoyen | **Admin-test** | Admin |
+|---|:--:|:--:|:--:|
+| Voir les listes d'administration (tous statuts) | — | ✅ (lecture) | ✅ |
+| Créer un brouillon (proposition, enquête) | — | ✅ | ✅ |
+| Modifier / supprimer un **brouillon** | — | ✅ | ✅ |
+| Modifier / supprimer un élément **publié, ouvert ou clôturé** | — | ❌ | ✅ |
+| **Publier**, ouvrir, clôturer, publier des résultats | — | ❌ | ✅ |
+| Tester une enquête (mode test, rien n'est enregistré) | — | ✅ | ✅ |
+| Voir les **réponses réelles** et les résultats détaillés | — | ❌ | ✅ |
+| Gérer les comptes (rôles) | — | ❌ | ✅ |
+| Voter, répondre pour de vrai | ✅ | ❌ (ne fausse pas les résultats) | ❌ |
+
+**Réalisation** :
+
+- un nouveau rôle `EDITOR` en base (affiché « Admin-test »), à côté de `CITIZEN` et `ADMIN` ; un middleware `canEditDrafts` vérifie à chaque route que l'élément visé est **et reste** un brouillon (un `status` autre que `DRAFT` envoyé par un Admin-test est refusé, 403) ;
+- **2FA** comme pour un admin (même niveau d'accès aux pages d'administration) ;
+- chaque action est **journalisée** (journal d'administration, S5A-06) : qui a créé ou modifié quel brouillon ;
+- la promotion se fait depuis **« Comptes »** (S5-19), par un admin uniquement ;
+- côté interface : le menu de gestion s'affiche, mais les boutons « Publier », « Résultats », « Supprimer » d'un élément publié et « Comptes » n'apparaissent pas ; un bandeau rappelle « Mode Admin-test : vous pouvez préparer et tester des brouillons ; la publication est faite par l'administration ».
+
+C'est une **première brique** du chantier « rôles complets » de l'offre mairie (F1), qui s'en trouve réduit.

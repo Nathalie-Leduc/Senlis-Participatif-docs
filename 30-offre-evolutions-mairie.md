@@ -66,9 +66,9 @@
 
 | Réf. | Évolution | Estim. |
 |---|---|:--:|
-| F1 (ex-BACKLOG-02) | **Rôles complets** : admin mairie, agents municipaux, maisons de quartier (admins et délégués), circuit de validation avant publication | 6–10 j |
+| F1 (ex-BACKLOG-02) | **Rôles complets** : admin mairie, agents municipaux, maisons de quartier (admins et délégués), circuit de validation avant publication — *une première brique, le rôle « Admin-test » limité aux brouillons, est livrée avec la mise en ligne (S5R2-11) : elle réduit d'autant ce chantier* | 5–9 j |
 | F2 (ex-L3-10) | **Tableau de bord** : participation, inscriptions, emails envoyés, enquêtes en cours | 2–3 j |
-| F3 (ex-L3-07) | **Second email** avant la suppression d'un compte inactif *(proposé pour la mise en ligne, voir § 3)* | 0,5 j |
+| F3 (ex-L3-07) | **Second email** avant la suppression d'un compte inactif *(intégré à la mise en ligne, voir § 3)* | 0,5 j |
 | | **Sous-total** | **8,5–13,5 j** |
 
 ### G. Connexion simplifiée
@@ -95,15 +95,16 @@
 
 ---
 
-## 3. À intégrer avant la mise en ligne (proposition)
+## 3. Intégré avant la mise en ligne (validé le 09/10)
 
-Peu coûteux, utiles dès le premier jour — **à valider par Nath** :
+Peu coûteux, utiles dès le premier jour — **validés par Nath le 09/10** :
 
 | Élément | Estim. | Où |
 |---|:--:|---|
 | BACKLOG-03 — chargement des données (qualité du code) | (inclus) | S5R2-08 |
 | F3 — second email avant suppression d'un compte inactif | 0,5 j | S5R2-09 |
 | Mascotte de la page 404 (extrait de H1) | 0,5 j | S5R2-10 |
+| Rôle « Admin-test » limité aux brouillons (première brique de F1) | 1,5 j | S5R2-11 |
 
 ---
 
@@ -116,15 +117,15 @@ Peu coûteux, utiles dès le premier jour — **à valider par Nath** :
 | C. Accessibilité et inclusion | 8,5–11,5 |
 | D. Cartographie et territoire | 7 (+ 0,5/an) |
 | E. Enquêtes avancées | 8–11 |
-| F. Administration et gouvernance (hors F3) | 8–13 |
+| F. Administration et gouvernance (hors F3) | 7–12 |
 | G. Connexion simplifiée | 4–6 |
 | H. Identité (hors 404) | 0,5 |
 | I. Recette par lot | 2 par lot |
-| **Total des évolutions** | **≈ 55 à 68 jours**, hors recettes, maintenance et coûts tiers |
+| **Total des évolutions** | **≈ 54 à 67 jours**, hors recettes, maintenance et coûts tiers |
 
 **Découpage commercial suggéré** (à affiner en présentant les maquettes) :
 
 1. **Lot 2 « Participation »** — A + B1 + I1 : ≈ 19 j. C'était le MVP complet prévu initialement ; le plus attendu par les citoyens.
 2. **Lot 3 « Accessibilité et territoire »** — C + D : ≈ 15,5–18,5 j. Fort intérêt pour une commune (inclusion, carte).
-3. **Lot 4 « Administration »** — F1, F2, G, B2 : ≈ 14–21 j. Utile quand plusieurs services de la mairie utilisent l'outil.
+3. **Lot 4 « Administration »** — F1, F2, G, B2 : ≈ 13–20 j. Utile quand plusieurs services de la mairie utilisent l'outil.
 4. **Options** — E (enquêtes avancées), H, et la maintenance (I2) en contrat annuel.
