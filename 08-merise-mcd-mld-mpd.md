@@ -191,7 +191,7 @@ Reconstitution **fidèle** (réordonnée pour la lecture) de ce que génèrent l
 
 ```sql
 -- Énumérations : des "menus fixes" refusés par la base hors liste
-CREATE TYPE "Role"           AS ENUM ('CITIZEN', 'ADMIN');
+CREATE TYPE "Role"           AS ENUM ('CITIZEN', 'EDITOR', 'ADMIN');  -- EDITOR : S5R2-11
 CREATE TYPE "ProposalStatus" AS ENUM ('DRAFT','PENDING_REVIEW','PUBLISHED',
                                       'REJECTED','CLOSED','ARCHIVED');
 CREATE TYPE "CommentStatus"  AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
