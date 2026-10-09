@@ -288,7 +288,8 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | POST | /surveys | 👑 | Créer une enquête (questions, options, branchement imbriqués) |
 | PATCH | /surveys/:id | 👑 | Éditer / ouvrir / clore / publier les résultats |
 | DELETE | /surveys/:id | 👑 | Supprimer |
-| POST | /surveys/:id/responses | 🔐✉️ | Soumettre sa réponse complète (transaction, unicité garantie) |
+| POST | /surveys/:id/responses | 🔐✉️ | Soumettre sa réponse complète (transaction, unicité garantie) — refusée à un compte admin (403 `ADMIN_CANNOT_RESPOND`, S5R2-01) |
+| POST | /surveys/:id/test | 👑 | Mode test (S5R2-01) : même validation qu'une vraie réponse, quel que soit le statut (brouillon compris), **rien n'est enregistré** ; renvoie le chemin parcouru et les champs du profil qui seraient mis à jour |
 
 **Administration et transverse**
 | Méthode | Route | Accès | Description |
