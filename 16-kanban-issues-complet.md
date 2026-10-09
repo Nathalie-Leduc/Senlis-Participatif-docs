@@ -1,6 +1,6 @@
-# Backlog complet — 92 issues planifiées sur 23 semaines
+# Backlog complet — jusqu'à la mise en ligne du Lot 1 (21 semaines)
 
-> Rythme : **5 jours / semaine**, 111 jours au total. Chaque issue = une carte du kanban GitHub Projects, un *milestone* = un sprint. Les jours (J1 → J111) sont indicatifs : ils supposent des journées pleines — si tu développes à mi-temps, double le calendrier, pas le contenu.
+> Rythme : **5 jours / semaine**, 104 jours jusqu'à la mise en ligne. Chaque issue = une carte du kanban GitHub Projects, un *milestone* = un sprint. Les jours (J1 → J104) sont indicatifs : ils supposent des journées pleines — si tu développes à mi-temps, double le calendrier, pas le contenu.
 >
 > **Mise à jour v1.1** : +6 issues `joy:palier-*` (mascotte, animations, sections colorées) intégrées aux sprints existants sans modifier le calendrier — les issues design sont courtes (0,5 à 1,5 j) et se glissent dans les marges de chaque sprint.
 >
@@ -27,6 +27,8 @@
 > **Mise à jour v1.11** (30/09/2026) : **retours de recette** de Nath avant la mise en ligne (document `23-retours-recette-2026-09-30.md`). Nouveau bloc **Sprint 5 recette** (13 issues, S5R-01 → S5R-13, 14 jours) inséré entre le Sprint 5 audit (✅ terminé) et la mise en ligne réelle (Sprint 5ter), qui glisse de 14 jours ; Sprints 6 et 7 décalés d'autant (96 → 110 jours). Bug majeur diagnostiqué : la page de vérification d'email envoyait le jeton **deux fois** (StrictMode de React en développement) et affichait « jeton invalide » alors que l'adresse était bien vérifiée. Dix propositions d'évolution classées **Lot 3** (à présenter à la mairie), listées en fin de backlog.
 >
 > **Mise à jour v1.12** (02/10/2026) : ajout de **S5R-02b** (vérification DNS du domaine de l'email côté API), née d'une proposition de Nath après S5R-02 ; placée juste après S5R-03. +0,5 jour, arrondi à 1 jour de décalage pour la suite (5ter, 6 et 7 : +1 jour ; 111 jours au total).
+>
+> **Mise à jour v1.13** (08/10/2026) : **deuxième recette** (document `29-retours-recette-2026-10-08.md`). Nouveau bloc **Sprint 5 recette 2** (S5R2-01 → S5R2-10, 12,5 jours, S5R-13 reportée dedans) : mode test pour l'admin, options conditionnelles, enquête v3.1, Chart.js, parkings officiels du centre, quartiers du plan municipal, lecture au survol, audit complet et refactorisation (avec BACKLOG-03). Le **Sprint 5ter** gagne le référencement (S5-26, S5-27). Les **Sprints 6 et 7, les backlogs et le Lot 3** deviennent l'**offre d'évolutions à la mairie** (document `30`, chiffrée par thème) : le calendrier s'arrête désormais à la **mise en ligne, J104** (semaine 21).
 >
 > **Légende** : ✅ livré (mergé sur `dev`) · 🔶 partiellement livré · sans marque = à faire.
 >
@@ -155,7 +157,7 @@
 
 🎯 *Fin de sprint : plus aucun point 🔴 de l'audit ouvert — le site peut être mis en ligne sans exposer ni ses visiteurs ni sa future relation avec la mairie.*
 
-## 🧪 Sprint 5 recette — Retours de tests avant mise en ligne *(Semaines 15–18 · J72–J86)*
+## 🧪 Sprint 5 recette — Retours de tests avant mise en ligne *(Semaines 15–17 · J72–J85)*
 
 > Issu de la recette du 30/09/2026 (`23-retours-recette-2026-09-30.md`) : chaque issue reprend un ou plusieurs retours, le document donne le détail et les réponses aux questions posées. Ordre = ordre de traitement : d'abord ce qui bloque un citoyen, ensuite l'enquête, puis les outils d'administration.
 
@@ -175,53 +177,82 @@
 | **S5R-10** | **`feat(api+bdd+client): zone d'une proposition — toute la ville ou quartiers IRIS ; coordonnées et GeoJSON sous « Avancé » ; aides de saisie`** ✅ | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client`** | **`feat/proposal-zone-quartiers`** | **1 j** | **J83** |
 | **S5R-11** | **`feat(client): carte « Explorer » — propositions ET enquêtes ouvertes par quartier, emplacements réels des parkings (extraction figée)`** ✅ | **`lot:1` `type:feature` `zone:client`** | **`feat/explore-map-quartiers`** | **1,5 j** | **J84–J85** |
 | **S5R-12** | **`fix(client): navigation admin — bouton « Voir » dans les listes admin, pages publiques Propositions/Enquêtes retirées du menu admin ; bandeau « Aperçu d'un brouillon » ; police du site pour les champs et boutons (`font: inherit`)`** ✅ | **`lot:1` `type:bug` `zone:client`** | **`fix/admin-navigation`** | **0,5 j** | **J85** |
-| **S5R-13** | **`docs: audit complété NIST (SP 800-63B, CSF 2.0) + procédure de mise à jour des contours IRIS`** | **`lot:1` `type:docs`** | **`docs/nist-iris-procedure`** | **0,5 j** | **J86** |
 
 🎯 *Fin de sprint : un premier citoyen s'inscrit, vérifie son adresse et répond à l'enquête stationnement sans accroc ; l'administratrice lit et exporte des résultats clairs.*
 
-## 🌍 Sprint 5ter — Mise en ligne réelle *(Semaines 18–19 · J87–J91)*
+> S5R-13 (audit NIST + procédure de mise à jour des contours) est **reportée** dans le Sprint 5 recette 2 : la procédure doit couvrir aussi les quartiers du plan municipal (S5R2-06).
+
+## 🧪 Sprint 5 recette 2 — Deuxième recette avant mise en ligne *(Semaines 18–20 · J86–J98)*
+
+> Issu de la recette du 08/10/2026 (`29-retours-recette-2026-10-08.md`). Ordre = ordre de traitement. S5R2-09 et S5R2-10 sont **proposées à l'intégration** (peu coûteuses, utiles dès le lancement) : à valider, sinon elles rejoignent l'offre mairie.
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| **S5-22** | **`chore(infra): nom de domaine + déploiement chez un hébergeur souverain (Clever Cloud, France) — OVH pour le domaine`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/domain-hosting`** | **1 j** | **J87–J88** |
-| **S5-23** | **`chore(infra): sauvegarde automatisée quotidienne de PostgreSQL (cron), stockage isolé, rétention 30 jours`** | **`lot:1` `type:infra` `zone:bdd` `prio:haute`** | **`chore/db-backups`** | **1 j** | **J88–J89** |
-| **S5-24** | **`chore(infra): chiffrement des flux (TLS partout, HSTS, CSP sur le site statique) + chiffrement des données sensibles au repos`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/encryption-transit-rest`** | **0,5 j** | **J89** |
-| **S5-25** | **`chore: communication de lancement — QR codes commerçants, réseaux locaux, approche des élus (mairie)`** | **`lot:1` `type:doc` `zone:comm`** | **`chore/launch-comms`** | **1 j** | **J90–J91** |
+| **S5R2-01** | **`feat(api+client): mode test de l'admin — « Tester l'enquête », validation complète par l'API sans rien enregistrer (ni réponse, ni profil), parcours récapitulé, tests illimités ; vraie réponse d'un admin refusée`** | **`lot:1` `type:feature` `zone:api` `zone:client`** | **`feat/admin-survey-test-mode`** | **1 j** | **J86** |
+| **S5R2-02** | **`feat(api+bdd+client): options conditionnelles — une option n'apparaît que si l'une de certaines réponses précédentes a été choisie (OU) ; API, moteur navigateur, constructeur`** | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client`** | **`feat/conditional-options`** | **1,5 j** | **J87–J88** |
+| **S5R2-03** | **`feat(data): enquête stationnement v3.1 — EDPM, activités en 6 familles + « Autre » → « Laquelle ? » facultative, « voitures ou motos », bus régional réservé aux résidents d'une autre ville ; seed --remplacer (dev)`** | **`lot:1` `type:feature` `zone:api`** | **`feat/parking-survey-v3-1`** | **0,5 j** | **J88** |
+| **S5R2-04** | **`feat(client): résultats d'enquête avec Chart.js (barres, secteurs) — chargé seulement sur la page des résultats, nombres en texte conservés à côté (accessibilité)`** | **`lot:1` `type:feature` `zone:client`** | **`feat/results-chartjs`** | **1 j** | **J89** |
+| **S5R2-05** | **`feat(client): parkings officiels du centre (plan de la Ville 2023-09) — nom, places, régime, recharge, légende des tarifs ; outil admin « placer un point » ; couche OpenStreetMap retirée`** | **`lot:1` `type:feature` `zone:client`** | **`feat/official-parkings`** | **2 j** | **J90–J91** |
+| **S5R2-06** | **`feat(client): quartiers du plan municipal 2018 (noms et couleurs) sur les contours IRIS ; « Centre historique » = Centre-Sud + Centre-Est – Saint-Vincent (étape 1)`** | **`lot:1` `type:feature` `zone:client`** | **`feat/municipal-quartiers`** | **1 j** | **J92** |
+| **S5R-13** | **`docs: audit complété NIST (SP 800-63B, CSF 2.0) + procédure de mise à jour des quartiers (IRIS et plan municipal)`** *(reportée de S5R)* | **`lot:1` `type:docs`** | **`docs/nist-iris-procedure`** | **0,5 j** | **J93** |
+| **S5R2-07** | **`fix(client): lecture au survol — seulement les éléments porteurs de texte, Pause / Reprendre / Arrêter (Arrêter désactive le survol), choix de la voix (voix naturelles en premier) et de la vitesse`** | **`lot:1` `type:bug` `zone:client` `a11y`** | **`fix/hover-reading`** | **1 j** | **J93–J94** |
+| S5R2-09 | `feat(api): second email avant la suppression d'un compte inactif (ex-L3-07)` — *à valider* | `lot:1` `type:feature` `zone:api` `rgpd` | `feat/inactivity-second-email` | 0,5 j | J94 |
+| S5R2-10 | `feat(client): page 404 avec la mascotte « perdue dans la forêt » (extrait de S7-05)` — *à valider* | `lot:1` `type:design` `zone:client` | `feat/404-mascot` | 0,5 j | J95 |
+| **S5R2-08** | **`refactor: audit complet du code avant mise en ligne — hook commun de chargement (BACKLOG-03, règle set-state-in-effect repassée en error), code mort, doublons, dépendances, performance (Lighthouse), relecture sécurité des routes récentes ; rapport 31`** | **`lot:1` `type:refactor` `prio:haute`** | **`refactor/pre-launch-audit`** | **3 j** | **J95–J98** |
 
-🎯 *Fin de sprint : **Lot 1 réellement en ligne**, hébergé en France chez un prestataire souverain, sauvegardé quotidiennement et chiffré — avec une enquête stationnement qui répond enfin correctement à son cas d'usage — lancement accompagné de QR codes commerçants, réseaux locaux, et d'une prise de contact avec les élus municipaux.*
+🎯 *Fin de sprint : l'administratrice teste ses enquêtes sans fausser les résultats, la carte montre les vrais parkings et les quartiers que les Senlisiens connaissent, et le code est relu de bout en bout avant d'être exploité.*
 
-## 💬 Sprint 6 — Commentaires & modération *(Semaines 19–21 · J92–J101)*
+## 🌍 Sprint 5ter — Mise en ligne réelle *(Semaines 20–21 · J99–J104)*
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| S6-01 | `feat(api): commentaires — stance pour/contre/neutre, statut PENDING` | `lot:2` `type:feature` `zone:api` | `feat/comments-api` | 1,5 j | J92–J93 |
-| S6-02 | `feat(api): endpoints de modération (approbation / rejet + motif)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/moderation-api` | 1,5 j | J93–J94 |
-| S6-03 | `feat(client): débat en colonnes pour/contre (empilées en mobile)` | `lot:2` `type:feature` `zone:client` | `feat/client-debate-columns` | 2 j | J95–J96 |
-| S6-04 | `feat(client): formulaire « Publier mon argument » + état "en modération"` | `lot:2` `type:feature` `zone:client` | `feat/client-comment-form` | 1,5 j | J97–J98 |
-| S6-05 | `feat(client): file de modération admin (contexte complet + motif obligatoire)` | `lot:2` `type:feature` `zone:client` | `feat/client-moderation` | 2,5 j | J98–J100 |
-| S6-06 | `test(api): modération a priori — rien ne se publie sans validation` | `lot:2` `type:test` `zone:api` | `test/moderation` | 1 j | J101 |
+| **S5-22** | **`chore(infra): nom de domaine + déploiement chez un hébergeur souverain (Clever Cloud, France) — OVH pour le domaine ; protection de la branche main (PR depuis dev, CI verte), dev comme branche par défaut ; secrets régénérés (ADMIN_PASSWORD, JWT_SECRET, SMTP)`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/domain-hosting`** | **1 j** | **J99** |
+| **S5-23** | **`chore(infra): sauvegarde automatisée quotidienne de PostgreSQL (cron), stockage isolé, rétention 30 jours`** | **`lot:1` `type:infra` `zone:bdd` `prio:haute`** | **`chore/db-backups`** | **1 j** | **J100** |
+| **S5-24** | **`chore(infra): chiffrement des flux (TLS partout, HSTS, CSP sur le site statique) + chiffrement des données sensibles au repos`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/encryption-transit-rest`** | **0,5 j** | **J101** |
+| **S5-26** | **`feat(api+client): référencement technique — robots.txt, sitemap.xml généré par l'API, title et meta description par page, Open Graph (aperçus de partage), Schema.org, Lighthouse SEO ≥ 90`** | **`lot:1` `type:feature` `zone:api` `zone:client` `seo`** | **`feat/seo-technical`** | **1,5 j** | **J101–J102** |
+| **S5-27** | **`chore: visibilité — Google Search Console (validation DNS OVH, sitemap), Bing Webmaster Tools, liens depuis le site de la mairie et les annuaires locaux`** | **`lot:1` `type:infra` `seo`** | **`chore/search-consoles`** | **0,5 j** | **J103** |
+| **S5-25** | **`chore: communication de lancement — QR codes commerçants, réseaux locaux, approche des élus (mairie)`** | **`lot:1` `type:doc` `zone:comm`** | **`chore/launch-comms`** | **1 j** | **J103–J104** |
+
+🎯 *Fin de sprint : **Lot 1 réellement en ligne**, hébergé en France, sauvegardé, chiffré, **trouvable sur les moteurs de recherche**, et annoncé aux Senlisiens.*
+
+---
+
+# 🏛️ Après la mise en ligne : offre d'évolutions à la mairie
+
+> Depuis la v1.13, tout ce qui suit est une **offre** à présenter et à facturer, regroupée par thème et chiffrée dans **`30-offre-evolutions-mairie.md`**. Les tableaux ci-dessous sont conservés pour le détail technique ; ils n'ont **plus de jours de calendrier**.
+
+## 💬 Ex-Sprint 6 — Commentaires & modération *(offre mairie, thème A1 · 10 j)*
+
+| ID | Issue | Labels | Branche | Estim. | Jours |
+|---|---|---|---|:--:|:--:|
+| S6-01 | `feat(api): commentaires — stance pour/contre/neutre, statut PENDING` | `lot:2` `type:feature` `zone:api` | `feat/comments-api` | 1,5 j | — |
+| S6-02 | `feat(api): endpoints de modération (approbation / rejet + motif)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/moderation-api` | 1,5 j | — |
+| S6-03 | `feat(client): débat en colonnes pour/contre (empilées en mobile)` | `lot:2` `type:feature` `zone:client` | `feat/client-debate-columns` | 2 j | — |
+| S6-04 | `feat(client): formulaire « Publier mon argument » + état "en modération"` | `lot:2` `type:feature` `zone:client` | `feat/client-comment-form` | 1,5 j | — |
+| S6-05 | `feat(client): file de modération admin (contexte complet + motif obligatoire)` | `lot:2` `type:feature` `zone:client` | `feat/client-moderation` | 2,5 j | — |
+| S6-06 | `test(api): modération a priori — rien ne se publie sans validation` | `lot:2` `type:test` `zone:api` | `test/moderation` | 1 j | — |
 
 🎯 *Fin de sprint : le débat structuré est ouvert, sous contrôle.*
 
-## 📣 Sprint 7 — Propositions citoyennes & notifications *(Semaines 21–23 · J102–J111)*
+## 📣 Ex-Sprint 7 — Propositions citoyennes & notifications *(offre mairie, thèmes A2, B1, H1, I1)*
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| S7-01 | `feat(api): soumission citoyenne → PENDING_REVIEW + modération des propositions` | `lot:2` `type:feature` `zone:api` | `feat/citizen-proposals` | 2 j | J102–J103 |
-| S7-02 | `feat(client): page /proposer — formulaire + localisation sur la carte` | `lot:2` `type:feature` `zone:client` | `feat/client-propose` | 2 j | J104–J105 |
-| S7-03 | `feat(api): notifications broadcast Brevo + lien de désinscription (obligation légale)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/notifications-broadcast` | 2 j | J106–J107 |
-| S7-04 | `feat(client): préférences de notification dans /mon-compte — désactivées par défaut (RGPD art. 25, migration notify* → false)` | `lot:2` `type:feature` `zone:client` `zone:bdd` | `feat/client-notif-prefs` | 1 j | J108 |
-| **S7-05** | **`feat(client): palier 3 — widget cerf contextuel par page, confettis résultats, mascotte 404 « perdue dans la forêt »`** | **`lot:2` `type:design` `zone:client` `joy:palier-3`** | **`feat/joy-palier-3`** | **1 j** | **J109** |
-| S7-06 | `test(api): parcours Lot 2 — soumission, notification, désinscription` | `lot:2` `type:test` `zone:api` | `test/lot2-flows` | 0,5 j | J109 |
-| S7-07 | `chore: recette finale complète + release v2.0.0 — MVP complet 🎉` | `lot:2` `type:infra` `prio:haute` | `chore/release-v2` | 1,5 j | J110–J111 |
+| S7-01 | `feat(api): soumission citoyenne → PENDING_REVIEW + modération des propositions` | `lot:2` `type:feature` `zone:api` | `feat/citizen-proposals` | 2 j | — |
+| S7-02 | `feat(client): page /proposer — formulaire + localisation sur la carte` | `lot:2` `type:feature` `zone:client` | `feat/client-propose` | 2 j | — |
+| S7-03 | `feat(api): notifications broadcast Brevo + lien de désinscription (obligation légale)` | `lot:2` `type:feature` `zone:api` `prio:haute` | `feat/notifications-broadcast` | 2 j | — |
+| S7-04 | `feat(client): préférences de notification dans /mon-compte — désactivées par défaut (RGPD art. 25, migration notify* → false)` | `lot:2` `type:feature` `zone:client` `zone:bdd` | `feat/client-notif-prefs` | 1 j | — |
+| **S7-05** | **`feat(client): palier 3 — widget cerf contextuel par page, confettis résultats, mascotte 404 « perdue dans la forêt »`** | **`lot:2` `type:design` `zone:client` `joy:palier-3`** | **`feat/joy-palier-3`** | **1 j** | — |
+| S7-06 | `test(api): parcours Lot 2 — soumission, notification, désinscription` | `lot:2` `type:test` `zone:api` | `test/lot2-flows` | 0,5 j | — |
+| S7-07 | `chore: recette finale complète + release v2.0.0 — MVP complet 🎉` | `lot:2` `type:infra` `prio:haute` | `chore/release-v2` | 1,5 j | — |
 
 🎯 *Fin de sprint : **MVP complet en ligne**, dossier prêt pour la mairie.*
 
 ---
 
-## 📦 Backlog non planifié — à chiffrer plus tard
+## 📦 Backlog non planifié *(offre mairie : BACKLOG-01 → E1, BACKLOG-02 → F1 ; BACKLOG-03 → intégré à S5R2-08)*
 
-> Identifié en revoyant le contenu de l'enquête stationnement (v1.6/v1.7), mais volontairement **hors calendrier** : l'ampleur réelle (comparable à l'ensemble S5-11→S5-17 réunis) mérite une conception à part avant d'y mettre une estimation ou des jours précis. Pas de branche ni d'ID dans la séquence J1→J111 tant que ce n'est pas chiffré.
+> Identifié en revoyant le contenu de l'enquête stationnement (v1.6/v1.7), mais volontairement **hors calendrier** : l'ampleur réelle (comparable à l'ensemble S5-11→S5-17 réunis) mérite une conception à part avant d'y mettre une estimation ou des jours précis. Pas de branche ni d'ID dans la séquence J1→J104 tant que ce n'est pas chiffré.
 
 | ID | Issue | Pourquoi ce n'est pas encore chiffré |
 |---|---|---|
@@ -229,7 +260,7 @@
 | **BACKLOG-02** | `feat(api+client): hiérarchie complète des rôles — admin mairie, salariés mairie, maisons de quartier (admins + délégués), circuit de validation avant publication` | Remplace le modèle binaire CITOYEN/ADMIN actuel par de vraies permissions granulaires (créer ≠ publier), vérifiées dans chaque contrôleur admin. Ajoute une entité "maison de quartier" qui n'existe pas encore. Ajoute un état intermédiaire "en attente de validation mairie" avec notification réelle. Ajoute un système d'invitation/délégation de droits (personne ne peut s'auto-déclarer salarié mairie). Comparable en ampleur à tout le moteur de branchement des enquêtes réuni — à concevoir en détail (notamment : le contenu d'une maison de quartier reste-t-il cloisonné, ou tout le monde voit tout une fois publié ?) avant de pouvoir l'estimer sérieusement. Un premier palier simple (promouvoir/rétrograder un compte admin, sans la hiérarchie) est déjà livré en S5-19. |
 | **BACKLOG-03** | `refactor(client): chargement des données sans setState synchrone dans useEffect (règle react-hooks/set-state-in-effect, eslint-plugin-react-hooks 7)` | 18 avertissements, surtout le motif « setLoading(true) puis appel à l'API » au chargement d'une page. Piste : un hook commun (ex. `useApiQuery`) qui part d'un état « chargement » et ne met à jour l'état que dans les callbacks de la requête, ou une bibliothèque dédiée (TanStack Query). À faire en une fois, avec les tests de chaque page concernée ; la règle repasse ensuite en « error ». Constaté le 04/10/2026 (Dependabot : react-hooks 5 → 7). |
 
-## 🏛️ Propositions Lot 3 — issues de la recette du 30/09/2026 (à présenter à la mairie)
+## 🏛️ Propositions Lot 3 — recette du 30/09/2026 *(offre mairie, thèmes B à G — chiffrées dans le document `30`)*
 
 > Évolutions de fond qui dépendent d'un budget, d'un service tiers ou d'un choix de la future responsable de traitement. Pas de branche ni de jours tant que la mairie ne les a pas retenues. Détail et remarques : `23-retours-recette-2026-09-30.md`, §5.
 
@@ -268,13 +299,11 @@
 | 14 | S5 audit | S5A-03 → S5A-07 | Polices locales, pages légales exactes, droits RGPD, auth durcie, RGAA |
 | 15 | S5 audit + S5 recette | S5A-08, S5R-01 → S5R-04 | Préparation prod · **vérification d'email fiable**, formulaires, accessibilité, DNS de l'email, accueil |
 | 16 | S5 recette | S5R-05 → S5R-08 | Moteur d'enquête v2, enquête stationnement v3, public visé, résultats et export |
-| 17 | S5 recette | S5R-08 → S5R-12 | Création d'enquête, zones de proposition, carte, navigation admin |
-| 18 | S5 recette + S5ter | S5R-13, S5-22 → S5-25 | NIST · domaine, hébergement, sauvegardes, chiffrement |
-| 19 | S5ter + S6 | S5-25, S6-01 → S6-03 | **🚀 Lot 1 réellement en ligne** · API commentaires, modération |
-| 20 | S6 Commentaires | S6-03 → S6-05 | Débat en colonnes, formulaire, file de modération |
-| 21 | S6 + S7 | S6-06, S7-01 → S7-02 | Modération testée · propositions citoyennes |
-| 22 | S7 Participation | S7-03 → S7-07 | Notifications, préférences, palier 3 |
-| 23 | S7 Participation | S7-07 | **🎉 Release v2.0.0 — MVP complet + palier 3** |
+| 17 | S5 recette | S5R-08 → S5R-12 | Création d'enquête, zones de proposition, carte, navigation admin ✅ |
+| 18 | S5 recette 2 | S5R2-01 → S5R2-05 | Mode test admin, options conditionnelles, enquête v3.1, Chart.js, parkings officiels |
+| 19 | S5 recette 2 | S5R2-05 → S5R2-09, S5R-13 | Quartiers municipaux, NIST, lecture au survol |
+| 20 | S5 recette 2 + S5ter | S5R2-10, S5R2-08, S5-22 | Audit et refactorisation · domaine et hébergement |
+| 21 | S5ter Mise en ligne | S5-23 → S5-27, S5-25 | Sauvegardes, chiffrement, référencement · **🚀 Lot 1 en ligne (J104)** |
 
 ## Règles de fonctionnement (rappel)
 

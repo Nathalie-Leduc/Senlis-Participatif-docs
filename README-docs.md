@@ -23,7 +23,7 @@
 | 13 | [Diagramme de packages](13-diagramme-package.md) | Organisation réelle du monorepo et dépendances |
 | 14 | [Sitemap](14-sitemap.md) | Arborescence de navigation par niveau d'accès |
 | 15 | [Kanban, sprints & Git](15-kanban-sprints-git.md) | Méthode : colonnes, labels, branches (`dev`), Definition of Done, livraison en zip |
-| 16 | [Backlog complet des issues](16-kanban-issues-complet.md) | v1.12 — 92 issues sur 23 semaines, avec état ✅ / 🔶, les blocs « Sprint 5 audit » et « Sprint 5 recette », et les propositions Lot 3 |
+| 16 | [Backlog complet des issues](16-kanban-issues-complet.md) | v1.13 — jusqu'à la mise en ligne (21 semaines), avec état ✅ / 🔶, les blocs « Sprint 5 audit » et « Sprint 5 recette », et les propositions Lot 3 |
 | 17 | [Prototype joyeux](17-senlis-participatif-joyeux.html) | Prototype interactif de référence pour la direction artistique |
 | 18 | [Logo](18-logo-senlis-participatif.svg) | Logo vectoriel |
 | 19 | [schema.prisma](19-schema.prisma) | Copie de référence du schéma — la source vivante est `api/prisma/schema.prisma` du dépôt de code |
@@ -33,6 +33,9 @@
 | 23 | [Retours de recette du 30/09/2026](23-retours-recette-2026-09-30.md) | Triage des tests avant mise en ligne : corrections (Sprint 5 recette), réponses aux questions, propositions Lot 3 |
 | 24 | [Dépannage terminal, Git, npm, VS Code](24-depannage-terminal-vscode.md) | Problèmes réellement rencontrés pendant le projet : symptôme, cause, solution, prévention |
 | 25 | [Enquête stationnement v3](25-enquete-stationnement-v3.md) | Parcours par profil, réponse à chaque point de la recette, liste des 39 questions avec leurs conditions |
+| 26–28 | Guides de référencement, territorial (API citoyenne, SEO, réseaux sociaux) et d'approche de la mairie | Réservés (rédigés à part) |
+| 29 | [Retours de recette du 08/10/2026](29-retours-recette-2026-10-08.md) | Deuxième recette : mode test admin, enquête v3.1, Chart.js, parkings officiels, quartiers municipaux, lecture au survol, SEO, audit |
+| 30 | [Offre d'évolutions à la mairie](30-offre-evolutions-mairie.md) | Sprints 6–7, backlogs et Lot 3 regroupés par thème et chiffrés en jours |
 
 Annexes Word : workflow GitHub, installation de Prisma 7, résumé technique.
 
