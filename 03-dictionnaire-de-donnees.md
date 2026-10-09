@@ -10,7 +10,7 @@
 | email | String | UNIQUE, NOT NULL | Adresse de connexion — jamais affichée publiquement |
 | passwordHash | String | NOT NULL | Empreinte Argon2 du mot de passe (jamais le mot de passe en clair) |
 | pseudo | String | UNIQUE, NOT NULL | Identité publique (votes, commentaires) — minimisation RGPD |
-| role | Role | défaut `CITIZEN` | Niveau de droits (promotion/rétrogradation par un admin : S5-19) |
+| role | Role | défaut `CITIZEN` | Niveau de droits (changé par un admin depuis « Comptes » : S5-19, S5R2-11) |
 | situation | Situation | NULL | Résidence déclarée (auto-déclaratif, sans justificatif). Nullable pour les comptes antérieurs au champ ; **exigée par Zod** à toute nouvelle inscription |
 | quartier | Quartier | NULL | Quartier IRIS de résidence — renseigné **uniquement** si `situation = AUTRE_QUARTIER`, remis à `NULL` sinon |
 | travailleQuartier | Quartier | NULL | Quartier où la personne travaille (axe indépendant de la résidence). `NULL` = « ne travaille pas à Senlis » **ou** « jamais demandé » — ambiguïté assumée |
@@ -176,7 +176,7 @@
 
 | Énumération | Valeurs | Usage |
 |---|---|---|
-| Role | CITIZEN, ADMIN | Droits du compte |
+| Role | CITIZEN, EDITOR, ADMIN | Droits du compte — EDITOR = « Admin-test » (S5R2-11) : prépare et teste des brouillons, ne publie jamais, ne voit pas les réponses |
 | ProposalStatus | DRAFT, PENDING_REVIEW, PUBLISHED, REJECTED, CLOSED, ARCHIVED | Cycle de vie d'une proposition |
 | VoteValue | POUR, CONTRE, NEUTRE | Sens du vote |
 | Stance | POUR, CONTRE, NEUTRE | Position d'un argument (Lot 2) |

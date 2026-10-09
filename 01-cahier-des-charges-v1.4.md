@@ -234,7 +234,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 
 ## 9. Routes API (endpoints REST)
 
-> Préfixe commun : `/api/v1` — versionnée dès le Lot 1 : décision gratuite aujourd'hui qui permettra demain à un client mobile ou une collectivité (Lot 3) de coexister avec une future v2 — Auth : 🔓 public · 🔐 connecté · 👑 admin
+> Préfixe commun : `/api/v1` — versionnée dès le Lot 1 : décision gratuite aujourd'hui qui permettra demain à un client mobile ou une collectivité (Lot 3) de coexister avec une future v2 — Auth : 🔓 public · 🔐 connecté · 👑 admin · 🛠️ admin ou Admin-test (EDITOR, S5R2-11 — brouillons seulement, vérifié par `canEditDrafts`)
 
 **Auth**
 | Méthode | Route | Accès | Description |
@@ -257,14 +257,14 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | Méthode | Route | Accès | Description |
 |---|---|---|---|
 | GET | /proposals | 🔓 | Liste paginée des propositions publiées |
-| GET | /proposals/admin | 👑 | Liste admin, tous statuts |
+| GET | /proposals/admin | 🛠️ | Liste admin, tous statuts |
 | GET | /proposals/:slug | 🔓 | Détail + agrégat des votes (+ mon vote si connecté) |
-| POST | /proposals | 👑 | Créer une proposition |
-| PATCH | /proposals/:id | 👑 | Éditer / changer le statut |
-| POST | /proposals/:id/image | 👑 | Envoyer / remplacer l'image (multipart, 5 Mo max) |
-| DELETE | /proposals/:id | 👑 | Supprimer |
+| POST | /proposals | 🛠️ | Créer une proposition (Admin-test : en brouillon seulement) |
+| PATCH | /proposals/:id | 🛠️ | Éditer / changer le statut (Admin-test : un brouillon, qui le reste) |
+| POST | /proposals/:id/image | 🛠️ | Envoyer / remplacer l'image (multipart, 5 Mo max) |
+| DELETE | /proposals/:id | 🛠️ | Supprimer (Admin-test : un brouillon) |
 | GET | /proposals/:id/stats | 👑 | Totaux + `?segmentBy=situation\|quartier\|travailleQuartier\|travailType` (groupes de moins de 5 votants masqués) |
-| PUT | /proposals/:id/vote | 🔐✉️ | Voter ou changer son vote (upsert) |
+| PUT | /proposals/:id/vote | 🔐✉️ | Voter ou changer son vote (upsert) — citoyen·nes seulement : refusé à l'équipe (403 `STAFF_CANNOT_VOTE`, S5R2-11) |
 | DELETE | /proposals/:id/vote | 🔐✉️ | Retirer son vote |
 | POST | /proposals/submit | 🔐 | Soumettre une proposition citoyenne → PENDING_REVIEW (Lot 2) |
 | PATCH | /proposals/:id/moderate | 👑 | Approuver / rejeter avec motif (Lot 2) |
@@ -281,21 +281,21 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | Méthode | Route | Accès | Description |
 |---|---|---|---|
 | GET | /surveys | 🔓 | Liste des enquêtes |
-| GET | /surveys/admin | 👑 | Liste admin, tous statuts |
+| GET | /surveys/admin | 🛠️ | Liste admin, tous statuts |
 | GET | /surveys/:slug | 🔓 | Détail : questions + options (+ « déjà répondu » si connecté) |
 | GET | /surveys/:slug/results | 🔓/👑 | Résultats agrégés — publics seulement si `resultsPublished` |
 | GET | /surveys/:id/stats | 👑 | Résultats détaillés ; public analysé : `?scope=target` (public visé) ou `?scope=custom&situations=…&quartiers=…&workQuartiers=…&workTypes=…` — groupes et questions de moins de 5 personnes masqués, jamais de texte libre brut dans une vue filtrée (S5R-08) ; `?segmentBy=<questionId>` conservé |
-| POST | /surveys | 👑 | Créer une enquête (questions, options, branchement imbriqués) |
-| PATCH | /surveys/:id | 👑 | Éditer / ouvrir / clore / publier les résultats |
-| DELETE | /surveys/:id | 👑 | Supprimer |
-| POST | /surveys/:id/responses | 🔐✉️ | Soumettre sa réponse complète (transaction, unicité garantie) — refusée à un compte admin (403 `ADMIN_CANNOT_RESPOND`, S5R2-01) |
-| POST | /surveys/:id/test | 👑 | Mode test (S5R2-01) : même validation qu'une vraie réponse, quel que soit le statut (brouillon compris), **rien n'est enregistré** ; renvoie le chemin parcouru et les champs du profil qui seraient mis à jour |
+| POST | /surveys | 🛠️ | Créer une enquête (questions, options, branchement imbriqués) — Admin-test : en brouillon |
+| PATCH | /surveys/:id | 🛠️ | Éditer / ouvrir / clore / publier les résultats — Admin-test : éditer un brouillon seulement (ni ouvrir, ni publier des résultats) |
+| DELETE | /surveys/:id | 🛠️ | Supprimer (Admin-test : un brouillon) |
+| POST | /surveys/:id/responses | 🔐✉️ | Soumettre sa réponse complète (transaction, unicité garantie) — refusée à un compte admin ou Admin-test (403 `ADMIN_CANNOT_RESPOND`, S5R2-01/11) |
+| POST | /surveys/:id/test | 🛠️ | Mode test (S5R2-01 ; Admin-test : brouillons seulement) : même validation qu'une vraie réponse, quel que soit le statut (brouillon compris), **rien n'est enregistré** ; renvoie le chemin parcouru et les champs du profil qui seraient mis à jour |
 
 **Administration et transverse**
 | Méthode | Route | Accès | Description |
 |---|---|---|---|
 | GET | /admin/users | 👑 | Liste paginée des comptes, recherche email / pseudo |
-| PATCH | /admin/users/:id | 👑 | Changer le rôle (impossible de se rétrograder soi-même) |
+| PATCH | /admin/users/:id | 👑 | Changer le rôle : `CITIZEN`, `EDITOR` (Admin-test) ou `ADMIN` (impossible de se rétrograder soi-même) |
 | GET | /stats/participants | 🔓 | Nombre de citoyens ayant voté ou répondu (aucune donnée personnelle) |
 | GET | /health | 🔓 | Health check (API + base) |
 
