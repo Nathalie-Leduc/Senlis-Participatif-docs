@@ -27,6 +27,7 @@ flowchart TD
     ADME --> ADMEF["👑 /admin/enquetes/nouvelle<br/>/admin/enquetes/:slug/modifier<br/>constructeur + branchement"]
     ADME --> ADMS["👑 /admin/enquetes/:id/stats<br/>résultats détaillés, segmentation,<br/>impression / PDF"]
     HOME --> ADMC["👑 /admin/comptes<br/>promouvoir / rétrograder"]
+    ADMP --> ADMQ["👑 /admin/quartiers<br/>tracé de Saint-Vincent (S5R2-06)"]
     HOME -.-> ADMM["👑 /admin/moderation<br/>(Lot 2)"]:::lot2
 
     HOME --> LEGAL["🔓 /mentions-legales<br/>/confidentialite"]

@@ -209,7 +209,7 @@ CREATE TYPE "QuestionType"   AS ENUM ('CHOIX_UNIQUE','CHOIX_MULTIPLE',
 CREATE TYPE "Situation"      AS ENUM ('CENTRE_RESIDENT', 'AUTRE_QUARTIER', 'HORS_SENLIS');
 CREATE TYPE "Quartier"       AS ENUM ('BRICHEBAY','BON_SECOURS','VAL_AUNETTE_GATELIERE',
                                       'ZONE_INDUSTRIELLE','VILLEVERT','JARDINIERS',
-                                      'CENTRE_HISTORIQUE');
+                                      'CENTRE_HISTORIQUE','SAINT_VINCENT');  -- SAINT_VINCENT : S5R2-06
 CREATE TYPE "TravailType"    AS ENUM ('COMMERCANT', 'SALARIE');
 
 CREATE TABLE "User" (

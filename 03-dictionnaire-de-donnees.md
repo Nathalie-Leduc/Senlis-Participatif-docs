@@ -50,7 +50,7 @@
 | lat / lng | Float | NULL | Point d'ancrage du marqueur sur la carte |
 | geoJson | Json | NULL | Réglage avancé : tracé libre (GeoJSON, format natif Leaflet) — effaçable (`null`) depuis S5R-10 |
 | zoneWholeCity | Boolean | défaut false | Zone concernée : toute la ville (S5R-10) |
-| zoneQuartiers | Quartier[] | défaut `[]` | Zone concernée : quartiers IRIS (centre historique compris), contours affichés depuis `iris-senlis.geojson` ; exclusif avec `zoneWholeCity` (S5R-10) |
+| zoneQuartiers | Quartier[] | défaut `[]` | Zone concernée : quartiers (Centre historique et Saint-Vincent compris), contours affichés depuis `iris-senlis.geojson` (propriété `quartier` de chaque contour, S5R2-06) ; exclusif avec `zoneWholeCity` (S5R-10) |
 | imagePath | String | NULL | Chemin **relatif** de l'image (`/uploads/proposals/<uuid>.webp`), jamais l'URL complète — recompressée en WebP 1200 px par Sharp (métadonnées EXIF/GPS supprimées au passage) |
 | authorId | UUID | FK → USER, NULL, SET NULL | Auteur — anonymisé si le compte est supprimé |
 | moderationNote | String | NULL | Motif communiqué à l'auteur en cas de rejet (Lot 2) |
@@ -194,7 +194,7 @@
 | QuestionType | CHOIX_UNIQUE, CHOIX_MULTIPLE, NOMBRE, OUI_NON, TEXTE_LIBRE | Type de saisie d'une question |
 | TokenType | VERIFY_EMAIL, RESET_PASSWORD, TWO_FACTOR_LOGIN | Nature d'un jeton email (lien ou code 2FA admin) |
 | Situation | CENTRE_RESIDENT, AUTRE_QUARTIER, HORS_SENLIS | Résidence déclarée (`CENTRE_COMMERCANT` retiré le 22/09/2026 : redondant avec l'axe travail) |
-| Quartier | CENTRE_HISTORIQUE, BRICHEBAY, BON_SECOURS, VAL_AUNETTE_GATELIERE, ZONE_INDUSTRIELLE, VILLEVERT, JARDINIERS | Quartiers IRIS INSEE (`CENTRE_HISTORIQUE` utilisé uniquement pour le lieu de travail) |
+| Quartier | CENTRE_HISTORIQUE, SAINT_VINCENT, BRICHEBAY, BON_SECOURS, VAL_AUNETTE_GATELIERE, ZONE_INDUSTRIELLE, VILLEVERT, JARDINIERS | 8 quartiers : les 7 IRIS INSEE, le « Centre Ville » coupé en deux d'après le plan municipal de 2018 (S5R2-06) — `CENTRE_HISTORIQUE` = le seul Centre historique (ex-« Centre-Sud »), `SAINT_VINCENT` = Quartier Saint-Vincent (ex-« Centre-Est – Saint-Vincent »), un « autre quartier » pour la résidence. `CENTRE_HISTORIQUE` n'est pas un quartier de résidence (couvert par `Situation.CENTRE_RESIDENT`). Liste commune : `api/src/lib/quartiers.js` |
 | TravailType | COMMERCANT, SALARIE | Rôle dans l'activité exercée à Senlis |
 
 ## Données personnelles — classement RGPD (rappel)
