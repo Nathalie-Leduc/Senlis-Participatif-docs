@@ -52,6 +52,7 @@
 | Transferts hors UE | Aucun |
 | Durée | Votes : supprimés avec le compte. Réponses : détachées du compte à sa suppression (`SET NULL`), conservées anonymement |
 | Point de vigilance | Les textes libres peuvent contenir des données identifiantes : jamais exportés tels quels, conseil de prudence affiché dans la politique. Question à trancher avec le DPO de la mairie au Lot 3 : un vote sur un projet municipal relève-t-il des « opinions politiques » (art. 9) ? |
+| Mesures spécifiques | Réponses commencées gardées **uniquement dans le navigateur** de la personne (S5R2-13) jusqu'à l'envoi, la déconnexion ou 7 jours — rien n'est transmis au serveur avant l'envoi |
 
 ## Fiche 4 — Sécurité et journalisation
 
@@ -87,3 +88,4 @@
 | 26/09/2026 | Fiche 1 : purge automatique effective, dates de connexion (S5A-05) ; droit d'accès et de portabilité en libre-service |
 | 27/09/2026 | Fiche 4 : journal d'administration (6 mois), révocation des sessions, limite d'essais 2FA (S5A-06) |
 | 09/10/2026 | Rôle « Admin-test » (S5R2-11) : comptes de préparation (mairie, partenaire) sans accès aux données des citoyen·nes — ni comptes, ni réponses, ni résultats détaillés ; 2FA et journalisation comme un admin ; jamais purgés automatiquement |
+| 12/10/2026 | Fiche 3 : sauvegarde automatique des saisies en cours dans le navigateur (S5R2-13) — clé `senlis:draft:*`, propre à chaque compte, effacée à l'envoi, à la déconnexion ou après 7 jours ; politique de confidentialité mise à jour |
