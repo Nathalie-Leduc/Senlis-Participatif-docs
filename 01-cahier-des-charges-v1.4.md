@@ -289,7 +289,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | PATCH | /surveys/:id | 🛠️ | Éditer / ouvrir / clore / publier les résultats — Admin-test : éditer un brouillon seulement (ni ouvrir, ni publier des résultats) |
 | DELETE | /surveys/:id | 🛠️ | Supprimer (Admin-test : un brouillon) |
 | POST | /surveys/:id/responses | 🔐✉️ | Soumettre sa réponse complète (transaction, unicité garantie) — refusée à un compte admin ou Admin-test (403 `ADMIN_CANNOT_RESPOND`, S5R2-01/11) |
-| POST | /surveys/:id/test | 🛠️ | Mode test (S5R2-01 ; Admin-test : brouillons seulement) : même validation qu'une vraie réponse, quel que soit le statut (brouillon compris), **rien n'est enregistré** ; renvoie le chemin parcouru et les champs du profil qui seraient mis à jour |
+| POST | /surveys/:id/test | 🛠️ | Mode test (S5R2-01 ; Admin-test compris, tout statut — S5R2-11) : même validation qu'une vraie réponse, quel que soit le statut (brouillon compris), **rien n'est enregistré** ; renvoie le chemin parcouru et les champs du profil qui seraient mis à jour |
 
 **Administration et transverse**
 | Méthode | Route | Accès | Description |

@@ -36,6 +36,8 @@
 >
 > **S5R2-11 livrée** (09/10/2026) : rôle `EDITOR` (« Admin-test », migration `add_editor_role`) ; API — `isStaff` (listes et préparation) et `canEditDrafts` (l'élément visé est un brouillon et le reste : `status` ≠ DRAFT ou `resultsPublished` → 403 `DRAFTS_ONLY`), 2FA et journal comme un admin, résultats détaillés et comptes réservés à l'admin ; **l'équipe (admin compris) ne vote plus** (403 `STAFF_CANNOT_VOTE`), conformément au tableau § 8.4 ; client — menu de gestion sans « Comptes », bandeau « Mode Admin-test », boutons masqués hors brouillons, statut figé à « Brouillon », bouton « 🧪 Tester » dans la liste des enquêtes, page « Comptes » avec menu à trois rôles.
 >
+> **Précision du 09/10 (après S5R2-11)** : l'Admin-test peut **tester toutes les enquêtes**, ouvertes et clôturées comprises — le mode test n'enregistre rien (`canEditDrafts` retiré de `POST /surveys/:id/test`, bouton « 🧪 Tester » sur chaque ligne de la liste). Modifier, supprimer et publier restent réservés aux brouillons / à l'admin. Les propositions n'ont pas de mode test : l'Admin-test les consulte via « Voir » (votes désactivés). Branche `fix/editor-test-any-status`.
+>
 > **Légende** : ✅ livré (mergé sur `dev`) · 🔶 partiellement livré · sans marque = à faire.
 >
 > **Gabarit d'issue** (à enregistrer comme template GitHub) : *Contexte* (lien cahier des charges) · *Critères d'acceptation* (cases à cocher) · *Definition of Done rappelée*.

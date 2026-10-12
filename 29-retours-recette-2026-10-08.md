@@ -255,7 +255,7 @@ La mairie pourra ensuite tenir ces informations à jour elle-même : un argument
 | Modifier / supprimer un **brouillon** | — | ✅ | ✅ |
 | Modifier / supprimer un élément **publié, ouvert ou clôturé** | — | ❌ | ✅ |
 | **Publier**, ouvrir, clôturer, publier des résultats | — | ❌ | ✅ |
-| Tester une enquête (mode test, rien n'est enregistré) | — | ✅ | ✅ |
+| Tester une enquête (mode test, rien n'est enregistré) — **quel que soit son statut** (précision du 09/10) | — | ✅ | ✅ |
 | Voir les **réponses réelles** et les résultats détaillés | — | ❌ | ✅ |
 | Gérer les comptes (rôles) | — | ❌ | ✅ |
 | Voter, répondre pour de vrai | ✅ | ❌ (ne fausse pas les résultats) | ❌ |
