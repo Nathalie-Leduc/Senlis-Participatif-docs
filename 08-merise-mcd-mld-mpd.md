@@ -114,6 +114,7 @@ flowchart TB
 | UTILISATEUR `(0,n)` VOTER `(0,n)` PROPOSITION | Association plusieurs-à-plusieurs **porteuse** de l'attribut {valeur} — elle deviendra une table dans le MLD |
 | QUESTION `(1,1)` CONTIENT | Une question appartient à *exactement une* enquête — pas de question orpheline |
 | QUESTION `(0,n)` CONDITIONNE | Une question peut dépendre de **plusieurs** options de questions antérieures, et s'affiche si l'une est choisie (OU — S5R-05) ; `0` = toujours affichée. Association **plusieurs-à-plusieurs** → devient la relation `QuestionCondition` au MLD |
+| OPTION `(0,n)` CONDITIONNE_OPTION | S5R2-02 : une option peut n'être proposée que si l'une de **plusieurs** options de questions antérieures a été choisie (OU) ; `0` = toujours proposée. Association réflexive plusieurs-à-plusieurs sur OPTION → relation `OptionCondition` au MLD |
 | ENQUÊTE `(1,n)` CONTIENT | Une enquête contient *au moins une* question — règle métier (une enquête vide n'a pas de sens), vérifiée par l'API à l'ouverture |
 
 ---
@@ -157,6 +158,10 @@ Question (id, label, helpText, type, required, "order", uiHint,
 QuestionCondition (#questionId, #optionId)        ← association CONDITIONNE (0,n)-(0,n)
      PK : (questionId, optionId)
      FK : questionId → Question(id) · FK : optionId → QuestionOption(id)
+
+OptionCondition (#optionId, #triggerOptionId)     ← association CONDITIONNE_OPTION (S5R2-02)
+     PK : (optionId, triggerOptionId)
+     FK : optionId → QuestionOption(id) · FK : triggerOptionId → QuestionOption(id)
 
 QuestionOption (id, label, "order", syncValue, endsSurvey, #questionId)
      PK : id · FK : questionId → Question(id) · UNIQUE : (questionId, "order")
@@ -333,6 +338,13 @@ CREATE TABLE "QuestionCondition" (
   "questionId" TEXT NOT NULL REFERENCES "Question"("id")       ON DELETE CASCADE ON UPDATE CASCADE,
   "optionId"   TEXT NOT NULL REFERENCES "QuestionOption"("id") ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT "QuestionCondition_pkey" PRIMARY KEY ("questionId", "optionId")
+);
+
+-- S5R2-02 : options conditionnelles (plusieurs déclencheurs = OU)
+CREATE TABLE "OptionCondition" (
+  "optionId"        TEXT NOT NULL REFERENCES "QuestionOption"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  "triggerOptionId" TEXT NOT NULL REFERENCES "QuestionOption"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "OptionCondition_pkey" PRIMARY KEY ("optionId", "triggerOptionId")
 );
 
 -- S5A-06 : main courante des actions d'administration (6 mois)

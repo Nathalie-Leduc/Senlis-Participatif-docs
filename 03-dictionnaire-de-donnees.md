@@ -160,6 +160,15 @@
 
 > Plusieurs lignes pour une même question = « OU » : elle s'affiche si l'une des options a été choisie. Aucune ligne = question toujours affichée. Remplace l'ancien champ `QUESTION.showIfOptionId` (une seule condition possible).
 
+## OPTION_CONDITION — condition d'une option (S5R2-02)
+
+| Attribut | Type | Contraintes | Description |
+|---|---|---|---|
+| optionId | UUID | PK (composée), FK → QUESTION_OPTION, CASCADE | L'option conditionnelle (ex. « Bus régional ») |
+| triggerOptionId | UUID | PK (composée), FK → QUESTION_OPTION, CASCADE | L'option qui la fait proposer, choisie à une question **antérieure** (ex. « Une autre ville ») |
+
+> Même principe que QUESTION_CONDITION, une option plus bas : plusieurs lignes = « OU ». Aucune ligne = option toujours proposée. Une question dont aucune option n'est proposée est sautée. Une option non proposée est refusée à l'envoi (400) ; dans les résultats, `offeredTo` indique à combien de personnes elle a été proposée.
+
 ## ADMIN_AUDIT_LOG — Journal des actions d'administration (S5A-06)
 
 | Attribut | Type | Contraintes | Description |

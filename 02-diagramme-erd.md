@@ -20,6 +20,8 @@ erDiagram
     QUESTION ||--o{ QUESTION_OPTION : "propose"
     QUESTION ||--o{ QUESTION_CONDITION : "s'affiche si"
     QUESTION_OPTION ||--o{ QUESTION_CONDITION : "déclenche"
+    QUESTION_OPTION ||--o{ OPTION_CONDITION : "n'est proposée que si"
+    QUESTION_OPTION ||--o{ OPTION_CONDITION : "fait proposer"
     QUESTION |o--o{ QUESTION : "limite les cases de"
     SURVEY_RESPONSE ||--o{ ANSWER : "regroupe"
     QUESTION ||--o{ ANSWER : "cible"
@@ -136,6 +138,10 @@ erDiagram
         uuid questionId PK
         uuid optionId PK
     }
+    OPTION_CONDITION {
+        uuid optionId PK
+        uuid triggerOptionId PK
+    }
     SURVEY_RESPONSE {
         uuid id PK
         uuid surveyId FK
@@ -180,6 +186,7 @@ erDiagram
 | Proposal → Vote / Comment | CASCADE | Sans la proposition, plus d'objet |
 | Survey → Question → Option → Answer | CASCADE | Suppression en chaîne d'une enquête entière |
 | Question / QuestionOption → QuestionCondition | CASCADE | Une condition n'a plus de sens sans sa question ou son option — la question conditionnée, elle, reste |
+| QuestionOption → OptionCondition (les deux côtés) | CASCADE | S5R2-02 : supprimer l'option conditionnelle ou son déclencheur supprime la condition — l'option restante redevient « toujours proposée » |
 | Question → Question (limite de cases) | SET NULL | Supprimer la question « Nombre » de référence lève la limite, sans toucher à la question limitée |
 
 > ⚠️ **Limite RGPD à connaître** : l'anonymisation par `SET NULL` rompt le lien au compte, mais une réponse `TEXTE_LIBRE` peut elle-même contenir une donnée identifiante (« j'habite au 12 rue X »). Voir l'audit `21-audit-securite-rgpd-accessibilite.md`.
