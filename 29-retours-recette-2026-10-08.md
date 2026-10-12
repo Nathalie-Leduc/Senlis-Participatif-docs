@@ -279,3 +279,16 @@ C'est une **première brique** du chantier « rôles complets » de l'offre mair
 - **Enquêtes** : « Partir d'un modèle » devient le **premier bloc** du formulaire de création (titre et description du modèle remplis d'office, comme aujourd'hui quand ils sont vides).
 - **Propositions** : quatre modèles, en tête du formulaire de création — *aménagement de l'espace public*, *mobilité et stationnement*, *végétalisation*, *animation ou événement* — plus « Page blanche ». Chacun préremplit un exemple de titre et d'accroche, et un **argumentaire structuré** en quatre parties (contexte ; ce qui changerait ; pour qui ; questions encore ouvertes), à compléter. Même mise en valeur du modèle choisi et même confirmation avant de remplacer un texte déjà saisi que pour les enquêtes (S5R-09).
 - En **modification** d'un élément existant, les modèles ne s'affichent pas.
+
+### 8.6 Sauvegarde automatique des saisies en cours (S5R2-13, ajoutée le 12/10)
+
+**Constat** (Nath, 12/10) : si l'administratrice quitte la création d'une enquête en cours — clic sur un autre menu, onglet fermé, coupure — tout est perdu. Même chose pour un citoyen qui a commencé à répondre à une enquête.
+
+**Analogie** : un marque-page. On ferme le livre, on le rouvre à la bonne page ; le marque-page disparaît quand on a fini.
+
+- **Admin et Admin-test** : l'enquête ou la proposition en cours de création ou de modification est gardée dans le navigateur à chaque saisie. Au retour sur le formulaire, un bandeau propose « Reprendre le brouillon du … » ou « Repartir de zéro ». Effacée après l'enregistrement.
+- **Citoyen** : les réponses déjà données et la question atteinte sont gardées ; au retour, reprise au même endroit, « ← Précédent » toujours possible. Effacées à l'envoi. Jamais en **mode test**.
+- **Confidentialité** : sauvegarde propre au compte (un autre compte sur le même ordinateur ne la voit pas), effacée à la **déconnexion** et au bout de **7 jours** ; rien n'est envoyé au serveur avant l'envoi final. Politique de confidentialité (stockage navigateur) et registre des traitements mis à jour.
+
+**Coût** : 1 jour, placé juste après S5R2-12 (mêmes formulaires) → **mise en ligne à J111**.
+
