@@ -1,8 +1,10 @@
-# Enquête « Stationnement et déplacements dans le centre historique » — version 3
+# Enquête « Stationnement et déplacements dans le centre historique » — version 3.1
 
-> S5R-06 (03/10/2026), d'après la recette du 30/09/2026 (document `23`). Source de vérité : `api/prisma/surveys/stationnement-v3.js` du dépôt de code ; ce document en est la lecture « métier », à présenter à la mairie.
+> **Version 3.1** — S5R2-03 (13/10/2026), relue en entier pour la présentation à la mairie, d'après la recette du 08/10 (document `29`, § 3.2) et les décisions des 09, 12 et 13/10 (quartiers). Version 3 : S5R-06 (03/10/2026), d'après la recette du 30/09/2026 (document `23`). Source de vérité : `api/prisma/surveys/stationnement-v3.js` du dépôt de code ; ce document en est la lecture « métier », à présenter à la mairie.
 >
-> 39 questions au total, mais **chacun ne voit que celles de sa situation** : de 3 questions (résident·e du centre sans véhicule) à une vingtaine (résident·e du centre qui dirige une activité avec des véhicules professionnels).
+> 39 questions au total, mais **chacun ne voit que celles de sa situation** : de 3 questions (résident·e du Centre historique sans voiture ni moto) à une vingtaine (résident·e du Centre historique qui dirige une activité avec des véhicules professionnels).
+>
+> **Périmètre** : le **Centre historique** seulement, à l'ouest de la rue de la République. Le **Quartier Saint-Vincent**, à l'est, est « un autre quartier de Senlis » : ses habitant·es répondent au bloc « venir dans le centre ».
 >
 > 🎓 **Analogie** : un plan de métro. Toutes les stations existent, mais chaque voyageur ne parcourt que sa ligne.
 
@@ -12,12 +14,12 @@
 flowchart TD
     P["1. PROFIL — tout le monde<br/>résidence · travail à Senlis · quartier de travail · rôle · activité"]
     P --> T{"Travaille dans le<br/>centre historique ?"}
-    T -- oui --> W["2. TRAVAIL DANS LE CENTRE<br/>trajet · stationnement · freins<br/>véhicules professionnels"]
+    T -- oui --> W["2. TRAVAIL DANS LE CENTRE HISTORIQUE<br/>trajet · stationnement · freins<br/>véhicules professionnels"]
     T -- non --> R0{"Réside dans<br/>le centre ?"}
     W --> R0
-    R0 -- non --> V["3. VENIR DANS LE CENTRE<br/>fréquence · moyen · stationnement si voiture"]
-    R0 -- oui --> H["4. RÉSIDER DANS LE CENTRE<br/>véhicules du foyer · stationnement<br/>circulation en voiture et motifs"]
-    H -- "pas de véhicule" --> FIN(["Merci ! (fin anticipée)"])
+    R0 -- "non (dont Saint-Vincent)" --> V["3. VENIR DANS LE CENTRE<br/>fréquence · moyen · stationnement si voiture"]
+    R0 -- oui --> H["4. RÉSIDER DANS LE CENTRE<br/>voitures ou motos du foyer · stationnement<br/>circulation en voiture et motifs"]
+    H -- "ni voiture ni moto" --> FIN(["Merci ! (fin anticipée)"])
     V --> S["5. Une suggestion (facultative)"]
     H --> S
     S --> FIN2(["Merci !"])
@@ -25,7 +27,19 @@ flowchart TD
 
 Le bloc « résider dans le centre » est placé **en dernier** : la réponse « pas de véhicule » y termine l'enquête, sans priver la personne d'aucun bloc qui la concerne (un·e résident·e qui travaille dans le centre a déjà répondu au bloc « travail »).
 
-## 2. Ce qui répond à chaque point de la recette
+## 2. Ce qui change en version 3.1 (recette du 08/10)
+
+| Retour | Réponse dans la v3.1 |
+|---|---|
+| Le centre coupé en deux quartiers (S5R2-06) | Q1 : « Le Centre historique » / « Un autre quartier de Senlis (dont Saint-Vincent) » / « Une autre ville » ; « Quartier Saint-Vincent » en tête des quartiers de résidence (Q2) et parmi les quartiers de travail (Q5) — y travailler n'ouvre pas le bloc « travail dans le centre » |
+| « Bus régional » proposé à tous | Proposé **seulement** aux résident·es d'une autre ville (Q9 et Q23) : option conditionnelle (S5R2-02) |
+| Activités trop détaillées | **6 familles** + « Autre activité » (Q7), avec des exemples en aide sous la question : commerces et boutiques ; services de proximité, agences et santé ; cafés, hôtels et restaurants ; administrations et services publics ; enseignement, culture et social ; bureaux et secteur tertiaire |
+| « Laquelle ? » (autre activité) obligatoire | **Facultative** (Q8) |
+| « Véhicules motorisés » ambigu (un EDPM est motorisé) | « **Voitures ou motos** » (Q30 à Q32) |
+| « Trottinette » | « EDPM (Engins De Déplacement Personnel Motorisés) » (modification de Nath, reprise) |
+| Invitation à transmettre aux salarié·es | Déplacée sous « À ce titre… » (Q6), l'aide de Q7 donnant désormais les exemples |
+
+## 3. Ce qui répond à chaque point de la recette du 30/09 (v3)
 
 | Retour de recette | Réponse dans la v3 |
 |---|---|
@@ -41,19 +55,19 @@ Le bloc « résider dans le centre » est placé **en dernier** : la réponse «
 | Salarié·e d'un autre quartier venant en voiture | Plus de questions sur le stationnement au travail (hors centre) ; à la place, « venez-vous dans le centre ? comment ? » puis le stationnement si en voiture |
 | « Précisez cet autre frein » optionnel | Obligatoire ; et une option « Aucun frein : je préfère la voiture » rend la question des freins honnêtement obligatoire |
 
-## 3. Les 39 questions
+## 4. Les 39 questions
 
 | # | Question | Type | Affichée si… | Règles |
 |---:|---|---|---|---|
 | 1 | Où résidez-vous ? | choix unique | toujours | profil : situation |
-| 2 | Dans quel quartier ? | choix unique | Q1 = « Un autre quartier de Senlis » | profil : quartier |
+| 2 | Dans quel quartier ? | choix unique | Q1 = « Un autre quartier de Senlis (dont Saint-Vincent) » | profil : quartier |
 | 3 | Dans quelle ville ? | texte libre | Q1 = « Une autre ville » |  |
 | 4 | Travaillez-vous ou dirigez-vous une activité à Senlis ? | oui / non | toujours | profil : travailleASenlis |
 | 5 | Dans quel quartier travaillez-vous ? | choix unique | Q4 = « Oui » | profil : travailleQuartier |
 | 6 | À ce titre… | choix unique | Q4 = « Oui » | profil : travailType |
 | 7 | Quel type d'activité (la vôtre, ou celle qui vous emploie) ? | choix unique | Q4 = « Oui » |  |
-| 8 | Laquelle ? | texte libre | Q7 = « Autre activité » |  |
-| 9 | Comment venez-vous travailler le plus souvent ? | choix unique | Q5 = « Centre historique » |  |
+| 8 | Laquelle ? | texte libre (facultative) | Q7 = « Autre activité » |  |
+| 9 | Comment venez-vous travailler le plus souvent ? | choix unique | Q5 = « Centre historique » | « Bus régional » proposé seulement si Q1 = « Une autre ville » |
 | 10 | Quel autre mode de transport ? | texte libre | Q9 = « Autre » |  |
 | 11 | Le véhicule de covoiturage se gare-t-il dans le centre historique ? | oui / non | Q9 = « Covoiturage » |  |
 | 12 | Où garez-vous ce véhicule pendant votre travail ? | choix unique | Q9 = « Voiture » **ou** Q11 = « Oui » |  |
@@ -66,27 +80,30 @@ Le bloc « résider dans le centre » est placé **en dernier** : la réponse «
 | 19 | Où sont garés ces véhicules professionnels ? | choix multiple | Q17 = « Oui » | ≤ réponse à Q18 cases |
 | 20 | Rencontrez-vous des difficultés pour garer ces véhicules professionnels ? | oui / non | Q17 = « Oui » |  |
 | 21 | Lesquelles ? | texte libre | Q20 = « Oui » |  |
-| 22 | En dehors de votre éventuel travail, à quelle fréquence venez-vous dans le centre historique ? | choix unique | Q1 = « Un autre quartier de Senlis » **ou** Q1 = « Une autre ville » |  |
-| 23 | Le plus souvent, comment venez-vous dans le centre historique ? | choix unique | Q22 = « Tous les jours » **ou** Q22 = « Plusieurs fois par semaine » **ou** Q22 = « Occasionnellement » |  |
+| 22 | En dehors de votre éventuel travail, à quelle fréquence venez-vous dans le centre historique ? | choix unique | Q1 = « Un autre quartier de Senlis (dont Saint-Vincent) » **ou** Q1 = « Une autre ville » |  |
+| 23 | Le plus souvent, comment venez-vous dans le centre historique ? | choix unique | Q22 = « Tous les jours » **ou** Q22 = « Plusieurs fois par semaine » **ou** Q22 = « Occasionnellement » | « Bus régional » proposé seulement si Q1 = « Une autre ville » |
 | 24 | Quel autre mode de transport ? | texte libre | Q23 = « Autre » |  |
 | 25 | Où vous garez-vous le plus souvent ? | choix unique | Q23 = « Voiture » |  |
 | 26 | Rencontrez-vous des difficultés pour vous garer ? | oui / non | Q23 = « Voiture » |  |
 | 27 | Lesquelles ? | texte libre | Q26 = « Oui » |  |
 | 28 | Quels freins vous empêchent de venir sans voiture ? | choix multiple | Q23 = « Voiture » |  |
 | 29 | Précisez cet autre frein | texte libre | Q28 = « Autre frein » |  |
-| 30 | Votre foyer possède-t-il un ou plusieurs véhicules motorisés ? | oui / non | Q1 = « Le centre historique » | « Non » termine l’enquête |
-| 31 | Combien de véhicules motorisés compte votre foyer ? | nombre | Q30 = « Oui » | min 1 |
-| 32 | Où sont garés vos véhicules ? | choix multiple | Q30 = « Oui » | ≤ réponse à Q31 cases |
+| 30 | Votre foyer possède-t-il une ou plusieurs voitures ou motos ? | oui / non | Q1 = « Le Centre historique » | « Non » termine l’enquête |
+| 31 | Combien de voitures ou motos compte votre foyer ? | nombre | Q30 = « Oui » | min 1 |
+| 32 | Où sont garées vos voitures ou motos ? | choix multiple | Q30 = « Oui » | ≤ réponse à Q31 cases |
 | 33 | Rencontrez-vous des difficultés pour vous garer ? | oui / non | Q30 = « Oui » |  |
 | 34 | Lesquelles ? | texte libre | Q33 = « Oui » |  |
 | 35 | Vous arrive-t-il de circuler en voiture dans le centre historique ? | oui / non | Q30 = « Oui » |  |
 | 36 | Pour quelle(s) raison(s) ? | choix multiple | Q35 = « Oui » |  |
 | 37 | Lequel ? | texte libre | Q36 = « Autre motif » |  |
 | 38 | À quelle fréquence circulez-vous en voiture dans le centre historique ? | choix unique | Q35 = « Oui » |  |
-| 39 | Une suggestion pour le stationnement ou les déplacements dans le centre historique ? | texte libre (optionnelle) | toujours |  |
+| 39 | Une suggestion pour le stationnement ou les déplacements dans le centre historique ? | texte libre (facultative) | toujours |  |
 
-## 4. Mise en place
+Tableau produit à partir de `stationnement-v3.js` (il ne peut pas en diverger).
+
+## 5. Mise en place
 
 - **Production** : `npm run seed:prod` crée cette enquête (ouverte) si aucune enquête ne porte déjà son identifiant (`stationnement-deplacements-centre-historique`).
-- **Développement** : l'ancienne version (v2) reste en base avec ses réponses de test ; la v3 est ajoutée à côté. Clore la v2 depuis l'administration pour ne garder que la v3 ouverte.
+- **Remplacer la v3 par la v3.1** (même identifiant) : `npm run seed:prod -- --remplacer`. En développement, l'ancienne version et ses réponses de test sont supprimées ; **en production, refusé dès qu'il existe une vraie réponse** (on n'efface jamais la parole des habitant·es : on clôt l'enquête et on en crée une nouvelle).
+- **Développement** : l'ancienne version v2 (autre identifiant) peut rester en base, close.
 - **Limite connue du moteur** : pas de « ET » entre deux conditions. Chaque bloc est donc déclenché par une seule question précise (le quartier de travail « Centre historique », la résidence « autre quartier » ou « autre ville »…).
