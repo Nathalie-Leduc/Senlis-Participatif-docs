@@ -52,6 +52,8 @@
 >
 > **S5R2-04 livrée** (14/10/2026) : composant `ResultChart` (Chart.js 4 + `react-chartjs-2` 5) sur `/enquetes/:slug/resultats` et `/admin/enquetes/:id/stats` — barres horizontales par défaut ; « Secteurs » proposés seulement pour une réponse unique de 3 à 5 options sans option conditionnelle (avec part « Sans réponse ») : à 2 parts ou avec des choix multiples, un camembert se lit mal ou ment ; palette de 5 couleurs dérivée de la charte, vérifiée daltonisme ; tableau des nombres sous chaque graphique, canvas décrit (`role="img"`) ; Chart.js dans un fichier à part (~58 ko compressés), chargé seulement par les pages de résultats (test garde-fou) ; impression vérifiée (cerf et ♿ masqués).
 >
+> **Complément S5R2-04** (14/10/2026, recette) : « Secteurs » proposé sur TOUTES les questions à réponse unique (la limite de 3 à 5 options privait « Dans quel quartier ? » et la plupart des questions de l'enquête stationnement) ; 8 couleurs, ordre calculé pour chaque nombre de parts (voisines toujours distinctes, daltonismes compris) ; au-delà de 8 parts, regroupement « Autres réponses » ; message à la place d'un anneau vide.
+>
 > **Légende** : ✅ livré (mergé sur `dev`) · 🔶 partiellement livré · sans marque = à faire.
 >
 > **Gabarit d'issue** (à enregistrer comme template GitHub) : *Contexte* (lien cahier des charges) · *Critères d'acceptation* (cases à cocher) · *Definition of Done rappelée*.
