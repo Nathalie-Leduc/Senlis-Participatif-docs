@@ -75,6 +75,17 @@ flowchart TB
     valeur texte
     valeur numérique"]
 
+    PARKING["**PARKING** (S5R2-05)
+    nom
+    places
+    régime
+    recharge
+    points de recharge
+    places PMR
+    remarque
+    latitude
+    longitude"]
+
     aPOSSEDE(["POSSÈDE"])
     aREDIGE(["RÉDIGE"])
     aVOTER(["VOTER
@@ -169,6 +180,9 @@ QuestionOption (id, label, "order", syncValue, endsSurvey, #questionId)
 AdminAuditLog (id, action, actorPseudo, targetType, targetId, details, createdAt, #actorId)
      PK : id · FK : actorId → User(id) [NULLABLE] · INDEX : createdAt
 
+Parking (id, name, places, regime, charging, chargingPoints, pmrPlaces, note, lat, lng, createdAt, updatedAt)   ← S5R2-05
+     PK : id · UNIQUE : name — entité isolée (aucune association) : la carte la lit, l'administration la tient
+
 SurveyResponse (id, submittedAt, #surveyId, #userId)
      PK : id · FK : surveyId → Survey(id)
      FK : userId → User(id) [NULLABLE] · UNIQUE : (userId, surveyId)
@@ -211,6 +225,9 @@ CREATE TYPE "Quartier"       AS ENUM ('BRICHEBAY','BON_SECOURS','VAL_AUNETTE_GAT
                                       'ZONE_INDUSTRIELLE','VILLEVERT','JARDINIERS',
                                       'CENTRE_HISTORIQUE','SAINT_VINCENT');  -- SAINT_VINCENT : S5R2-06
 CREATE TYPE "TravailType"    AS ENUM ('COMMERCANT', 'SALARIE');
+CREATE TYPE "ParkingRegime"   AS ENUM ('GRATUIT','ZONE_ROUGE','ZONE_VERTE','GARE',
+                                      'DUREE_LIMITEE','PARC_PAYANT');        -- S5R2-05
+CREATE TYPE "ParkingCharging" AS ENUM ('AUCUNE','EXISTANTE','EN_PROJET');     -- S5R2-05
 
 CREATE TABLE "User" (
   "id"                 TEXT NOT NULL PRIMARY KEY,
@@ -359,6 +376,22 @@ CREATE TABLE "AdminAuditLog" (
   "createdAt"   TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX "AdminAuditLog_createdAt_idx" ON "AdminAuditLog"("createdAt");
+
+-- S5R2-05 : parkings gérés par l'administration (remplace OpenStreetMap)
+CREATE TABLE "Parking" (
+  "id"             TEXT NOT NULL PRIMARY KEY,
+  "name"           TEXT NOT NULL UNIQUE,
+  "places"         INTEGER,
+  "regime"         "ParkingRegime",                -- NULL = à préciser
+  "charging"       "ParkingCharging" NOT NULL DEFAULT 'AUCUNE',
+  "chargingPoints" INTEGER,
+  "pmrPlaces"      INTEGER,
+  "note"           TEXT,
+  "lat"            DOUBLE PRECISION,               -- NULL = pas encore placé
+  "lng"            DOUBLE PRECISION,
+  "createdAt"      TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt"      TIMESTAMP(3) NOT NULL
+);
 
 CREATE TABLE "SurveyResponse" (
   "id"          TEXT NOT NULL PRIMARY KEY,

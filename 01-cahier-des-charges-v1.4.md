@@ -224,6 +224,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 /admin/enquetes                      Liste + /nouvelle + /:slug/modifier (constructeur, branchement)
 /admin/enquetes/:id/stats            Résultats détaillés, segmentation, impression / PDF
 /admin/comptes                       Promouvoir / rétrograder un admin
+/admin/parkings                      Parkings de la carte : ajouter, modifier, placer d'un clic (S5R2-05)
 /admin/moderation                    File de modération (Lot 2)
 /mentions-legales · /confidentialite Pages légales
 /accessibilite · /plan-du-site       Déclaration d'accessibilité (modèle RGAA), plan du site
@@ -297,6 +298,11 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | GET | /admin/users | 👑 | Liste paginée des comptes, recherche email / pseudo |
 | PATCH | /admin/users/:id | 👑 | Changer le rôle : `CITIZEN`, `EDITOR` (Admin-test) ou `ADMIN` (impossible de se rétrograder soi-même) |
 | GET | /stats/participants | 🔓 | Nombre de citoyens ayant voté ou répondu (aucune donnée personnelle) |
+| GET | /parkings | 🔓 | Parkings **placés** sur la carte (S5R2-05) |
+| GET | /parkings/admin | 🛠️ | Tous les parkings, placés ou non (Admin-test : consultation) |
+| POST | /parkings | 👑 | Ajouter un parking (nom seul possible) |
+| PATCH | /parkings/:id | 👑 | Modifier, placer (`lat`/`lng`) ou retirer de la carte (`null`) |
+| DELETE | /parkings/:id | 👑 | Supprimer |
 | GET | /health | 🔓 | Health check (API + base) |
 
 > ✉️ = email vérifié exigé (middleware `requireVerifiedEmail`, relu en base à chaque requête). Les images uploadées sont servies hors préfixe, sur `/uploads/proposals/<uuid>.webp`.

@@ -28,11 +28,12 @@ flowchart TD
     ADME --> ADMS["👑 /admin/enquetes/:id/stats<br/>résultats détaillés, segmentation,<br/>impression / PDF"]
     HOME --> ADMC["👑 /admin/comptes<br/>promouvoir / rétrograder"]
     ADMP --> ADMQ["👑 /admin/quartiers<br/>tracé de Saint-Vincent (S5R2-06)"]
+    ADMP --> ADMK["🛠️ /admin/parkings<br/>parkings de la carte, placement d'un clic (S5R2-05)"]
     HOME -.-> ADMM["👑 /admin/moderation<br/>(Lot 2)"]:::lot2
 
     HOME --> LEGAL["🔓 /mentions-legales<br/>/confidentialite"]
     HOME --> A11Y["🔓 /accessibilite · /plan-du-site<br/>déclaration RGAA, plan du site"]
-    HOME --> CARTE["🔓 /carte<br/>carte « Explorer » : propositions, enquêtes, parkings par quartier (S5R-11)"]
+    HOME --> CARTE["🔓 /carte<br/>carte « Explorer » : propositions, enquêtes, parkings par quartier (S5R-11) ;<br/>parkings de l'administration + légende des tarifs 2025 (S5R2-05)"]
     HOME --> NF["🔓 /* — page 404"]
 
     classDef lot2 stroke-dasharray:5 5

@@ -174,12 +174,29 @@
 | Attribut | Type | Contraintes | Description |
 |---|---|---|---|
 | id | UUID | PK | Identifiant |
-| action | String | NOT NULL | Code de l'action : `ADMIN_LOGIN`, `USER_ROLE_CHANGED`, `PROPOSAL_CREATED/UPDATED/IMAGE_UPLOADED/DELETED`, `SURVEY_CREATED/UPDATED/DELETED` |
+| action | String | NOT NULL | Code de l'action : `ADMIN_LOGIN`, `USER_ROLE_CHANGED`, `PROPOSAL_CREATED/UPDATED/IMAGE_UPLOADED/DELETED`, `SURVEY_CREATED/UPDATED/DELETED`, `PARKING_CREATED/UPDATED/DELETED` |
 | actorId | UUID | FK → USER, NULL, SET NULL | L'admin qui a agi ; NULL si son compte a été supprimé depuis |
 | actorPseudo | String | NOT NULL | Pseudo recopié au moment de l'action (reste lisible après suppression du compte) |
 | targetType / targetId | String | NULL | Objet visé (ex. `Proposal` + son id) |
 | details | Json | NULL | Quelques informations utiles (titre, champs modifiés, rôle avant/après) — jamais de secret ni de contenu citoyen |
 | createdAt | DateTime | défaut now(), INDEX | Date de l'action ; purge après 6 mois |
+
+## PARKING — parking de la carte, tenu par l'administration (S5R2-05)
+
+| Attribut | Type | Contraintes | Description |
+|---|---|---|---|
+| id | UUID | PK | Identifiant |
+| name | String | NOT NULL, UNIQUE | Nom (ex. « Parking Saint-Rieul ») — unique : pas de doublon |
+| places | Int | NULL, ≥ 0 | Nombre de places (plan 2023) |
+| regime | ParkingRegime | NULL | Régime (guide 2025) ; NULL = « à préciser » |
+| charging | ParkingCharging | NOT NULL, défaut AUCUNE | Recharge électrique : aucune, installée, en projet |
+| chargingPoints | Int | NULL | Nombre de points de recharge, si connu (effacé si AUCUNE) |
+| pmrPlaces | Int | NULL | Places réservées aux personnes à mobilité réduite |
+| note | String | NULL, ≤ 300 | Remarque (ex. règles du disque, tarif propre) |
+| lat / lng | Float | NULL, les deux ou aucun, dans un cadre autour de Senlis | Position sur la carte ; NULL = pas encore placé (absent de la carte publique) |
+| createdAt / updatedAt | DateTime | | Dates de création et de modification |
+
+> Aucune donnée personnelle. Données initiales : `api/prisma/data/parkings-initiaux.js` (19 parkings, plan 2023 + guide 2025), insérées par le seed si la table est vide.
 
 ## Énumérations
 
@@ -196,6 +213,8 @@
 | Situation | CENTRE_RESIDENT, AUTRE_QUARTIER, HORS_SENLIS | Résidence déclarée (`CENTRE_COMMERCANT` retiré le 22/09/2026 : redondant avec l'axe travail) |
 | Quartier | CENTRE_HISTORIQUE, SAINT_VINCENT, BRICHEBAY, BON_SECOURS, VAL_AUNETTE_GATELIERE, ZONE_INDUSTRIELLE, VILLEVERT, JARDINIERS | 8 quartiers : les 7 IRIS INSEE, le « Centre Ville » coupé en deux d'après le plan municipal de 2018 (S5R2-06) — `CENTRE_HISTORIQUE` = le seul Centre historique (ex-« Centre-Sud »), `SAINT_VINCENT` = Quartier Saint-Vincent (ex-« Centre-Est – Saint-Vincent »), un « autre quartier » pour la résidence. `CENTRE_HISTORIQUE` n'est pas un quartier de résidence (couvert par `Situation.CENTRE_RESIDENT`). Liste commune : `api/src/lib/quartiers.js` |
 | TravailType | COMMERCANT, SALARIE | Rôle dans l'activité exercée à Senlis |
+| ParkingRegime | GRATUIT, ZONE_ROUGE, ZONE_VERTE, GARE, DUREE_LIMITEE, PARC_PAYANT | Régime d'un parking (S5R2-05) — `PARC_PAYANT` : tarif propre (ex. Brunehaut, ÉcoQuartier) |
+| ParkingCharging | AUCUNE, EXISTANTE, EN_PROJET | Bornes de recharge d'un parking (S5R2-05) |
 
 ## Données personnelles — classement RGPD (rappel)
 

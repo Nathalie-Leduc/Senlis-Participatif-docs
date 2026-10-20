@@ -56,6 +56,20 @@ erDiagram
         datetime usedAt "nullable"
         int attempts
     }
+    PARKING {
+        uuid id PK
+        string name UK
+        int places "nullable"
+        enum regime "nullable, S5R2-05"
+        enum charging
+        int chargingPoints "nullable"
+        int pmrPlaces "nullable"
+        string note "nullable"
+        float lat "nullable"
+        float lng "nullable"
+        datetime createdAt
+        datetime updatedAt
+    }
     ADMIN_AUDIT_LOG {
         uuid id PK
         string action
