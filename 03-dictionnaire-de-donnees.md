@@ -193,7 +193,7 @@
 | chargingPoints | Int | NULL | Nombre de points de recharge, si connu (effacé si AUCUNE) |
 | pmrPlaces | Int | NULL | Places réservées aux personnes à mobilité réduite |
 | note | String | NULL, ≤ 300 | Remarque (ex. règles du disque, tarif propre) |
-| lat / lng | Float | NULL, les deux ou aucun, dans un cadre autour de Senlis | Position sur la carte ; NULL = pas encore placé (absent de la carte publique) |
+| geometry | Json (GeoJSON) | NULL | Emplacements (recette du 20/10) : `GeometryCollection` de `Point` (une aire) et de `LineString` (places le long d'une rue, 2 à 200 points), coordonnées `[longitude, latitude]` dans Senlis, 50 au plus ; NULL = pas encore placé (absent de la carte publique). Remplace `lat` / `lng` (migration `parking_locations`) |
 | createdAt / updatedAt | DateTime | | Dates de création et de modification |
 
 > Aucune donnée personnelle. Données initiales : `api/prisma/data/parkings-initiaux.js` (19 parkings, plan 2023 + guide 2025), insérées par le seed si la table est vide.

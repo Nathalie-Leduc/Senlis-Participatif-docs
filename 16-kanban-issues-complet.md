@@ -56,6 +56,8 @@
 >
 > **S5R2-05 livrée** (14/10/2026) : table `Parking` (migration `managed_parkings`, régimes `GRATUIT`, `ZONE_ROUGE`, `ZONE_VERTE`, `GARE`, `DUREE_LIMITEE` et `PARC_PAYANT` — ajouté pour Brunehaut, tarif propre), API `/parkings` (lecture publique des parkings placés, liste complète pour l'équipe, écriture ADMIN, journal d'administration) ; écran `/admin/parkings` (liste, filtre « À placer », formulaire, **placement par clic sur la carte** ou saisie des coordonnées ; Admin-test en lecture seule) ; **19 parkings initiaux** lus sur les documents de la Ville (plan 2023 : noms, places ; guide 2025 : zones et bornes, qui l'emportent en cas d'écart — ex. square des États-Unis passé de zone rouge à zone verte), à placer sur la carte ; repères par régime (lettre + couleur, éclair pour la recharge), infobulles complètes, **légende et tarifs 2025** sous la carte (« tarifs indicatifs ») ; extraction OpenStreetMap retirée de `public/data` (script gardé) ; mentions légales mises à jour.
 >
+> **Complément S5R2-05** (20/10/2026, recette) : **plusieurs emplacements par parking** (le stade : plusieurs aires) et **des traits le long des rues** (places en voirie, zone rouge) — colonne `geometry` GeoJSON (points et traits), migration `parking_locations` qui reprend les points déjà placés ; outils « Ajouter des points » / « Tracer un trait » dans l'écran d'administration, traits de la couleur du régime sur la carte publique.
+>
 > **Légende** : ✅ livré (mergé sur `dev`) · 🔶 partiellement livré · sans marque = à faire.
 >
 > **Gabarit d'issue** (à enregistrer comme template GitHub) : *Contexte* (lien cahier des charges) · *Critères d'acceptation* (cases à cocher) · *Definition of Done rappelée*.

@@ -65,8 +65,7 @@ erDiagram
         int chargingPoints "nullable"
         int pmrPlaces "nullable"
         string note "nullable"
-        float lat "nullable"
-        float lng "nullable"
+        json geometry "nullable, points et traits"
         datetime createdAt
         datetime updatedAt
     }

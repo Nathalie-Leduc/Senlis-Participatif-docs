@@ -301,7 +301,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | GET | /parkings | 🔓 | Parkings **placés** sur la carte (S5R2-05) |
 | GET | /parkings/admin | 🛠️ | Tous les parkings, placés ou non (Admin-test : consultation) |
 | POST | /parkings | 👑 | Ajouter un parking (nom seul possible) |
-| PATCH | /parkings/:id | 👑 | Modifier, placer (`lat`/`lng`) ou retirer de la carte (`null`) |
+| PATCH | /parkings/:id | 👑 | Modifier, placer — `geometry` : GeoJSON, plusieurs points et traits le long des rues (20/10) — ou retirer de la carte (`null`) |
 | DELETE | /parkings/:id | 👑 | Supprimer |
 | GET | /health | 🔓 | Health check (API + base) |
 

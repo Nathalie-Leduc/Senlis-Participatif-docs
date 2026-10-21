@@ -83,8 +83,7 @@ flowchart TB
     points de recharge
     places PMR
     remarque
-    latitude
-    longitude"]
+    emplacements (points, traits)"]
 
     aPOSSEDE(["POSSÈDE"])
     aREDIGE(["RÉDIGE"])
@@ -180,7 +179,7 @@ QuestionOption (id, label, "order", syncValue, endsSurvey, #questionId)
 AdminAuditLog (id, action, actorPseudo, targetType, targetId, details, createdAt, #actorId)
      PK : id · FK : actorId → User(id) [NULLABLE] · INDEX : createdAt
 
-Parking (id, name, places, regime, charging, chargingPoints, pmrPlaces, note, lat, lng, createdAt, updatedAt)   ← S5R2-05
+Parking (id, name, places, regime, charging, chargingPoints, pmrPlaces, note, geometry, createdAt, updatedAt)   ← S5R2-05 (geometry : 20/10)
      PK : id · UNIQUE : name — entité isolée (aucune association) : la carte la lit, l'administration la tient
 
 SurveyResponse (id, submittedAt, #surveyId, #userId)
@@ -387,8 +386,7 @@ CREATE TABLE "Parking" (
   "chargingPoints" INTEGER,
   "pmrPlaces"      INTEGER,
   "note"           TEXT,
-  "lat"            DOUBLE PRECISION,               -- NULL = pas encore placé
-  "lng"            DOUBLE PRECISION,
+  "geometry"       JSONB,                          -- GeoJSON : points et traits (20/10) ; NULL = pas encore placé
   "createdAt"      TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updatedAt"      TIMESTAMP(3) NOT NULL
 );
