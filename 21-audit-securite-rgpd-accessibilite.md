@@ -3,6 +3,7 @@
 > Audit du **23/09/2026**, réalisé sur la branche `dev` du dépôt de code (dernier commit du 23/09, 09h55), **avant la mise en ligne réelle** (Sprint 5ter).
 > Référentiels : **OWASP Top 10 (2021)** et ASVS 4.0 · **ANSSI** (recommandations pour la sécurisation des sites web, guide d'hygiène) · **CNIL** (RGPD, délibération 2020-091 sur les traceurs, 2022-100 sur les mots de passe, recommandation du 14/04/2026 sur les pixels de suivi) · **RGAA 4.1** (WCAG 2.1 AA).
 > Chaque constat renvoie à une issue du kanban (`16-kanban-issues-complet.md`, v1.10).
+> **Complété le 21/10/2026 (S5R-13)** : section 8, référentiels du **NIST** — SP 800-63B-4 (authentification, version finale du 31/07/2025) et Cybersecurity Framework 2.0.
 
 **Gravité** : 🔴 bloquant avant mise en ligne · 🟠 important · 🟡 amélioration · ✅ conforme
 
@@ -19,6 +20,7 @@
 | Cookies et consentement | ✅ Aucun bandeau nécessaire (Google Fonts retiré par S5A-03) | 0 | S5A-03 ✅ |
 | Accessibilité (RGAA) | Bonne base + critères de structure corrigés ; déclaration publiée (« non conforme » faute d'audit complet) | 0 | S5A-07 ✅ |
 | Mise en production | Corrigé (S5A-08) ; CSP/HSTS du site statique en S5-24 | 0 | S5A-08 ✅, S5-22, S5-24 |
+| Référentiels NIST (S5R-13, 21/10) | Stockage, sessions, saisie : conformes ; **4 écarts** sur les mots de passe des citoyens (longueur 15, règles de composition, liste de blocage, limite par compte) — choix CNIL assumé, alignement proposé ; 2FA par email non reconnu par le NIST | 0 | S5R-13 ✅, proposition S5R-13b |
 
 ---
 
@@ -170,7 +172,83 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 
 ---
 
-## 8. Documentation
+## 8. Référentiels NIST — S5R-13 *(ajouté le 21/10/2026)*
+
+> **Pourquoi le NIST, en plus de la CNIL ?** Le NIST est l'organisme de normalisation américain. Ses guides ne s'imposent pas à une commune française — c'est la **CNIL** qui contrôlerait la mairie, et le projet suit sa délibération 2022-100. Mais ils font référence dans le monde entier, et une mairie, son prestataire ou un auditeur peuvent les citer. Les deux convergent sur l'essentiel (mots de passe longs, stockage robuste, limitation des essais) et divergent sur un point : **les règles de composition** (« une majuscule, un chiffre… »), que le NIST interdit désormais.
+>
+> 🎓 **Analogie** : deux codes de la route, français et américain. On roule en France, donc on suit le code français ; mais quand le code américain est plus exigeant sur un point utile (les ceintures à l'arrière, par exemple), rien n'empêche de s'y aligner.
+
+### 8.1 SP 800-63B-4 — mots de passe et authentification
+
+Source : *Digital Identity Guidelines: Authentication and Authenticator Management*, NIST SP 800-63B-4, **version finale du 31 juillet 2025**, § 3.1.1.2 (vérification des mots de passe) et § 3.2.2 (limitation des essais). Les comptes citoyens n'ont **que** le mot de passe (un seul facteur) ; les comptes de l'équipe ont en plus un code par email (§ 8.2).
+
+| Exigence NIST (force) | Senlis Participatif | Verdict |
+|---|---|:--:|
+| 15 caractères minimum pour un mot de passe seul (**SHALL**) ; 8 s'il fait partie d'une double authentification | 12 caractères (CNIL 2022-100) | 🟠 écart |
+| Aucune règle de composition (**SHALL NOT**) | 4 familles imposées (majuscule, minuscule, chiffre, caractère spécial) | 🟠 écart (choix CNIL) |
+| Comparaison à une **liste de blocage** (mots de passe courants, attendus ou déjà divulgués), refus motivé (**SHALL**) | Absente (seul le refus d'un nouveau mot de passe identique à l'ancien existe) | 🟠 écart |
+| Limiter les échecs consécutifs **par compte** à 100 au plus (**SHALL**) | Limite **par adresse IP** (10 échecs / 15 min en production) ; aucune limite par compte : un attaquant qui change d'adresse n'est pas freiné | 🟠 écart |
+| Longueur maximale d'au moins 64 caractères (SHOULD) | 128 | ✅ |
+| Tous les caractères imprimables, l'espace et l'Unicode acceptés (SHOULD) | Oui (aucun caractère refusé) | ✅ |
+| Longueur comptée en caractères Unicode, normalisation NFC avant hachage (SHALL / SHOULD) | Longueur comptée en unités UTF-16 (un émoji compte 2) ; pas de normalisation NFC | 🟡 |
+| Mot de passe vérifié en entier, sans troncature (**SHALL**) | Oui (Argon2 hache le mot de passe complet) | ✅ |
+| Aucun indice, aucune question secrète (**SHALL NOT**) | Aucun | ✅ |
+| Aucun changement périodique imposé (**SHALL NOT**) ; changement forcé si compromission (**SHALL**) | Aucun changement périodique ; pas d'outil pour forcer un changement (faisable à la main : `tokenVersion` + lien de réinitialisation) | ✅ / 🟡 |
+| Gestionnaires de mots de passe et remplissage automatique permis (**SHALL**) ; coller permis, affichage possible (SHOULD) | `autocomplete="new-password"` / `current-password`, coller non bloqué, bouton « afficher » (`PasswordInput`) | ✅ |
+| Aide au choix d'un mot de passe solide (**SHALL**) | Jauge `PasswordStrengthMeter` — mais elle pousse vers les règles de composition | ✅ / 🟡 |
+| Canal chiffré et authentifié (**SHALL**) | HTTPS en production (HSTS du site statique : S5-24) | ✅ |
+| Stockage résistant aux attaques hors ligne, sel ≥ 32 bits, coût élevé (**SHALL** / SHOULD) | Argon2id, 64 Mio, 3 itérations, sel de 128 bits | ✅ |
+| Hachage supplémentaire avec une clé secrète stockée à part, le « poivre » (SHOULD) | Absent | 🟡 |
+| Jetons envoyés par email (lien de vérification, réinitialisation) | 256 bits aléatoires, empreinte SHA-256 seule en base, usage unique, 60 min | ✅ |
+
+### 8.2 Double authentification de l'équipe
+
+Le code à 6 chiffres envoyé **par email** aux comptes admin et Admin-test est une vraie barrière en plus du mot de passe. Mais pour le NIST, un email ne prouve pas la possession d'un appareil précis : il **exclut l'email** des canaux de double authentification (« *methods that do not prove possession of a specific device, such as VoIP or email, SHALL NOT be used for out-of-band authentication* »). 🟡
+
+- **Ce qui est déjà bien** : code tiré par `crypto.randomInt`, empreinte seule en base, 10 min, 5 essais, appareil de confiance limité à 1 h.
+- **Alignement possible (offre à la mairie, document 30)** : une application d'authentification (codes TOTP, type « Google Authenticator ») ou, mieux, les **clés d'accès** (passkeys, WebAuthn), résistantes à l'hameçonnage — recommandées pour les comptes d'administration.
+
+### 8.3 Cybersecurity Framework 2.0 — vue d'ensemble
+
+Le CSF 2.0 (février 2024) range la sécurité en six fonctions. Il ne fixe pas de règle chiffrée : il sert à vérifier qu'aucune famille de mesures n'est oubliée.
+
+| Fonction | En place | À prévoir |
+|---|---|---|
+| **Gouverner** | Registre des traitements (doc 22), cet audit, rôles et droits (ADMIN, Admin-test), conventions de travail | Désigner, avec la mairie, qui décide en cas d'incident |
+| **Identifier** | Inventaire des données personnelles, dépendances suivies (`npm audit` en CI, Dependabot) | Revue annuelle des dépendances et des accès |
+| **Protéger** | Authentification (§ 8.1), 2FA de l'équipe, Helmet, CORS, limitation des requêtes, validation Zod, moindre privilège | Écarts du § 8.1 ; CSP / HSTS du site (S5-24) |
+| **Détecter** | Journal d'administration (6 mois), journaux serveur sans donnée sensible | Alerte sur des échecs de connexion en série (avec la limite par compte) |
+| **Répondre** | — | **Procédure de violation de données** : qui prévient, notification CNIL sous 72 h (RGPD art. 33), information des personnes |
+| **Récupérer** | Migrations versionnées, seed de production | Vérifier les sauvegardes de la base chez l'hébergeur et faire **un essai de restauration** (S5-22) |
+
+### 8.4 Mots de passe divulgués — évaluation
+
+Le NIST demande de refuser les mots de passe « courants, attendus ou déjà divulgués ». Deux façons de faire :
+
+| | Liste locale (recommandée) | Service *Pwned Passwords* (Have I Been Pwned) |
+|---|---|---|
+| Principe | Un fichier des ~100 000 mots de passe les plus courants (listes publiques sous licence libre), plus quelques mots attendus ici (`senlis`, `participatif`, `cathedrale`…), embarqué dans l'API | L'API envoie les 5 premiers caractères de l'empreinte SHA-1 du mot de passe ; le service renvoie les empreintes qui commencent pareil (« k-anonymat ») |
+| Couverture | Les mots de passe les plus probables | Des centaines de millions de mots de passe réellement divulgués |
+| Dépendance | Aucune : rien ne sort du serveur | Service tiers aux États-Unis (Cloudflare) ; s'il ne répond pas, il faut laisser passer le mot de passe |
+| Cohérence avec le projet | Même logique que les polices auto-hébergées (S5A-03) et les données figées de la carte | Un transfert hors UE à mentionner dans la politique de confidentialité, même si 5 caractères d'empreinte ne sont pas une donnée personnelle |
+| Effort | ~0,5 j | ~0,5 j |
+
+**Recommandation** : la liste locale, testée sur le mot de passe **en entier** (pas des morceaux), à l'inscription, à la réinitialisation et au changement de mot de passe, avec un refus motivé (« ce mot de passe fait partie des plus utilisés, choisissez-en un autre »).
+
+### 8.5 Proposition d'alignement — S5R-13b *(à décider)*
+
+| Mesure | Effet | Effort |
+|---|---|---|
+| Longueur minimale **15**, **plus aucune règle de composition** ; jauge et messages réécrits (« une phrase de passe : 4 mots au hasard ») | Conforme NIST ; reste dans l'esprit de la CNIL, qui accepte les deux approches | 0,25 j |
+| **Liste de blocage locale** (§ 8.4) | Conforme NIST ; bloque les mots de passe les plus devinés | 0,5 j |
+| **Limite par compte** : au-delà de 100 échecs consécutifs (ou moins), connexion suspendue 1 h et email d'alerte au titulaire | Conforme NIST ; résiste aux attaques réparties sur plusieurs adresses | 0,25 j |
+| Longueur en caractères Unicode et normalisation NFC | Conforme NIST (cas rares : émojis, accents composés) | inclus |
+
+Les comptes existants **ne sont pas touchés** : les nouvelles règles s'appliquent au prochain choix de mot de passe (le NIST interdit d'imposer un changement sans motif). Le poivre et la 2FA par application ou clé d'accès vont dans l'offre à la mairie (document 30).
+
+---
+
+## 9. Documentation
 
 - ✅ Swagger annoncé mais non implémenté : cahier des charges v1.4 et READMEs corrigés (« prévu »).
 - ✅ README racine : `dev`, Clever Cloud, démarrage rapide réaligné sur les npm workspaces (S5A-08).
