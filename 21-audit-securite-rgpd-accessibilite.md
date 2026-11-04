@@ -20,7 +20,7 @@
 | Cookies et consentement | ✅ Aucun bandeau nécessaire (Google Fonts retiré par S5A-03) | 0 | S5A-03 ✅ |
 | Accessibilité (RGAA) | Bonne base + critères de structure corrigés ; déclaration publiée (« non conforme » faute d'audit complet) | 0 | S5A-07 ✅ |
 | Mise en production | Corrigé (S5A-08) ; CSP/HSTS du site statique en S5-24 | 0 | S5A-08 ✅, S5-22, S5-24 |
-| Référentiels NIST (S5R-13, 21/10) | Stockage, sessions, saisie : conformes ; **4 écarts** sur les mots de passe des citoyens (longueur 15, règles de composition, liste de blocage, limite par compte) — choix CNIL assumé, alignement proposé ; 2FA par email non reconnu par le NIST | 0 | S5R-13 ✅, proposition S5R-13b |
+| Référentiels NIST (S5R-13, 21/10) | Stockage, sessions, saisie : conformes ; **4 écarts** sur les mots de passe des citoyens (longueur 15, règles de composition, liste de blocage, limite par compte) — choix CNIL assumé, alignement proposé ; 2FA par email non reconnu par le NIST | 0 | S5R-13 ✅, S5R-13b (politique combinée CNIL + NIST, § 8.5) |
 
 ---
 
@@ -159,6 +159,10 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 > **Correctif appliqué** : les six premières lignes du tableau sont traitées (`trust proxy` configurable par `TRUST_PROXY`, `assetUrl` côté client, CORP `same-site`, tuiles `tile.openstreetmap.org`, docker-compose sur `127.0.0.1` avec le `.env` de l'API, Dockerfile réparé et non-root avec healthcheck). En plus : `prisma` et `dotenv` passés en dépendances de production (sinon `postinstall` et `migrate deploy` échouent chez l'hébergeur), `npm audit` en CI (bloquant sur « critique ») et Dependabot, ESLint client étendu aux `.jsx`, redirection après connexion blindée contre `//autre-site`. **Reste en S5-24** : en-têtes de sécurité (CSP, HSTS) du site statique, à régler avec l'hébergeur — la CSP pourra se limiter à `font-src 'self'` grâce à S5A-03.
 >
 > ⚠️ **Dépendances vulnérables connues au 28/09/2026** : 4 failles « élevées » et 3 « modérées », toutes dans l'outillage de la CLI Prisma 7.8 (`@prisma/dev`, `mysql2`, `deepmerge-ts`, `valibot`, `@hono/node-server`), jamais exécuté par l'API en fonctionnement. Seule correction proposée par npm : redescendre en Prisma 6 (rupture). Suivi : Dependabot + audit informatif en CI.
+>
+> ✅ **Mise à jour du 28/10/2026** : Prisma **7.10.1** corrige toute la chaîne de l'outillage ci-dessus sans changement de version majeure ; corrigés aussi `body-parser` 2.4.0, `multer` 2.5.0, `nodemailer` 10.2.1, `qs`, `fast-uri` (branche `chore/deps-security`). **Reste** : `zod` 3 (consommation mémoire sur des listes géantes, GHSA-mrhx-c7xc-m3w5), corrigé seulement en Zod 4 — risque contenu par les limites de taille des requêtes (10 ko, 100 ko pour les enquêtes) ; migration avec S5R2-08.
+>
+> ℹ️ **PHP2Shell** (CVE-2026-109618 et CVE-2026-109619, failles critiques du cœur de PHP corrigées le 21/10/2026) : **projet non concerné** — aucune ligne de PHP, images Docker `node:22-alpine` et `postgres:16-alpine` sans PHP, hébergement Node.js. À vérifier en revanche sur tout autre site en PHP (WordPress, etc.) : PHP 8.2.35, 8.3.36, 8.4.27 ou 8.5.12 au minimum.
 
 | Constat | Effet en ligne | Correctif |
 |---|---|---|
@@ -235,16 +239,33 @@ Le NIST demande de refuser les mots de passe « courants, attendus ou déjà div
 
 **Recommandation** : la liste locale, testée sur le mot de passe **en entier** (pas des morceaux), à l'inscription, à la réinitialisation et au changement de mot de passe, avec un refus motivé (« ce mot de passe fait partie des plus utilisés, choisissez-en un autre »).
 
-### 8.5 Proposition d'alignement — S5R-13b *(à décider)*
+### 8.5 Politique combinée CNIL + NIST — S5R-13b *(mise à jour le 28/10/2026)*
 
-| Mesure | Effet | Effort |
+**Qui fait foi ?** Pour un site destiné à une mairie française, la **CNIL** : c'est elle qui contrôle (avec l'ANSSI pour les bonnes pratiques). Le NIST sert de référence de qualité. Bonne nouvelle : relue de près, la recommandation CNIL 2022-100 permet de satisfaire **les deux à la fois**.
+
+La CNIL fixe un niveau de solidité selon le cas :
+
+| Cas CNIL | Solidité exigée | Exemples donnés par la CNIL |
 |---|---|---|
-| Longueur minimale **15**, **plus aucune règle de composition** ; jauge et messages réécrits (« une phrase de passe : 4 mots au hasard ») | Conforme NIST ; reste dans l'esprit de la CNIL, qui accepte les deux approches | 0,25 j |
-| **Liste de blocage locale** (§ 8.4) | Conforme NIST ; bloque les mots de passe les plus devinés | 0,5 j |
-| **Limite par compte** : au-delà de 100 échecs consécutifs (ou moins), connexion suspendue 1 h et email d'alerte au titulaire | Conforme NIST ; résiste aux attaques réparties sur plusieurs adresses | 0,25 j |
-| Longueur en caractères Unicode et normalisation NFC | Conforme NIST (cas rares : émojis, accents composés) | inclus |
+| n° 1 — mot de passe **seul** (§ 41) | 80 bits | 12 caractères avec les 4 familles ; 14 caractères (majuscules, minuscules, chiffres) ; phrase de passe d'au moins 7 mots |
+| n° 2 — mot de passe **+ restriction d'accès au compte** (§ 42-43) | 50 bits | 8 caractères et 3 familles sur 4 ; phrase de passe d'au moins 5 mots ; 16 chiffres |
 
-Les comptes existants **ne sont pas touchés** : les nouvelles règles s'appliquent au prochain choix de mot de passe (le NIST interdit d'imposer un changement sans motif). Le poivre et la 2FA par application ou clé d'accès vont dans l'offre à la mairie (document 30).
+La restriction d'accès du cas n° 2 doit compter au moins un de ces mécanismes (§ 43) : délai croissant après les échecs, **nombre maximal d'essais dans un délai donné** (exemple CNIL : 10 essais par heure), captcha, ou blocage après 10 échecs au plus avec un moyen de déblocage. La CNIL demande aussi de **privilégier la longueur plutôt que la complexité** (§ 21), de **refuser les mots de passe couramment utilisés** en le disant à l'utilisateur (§ 37), et de ne plus imposer de changement périodique à tous les utilisateurs (§ 54).
+
+**Politique retenue pour les comptes citoyens** :
+
+| Mesure | CNIL | NIST | Effort |
+|---|---|---|---|
+| **15 caractères minimum, aucune règle de composition** ; aide « une phrase de passe, par exemple 4 ou 5 mots au hasard » ; jauge fondée sur la longueur | ✅ cas n° 2 : même en minuscules seules, 15 caractères ≈ 70 bits (≥ 50) ; longueur privilégiée (§ 21) | ✅ | 0,25 j |
+| **Liste de blocage locale** (§ 8.4), refus motivé | ✅ § 37 | ✅ | 0,5 j |
+| **Limite par compte** : 10 essais par heure et par compte, puis attente ; email d'alerte au titulaire ; la limite par adresse IP actuelle est conservée | ✅ § 43 (c'est elle qui fait passer en cas n° 2) | ✅ (≤ 100 échecs) | 0,25 j |
+| Longueur maximale 128 | ✅ (≥ 50, § 31) | ✅ (≥ 64) | — |
+| Pas de changement périodique | ✅ § 54 | ✅ | — |
+| Longueur comptée en caractères Unicode, normalisation NFC | — | ✅ | inclus |
+
+**Comptes de l'équipe** (admin, Admin-test) : les mêmes règles, plus la double authentification déjà en place. Seul point où les deux référentiels divergent vraiment : la recommandation de la CNIL maintient un **renouvellement périodique pour les comptes d'administration**, que le NIST déconseille. Pour deux ou trois comptes, on suit la CNIL (rappel annuel de changer le mot de passe) — le régulateur français prime.
+
+Les comptes existants **ne sont pas touchés** : les nouvelles règles s'appliquent au prochain choix de mot de passe. Le poivre et la 2FA par application ou clé d'accès vont dans l'offre à la mairie (document 30).
 
 ---
 
