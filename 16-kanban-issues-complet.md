@@ -1,6 +1,6 @@
 # Backlog complet — jusqu'à la mise en ligne du Lot 1 (23 semaines)
 
-> Rythme : **5 jours / semaine**, 111 jours jusqu'à la mise en ligne. Chaque issue = une carte du kanban GitHub Projects, un *milestone* = un sprint. Les jours (J1 → J110) sont indicatifs : ils supposent des journées pleines — si tu développes à mi-temps, double le calendrier, pas le contenu.
+> Rythme : **5 jours / semaine**, 112 jours jusqu'à la mise en ligne. Chaque issue = une carte du kanban GitHub Projects, un *milestone* = un sprint. Les jours (J1 → J110) sont indicatifs : ils supposent des journées pleines — si tu développes à mi-temps, double le calendrier, pas le contenu.
 >
 > **Mise à jour v1.1** : +6 issues `joy:palier-*` (mascotte, animations, sections colorées) intégrées aux sprints existants sans modifier le calendrier — les issues design sont courtes (0,5 à 1,5 j) et se glissent dans les marges de chaque sprint.
 >
@@ -59,6 +59,10 @@
 > **Complément S5R2-05** (20/10/2026, recette) : **plusieurs emplacements par parking** (le stade : plusieurs aires) et **des traits le long des rues** (places en voirie, zone rouge) — colonne `geometry` GeoJSON (points et traits), migration `parking_locations` qui reprend les points déjà placés ; outils « Ajouter des points » / « Tracer un trait » dans l'écran d'administration, traits de la couleur du régime sur la carte publique.
 >
 > **S5R-13 livrée** (21/10/2026) : audit complété (document `21`, § 8) avec le **NIST SP 800-63B-4** (version finale du 31/07/2025) — stockage, saisie, jetons conformes ; **4 écarts** sur les mots de passe des citoyens (15 caractères minimum, plus de règles de composition, liste de blocage, limite d'échecs par compte), le projet ayant suivi la CNIL ; la 2FA par email n'est pas reconnue par le NIST — et le **CSF 2.0** (six fonctions ; à prévoir : procédure de violation de données, essai de restauration) ; évaluation des mots de passe divulgués (liste locale recommandée plutôt que le service *Pwned Passwords*) ; **proposition S5R-13b** (1 j, à décider). Procédure de mise à jour (document `32`) et script `client/scripts/update-iris.mjs` : contours IGN rechargés, Saint-Vincent redécoupé automatiquement (`splitWithShape`), écarts de surface affichés.
+>
+> **Mise à jour v1.15** (05/11/2026) : ajout de **S5R-13b** (proposée par l'audit S5R-13, décidée par Nath le 05/11 : « maintenant, avant S5R2-07 »), 1 jour : les issues suivantes glissent d'un jour — **mise en ligne à J112**.
+>
+> **S5R-13b livrée** (05/11/2026) : `lib/passwordPolicy.js` — 15 à 128 caractères comptés en caractères Unicode après normalisation NFC, **aucune règle de composition** ; refus motivé des mots de passe courants (liste locale de 5 521 mots de passe de 15 caractères et plus, tirés de SecLists — licence MIT —, régénérée par `scripts/build-password-blocklist.mjs`), des suites de touches et répétitions, du nom du site et de la phrase d'exemple affichée, et de l'adresse email ou du pseudo ; inscription, changement et réinitialisation (un refus ne consomme plus le lien reçu) ; anciens comptes inchangés et toujours accessibles. **10 essais par heure et par compte** (`services/loginThrottle.js`, table `LoginThrottle`, migration `password_policy` : empreinte HMAC de l'adresse ; adresses inconnues comptées pareil) — 429 `ACCOUNT_THROTTLED`, email d'alerte sans lien, déblocage par « Mot de passe oublié », purge de nuit. **Rappel annuel** pour l'équipe (`passwordChangedAt`, `passwordRenewalDue`, bandeau `PasswordRenewalBanner`). Client : jauge fondée sur la longueur, astuce de la phrase de passe, attributs `pattern` retirés. Document 21 § 8.5, registre (fiche 1), politique de confidentialité.
 >
 > **Légende** : ✅ livré (mergé sur `dev`) · 🔶 partiellement livré · sans marque = à faire.
 >
@@ -212,7 +216,7 @@
 
 > S5R-13 (audit NIST + procédure de mise à jour des contours) est **reportée** dans le Sprint 5 recette 2 : la procédure doit couvrir aussi les quartiers du plan municipal (S5R2-06).
 
-## 🧪 Sprint 5 recette 2 — Deuxième recette avant mise en ligne *(Semaines 18–21 · J86–J105)*
+## 🧪 Sprint 5 recette 2 — Deuxième recette avant mise en ligne *(Semaines 18–21 · J86–J106)*
 
 > Issu de la recette du 08/10/2026 et des décisions du 09/10 (`29-retours-recette-2026-10-08.md`, § 8). Ordre = ordre de traitement : les quartiers (S5R2-06) passent avant l'enquête v3.1 (S5R2-03), qui en dépend. S5R2-09 et S5R2-10 ont été **validées** le 09/10. S5R2-11 (rôle « Admin-test ») est ajoutée le 09/10 : elle s'appuie sur le mode test (S5R2-01), d'où sa place juste après. S5R2-12 (modèles en premier) est ajoutée le même jour, oubli de la recette du 08/10.
 
@@ -228,23 +232,24 @@
 | **S5R2-04** | **`feat(client): résultats d'enquête avec Chart.js (barres, secteurs) — chargé seulement sur la page des résultats, nombres en texte conservés à côté (accessibilité)`** ✅ | **`lot:1` `type:feature` `zone:client`** | **`feat/results-chartjs`** | **1 j** | **J95–J96** |
 | **S5R2-05** | **`feat(api+bdd+client): parkings gérés par l'administration — table Parking (nom, places, régime : gratuit / zone rouge / zone verte / gare / durée limitée, recharge existante ou en projet, PMR), écran admin avec placement sur la carte ; données initiales croisant le plan 2023 (noms, places) et le guide Indigo 2025 (zones, tarifs) ; légende des tarifs 2025 ; couche OpenStreetMap retirée`** ✅ | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client`** | **`feat/managed-parkings`** | **3 j** | **J96–J99** |
 | **S5R-13** | **`docs: audit complété NIST (SP 800-63B, CSF 2.0) + procédure de mise à jour des quartiers et des parkings`** *(reportée de S5R)* ✅ | **`lot:1` `type:docs`** | **`docs/nist-iris-procedure`** | **0,5 j** | **J99** |
-| **S5R2-07** | **`feat(api+client): lecture au survol avec les voix neuronales Azure AI Speech (offre gratuite F0) via un relais de l'API (clé jamais exposée, cache, limite) — seulement les éléments porteurs de texte, jamais les pages de compte ni les champs saisis ; Pause / Reprendre / Arrêter ; repli sur les voix du navigateur si le quota est atteint ; sous-traitant déclaré (registre, politique de confidentialité)`** | **`lot:1` `type:feature` `zone:api` `zone:client` `a11y` `rgpd`** | **`feat/hover-reading-azure`** | **2 j** | **J100–J101** |
-| **S5R2-09** | **`feat(api): second email avant la suppression d'un compte inactif (ex-L3-07)`** | **`lot:1` `type:feature` `zone:api` `rgpd`** | **`feat/inactivity-second-email`** | **0,5 j** | **J102** |
-| **S5R2-10** | **`feat(client): page 404 avec la mascotte « perdue dans la forêt » (extrait de S7-05)`** | **`lot:1` `type:design` `zone:client`** | **`feat/404-mascot`** | **0,5 j** | **J102** |
-| **S5R2-08** | **`refactor: audit complet du code avant mise en ligne — hook commun de chargement (BACKLOG-03, règle set-state-in-effect repassée en error), code mort, doublons, dépendances, performance (Lighthouse), relecture sécurité des routes récentes ; rapport 31`** | **`lot:1` `type:refactor` `prio:haute`** | **`refactor/pre-launch-audit`** | **3 j** | **J103–J105** |
+| **S5R-13b** | **`feat(api+bdd+client): politique des mots de passe CNIL + NIST combinée — 15 caractères minimum sans règle de composition, liste de blocage locale (mots de passe courants, suites, nom du site, email ou pseudo), longueur Unicode et NFC, 10 essais par heure et par compte avec alerte email au titulaire, rappel annuel de changement pour l'équipe ; comptes existants inchangés`** ✅ | **`lot:1` `type:feature` `zone:api` `zone:bdd` `zone:client` `securite` `rgpd`** | **`feat/password-policy`** | **1 j** | **J100** |
+| **S5R2-07** | **`feat(api+client): lecture au survol avec les voix neuronales Azure AI Speech (offre gratuite F0) via un relais de l'API (clé jamais exposée, cache, limite) — seulement les éléments porteurs de texte, jamais les pages de compte ni les champs saisis ; Pause / Reprendre / Arrêter ; repli sur les voix du navigateur si le quota est atteint ; sous-traitant déclaré (registre, politique de confidentialité)`** | **`lot:1` `type:feature` `zone:api` `zone:client` `a11y` `rgpd`** | **`feat/hover-reading-azure`** | **2 j** | **J101–J102** |
+| **S5R2-09** | **`feat(api): second email avant la suppression d'un compte inactif (ex-L3-07)`** | **`lot:1` `type:feature` `zone:api` `rgpd`** | **`feat/inactivity-second-email`** | **0,5 j** | **J103** |
+| **S5R2-10** | **`feat(client): page 404 avec la mascotte « perdue dans la forêt » (extrait de S7-05)`** | **`lot:1` `type:design` `zone:client`** | **`feat/404-mascot`** | **0,5 j** | **J103** |
+| **S5R2-08** | **`refactor: audit complet du code avant mise en ligne — hook commun de chargement (BACKLOG-03, règle set-state-in-effect repassée en error), code mort, doublons, dépendances, performance (Lighthouse), relecture sécurité des routes récentes ; rapport 31`** | **`lot:1` `type:refactor` `prio:haute`** | **`refactor/pre-launch-audit`** | **3 j** | **J104–J106** |
 
 🎯 *Fin de sprint : l'administratrice teste ses enquêtes sans fausser les résultats, la mairie peut préparer des brouillons sans pouvoir rien publier et tient à jour les parkings elle-même ; la carte distingue le Centre historique du quartier Saint-Vincent ; la lecture au survol a une vraie voix ; le code est relu de bout en bout avant d'être exploité.*
 
-## 🌍 Sprint 5ter — Mise en ligne réelle *(Semaines 22–23 · J106–J111)*
+## 🌍 Sprint 5ter — Mise en ligne réelle *(Semaines 22–23 · J107–J112)*
 
 | ID | Issue | Labels | Branche | Estim. | Jours |
 |---|---|---|---|:--:|:--:|
-| **S5-22** | **`chore(infra): nom de domaine + déploiement chez un hébergeur souverain (Clever Cloud, France) — OVH pour le domaine ; protection de la branche main (PR depuis dev, CI verte), dev comme branche par défaut ; secrets régénérés (ADMIN_PASSWORD, JWT_SECRET, SMTP)`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/domain-hosting`** | **1 j** | **J106** |
-| **S5-23** | **`chore(infra): sauvegarde automatisée quotidienne de PostgreSQL (cron), stockage isolé, rétention 30 jours`** | **`lot:1` `type:infra` `zone:bdd` `prio:haute`** | **`chore/db-backups`** | **1 j** | **J107** |
-| **S5-24** | **`chore(infra): chiffrement des flux (TLS partout, HSTS, CSP sur le site statique) + chiffrement des données sensibles au repos`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/encryption-transit-rest`** | **0,5 j** | **J108** |
-| **S5-26** | **`feat(api+client): référencement technique — robots.txt, sitemap.xml généré par l'API, title et meta description par page, Open Graph (aperçus de partage), Schema.org, Lighthouse SEO ≥ 90`** | **`lot:1` `type:feature` `zone:api` `zone:client` `seo`** | **`feat/seo-technical`** | **1,5 j** | **J108–J109** |
-| **S5-27** | **`chore: visibilité — Google Search Console (validation DNS OVH, sitemap), Bing Webmaster Tools, liens depuis le site de la mairie et les annuaires locaux`** | **`lot:1` `type:infra` `seo`** | **`chore/search-consoles`** | **0,5 j** | **J110** |
-| **S5-25** | **`chore: communication de lancement — QR codes commerçants, réseaux locaux, approche des élus (mairie)`** | **`lot:1` `type:doc` `zone:comm`** | **`chore/launch-comms`** | **1 j** | **J110–J111** |
+| **S5-22** | **`chore(infra): nom de domaine + déploiement chez un hébergeur souverain (Clever Cloud, France) — OVH pour le domaine ; protection de la branche main (PR depuis dev, CI verte), dev comme branche par défaut ; secrets régénérés (ADMIN_PASSWORD, JWT_SECRET, SMTP)`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/domain-hosting`** | **1 j** | **J107** |
+| **S5-23** | **`chore(infra): sauvegarde automatisée quotidienne de PostgreSQL (cron), stockage isolé, rétention 30 jours`** | **`lot:1` `type:infra` `zone:bdd` `prio:haute`** | **`chore/db-backups`** | **1 j** | **J108** |
+| **S5-24** | **`chore(infra): chiffrement des flux (TLS partout, HSTS, CSP sur le site statique) + chiffrement des données sensibles au repos`** | **`lot:1` `type:infra` `zone:ci` `prio:haute`** | **`chore/encryption-transit-rest`** | **0,5 j** | **J109** |
+| **S5-26** | **`feat(api+client): référencement technique — robots.txt, sitemap.xml généré par l'API, title et meta description par page, Open Graph (aperçus de partage), Schema.org, Lighthouse SEO ≥ 90`** | **`lot:1` `type:feature` `zone:api` `zone:client` `seo`** | **`feat/seo-technical`** | **1,5 j** | **J109–J110** |
+| **S5-27** | **`chore: visibilité — Google Search Console (validation DNS OVH, sitemap), Bing Webmaster Tools, liens depuis le site de la mairie et les annuaires locaux`** | **`lot:1` `type:infra` `seo`** | **`chore/search-consoles`** | **0,5 j** | **J111** |
+| **S5-25** | **`chore: communication de lancement — QR codes commerçants, réseaux locaux, approche des élus (mairie)`** | **`lot:1` `type:doc` `zone:comm`** | **`chore/launch-comms`** | **1 j** | **J111–J112** |
 
 🎯 *Fin de sprint : **Lot 1 réellement en ligne**, hébergé en France, sauvegardé, chiffré, **trouvable sur les moteurs de recherche**, et annoncé aux Senlisiens.*
 
@@ -335,9 +340,9 @@
 | 17 | S5 recette | S5R-08 → S5R-12 | Création d'enquête, zones de proposition, carte, navigation admin ✅ |
 | 18 | S5 recette 2 | S5R2-01, S5R2-11, S5R2-12, S5R2-13, S5R2-02 | Mode test admin, rôle Admin-test, modèles en premier, sauvegarde automatique, options conditionnelles |
 | 19 | S5 recette 2 | S5R2-03 → S5R2-05, S5R-13 | Enquête v3.1, Chart.js, parkings gérés par l'admin, NIST |
-| 20 | S5 recette 2 | S5R2-07, S5R2-09, S5R2-10, S5R2-08 | Voix neuronales, audit et refactorisation |
+| 20 | S5 recette 2 | S5R-13b, S5R2-07, S5R2-09, S5R2-10, S5R2-08 | Mots de passe CNIL + NIST, voix neuronales, audit et refactorisation |
 | 21 | S5 recette 2 + S5ter | S5R2-08, S5-22 → S5-24, S5-26 | Domaine, hébergement, sauvegardes, chiffrement, SEO |
-| 22 | S5ter Mise en ligne | S5-26, S5-27, S5-25 | Visibilité, communication · **🚀 Lot 1 en ligne (J111, début de semaine 23)** |
+| 22 | S5ter Mise en ligne | S5-26, S5-27, S5-25 | Visibilité, communication · **🚀 Lot 1 en ligne (J112, semaine 23)** |
 
 ## Règles de fonctionnement (rappel)
 

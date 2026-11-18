@@ -20,7 +20,7 @@
 | Cookies et consentement | ✅ Aucun bandeau nécessaire (Google Fonts retiré par S5A-03) | 0 | S5A-03 ✅ |
 | Accessibilité (RGAA) | Bonne base + critères de structure corrigés ; déclaration publiée (« non conforme » faute d'audit complet) | 0 | S5A-07 ✅ |
 | Mise en production | Corrigé (S5A-08) ; CSP/HSTS du site statique en S5-24 | 0 | S5A-08 ✅, S5-22, S5-24 |
-| Référentiels NIST (S5R-13, 21/10) | Stockage, sessions, saisie : conformes ; **4 écarts** sur les mots de passe des citoyens (longueur 15, règles de composition, liste de blocage, limite par compte) — choix CNIL assumé, alignement proposé ; 2FA par email non reconnu par le NIST | 0 | S5R-13 ✅, S5R-13b (politique combinée CNIL + NIST, § 8.5) |
+| Référentiels NIST (S5R-13, 21/10) | Stockage, sessions, saisie : conformes ; **4 écarts** sur les mots de passe des citoyens (longueur 15, règles de composition, liste de blocage, limite par compte) — **corrigés par S5R-13b le 05/11** (politique combinée CNIL + NIST) ; 2FA par email non reconnu par le NIST | 0 | S5R-13 ✅, S5R-13b ✅ (politique combinée CNIL + NIST, § 8.5) |
 
 ---
 
@@ -188,10 +188,10 @@ Source : *Digital Identity Guidelines: Authentication and Authenticator Manageme
 
 | Exigence NIST (force) | Senlis Participatif | Verdict |
 |---|---|:--:|
-| 15 caractères minimum pour un mot de passe seul (**SHALL**) ; 8 s'il fait partie d'une double authentification | 12 caractères (CNIL 2022-100) | 🟠 écart |
-| Aucune règle de composition (**SHALL NOT**) | 4 familles imposées (majuscule, minuscule, chiffre, caractère spécial) | 🟠 écart (choix CNIL) |
-| Comparaison à une **liste de blocage** (mots de passe courants, attendus ou déjà divulgués), refus motivé (**SHALL**) | Absente (seul le refus d'un nouveau mot de passe identique à l'ancien existe) | 🟠 écart |
-| Limiter les échecs consécutifs **par compte** à 100 au plus (**SHALL**) | Limite **par adresse IP** (10 échecs / 15 min en production) ; aucune limite par compte : un attaquant qui change d'adresse n'est pas freiné | 🟠 écart |
+| 15 caractères minimum pour un mot de passe seul (**SHALL**) ; 8 s'il fait partie d'une double authentification | 12 caractères (CNIL 2022-100) → **15 caractères** (S5R-13b) | ✅ corrigé |
+| Aucune règle de composition (**SHALL NOT**) | 4 familles imposées (majuscule, minuscule, chiffre, caractère spécial) → **aucune règle** (S5R-13b) | ✅ corrigé |
+| Comparaison à une **liste de blocage** (mots de passe courants, attendus ou déjà divulgués), refus motivé (**SHALL**) | Absente → **liste locale** de 5 521 mots de passe, mots prévisibles et personnels, refus motivé (S5R-13b) | ✅ corrigé |
+| Limiter les échecs consécutifs **par compte** à 100 au plus (**SHALL**) | Limite **par adresse IP** (10 échecs / 15 min en production) ; aucune limite par compte : un attaquant qui change d'adresse n'est pas freiné → **10 échecs par heure et par compte** en plus (S5R-13b) | ✅ corrigé |
 | Longueur maximale d'au moins 64 caractères (SHOULD) | 128 | ✅ |
 | Tous les caractères imprimables, l'espace et l'Unicode acceptés (SHOULD) | Oui (aucun caractère refusé) | ✅ |
 | Longueur comptée en caractères Unicode, normalisation NFC avant hachage (SHALL / SHOULD) | Longueur comptée en unités UTF-16 (un émoji compte 2) ; pas de normalisation NFC | 🟡 |
@@ -239,7 +239,7 @@ Le NIST demande de refuser les mots de passe « courants, attendus ou déjà div
 
 **Recommandation** : la liste locale, testée sur le mot de passe **en entier** (pas des morceaux), à l'inscription, à la réinitialisation et au changement de mot de passe, avec un refus motivé (« ce mot de passe fait partie des plus utilisés, choisissez-en un autre »).
 
-### 8.5 Politique combinée CNIL + NIST — S5R-13b *(mise à jour le 28/10/2026)*
+### 8.5 Politique combinée CNIL + NIST — S5R-13b *(mise à jour le 28/10/2026 — ✅ livrée le 05/11/2026)*
 
 **Qui fait foi ?** Pour un site destiné à une mairie française, la **CNIL** : c'est elle qui contrôle (avec l'ANSSI pour les bonnes pratiques). Le NIST sert de référence de qualité. Bonne nouvelle : relue de près, la recommandation CNIL 2022-100 permet de satisfaire **les deux à la fois**.
 
@@ -266,6 +266,20 @@ La restriction d'accès du cas n° 2 doit compter au moins un de ces mécanismes
 **Comptes de l'équipe** (admin, Admin-test) : les mêmes règles, plus la double authentification déjà en place. Seul point où les deux référentiels divergent vraiment : la recommandation de la CNIL maintient un **renouvellement périodique pour les comptes d'administration**, que le NIST déconseille. Pour deux ou trois comptes, on suit la CNIL (rappel annuel de changer le mot de passe) — le régulateur français prime.
 
 Les comptes existants **ne sont pas touchés** : les nouvelles règles s'appliquent au prochain choix de mot de passe. Le poivre et la 2FA par application ou clé d'accès vont dans l'offre à la mairie (document 30).
+
+**Mise en œuvre (05/11/2026)** — ce qui a été livré, et les choix faits en route :
+
+| Mesure | Où | Précisions |
+|---|---|---|
+| Longueur 15 à 128, sans composition | `api/src/lib/passwordPolicy.js`, `client/src/utils/formValidation.js` | Comptée en caractères Unicode (un emoji = 1) après normalisation **NFC** ; c'est la forme normalisée qui est hachée ; à la connexion, la forme brute est aussi essayée, pour les comptes créés avant |
+| Liste de blocage | `api/src/lib/data/mots-de-passe-courants.txt` | **5 521 mots de passe** : ceux de 15 caractères et plus des listes publiques *100k-most-used-passwords-NCSC* et *Pwdb top 1 000 000* (projet SecLists, licence MIT). Inutile d'embarquer les plus courts, déjà refusés par la longueur. À régénérer **une fois par an** : `cd api && node scripts/build-password-blocklist.mjs`, puis commit |
+| Mots prévisibles | même fichier | Suites de touches (azerty, qwerty, alphabet, chiffres), répétitions (« abcabcabc… »), mots du site (« Senlis2026!!!!!! »), phrase d'exemple affichée sous le champ, et l'**adresse email ou le pseudo** de la personne (« Prenom-Nom-2026 ») ; une vraie phrase qui contient son prénom reste permise |
+| Refus motivé | inscription, changement, réinitialisation | Message sous le champ (« fait partie des plus utilisés », « trop prévisible », « reprend votre adresse… ») ; une réinitialisation refusée **ne consomme pas** le lien reçu par email |
+| 10 essais / heure / compte | `api/src/services/loginThrottle.js`, table `LoginThrottle` | Au 10e mot de passe faux : connexion suspendue jusqu'à la fin de l'heure, **même avec le bon mot de passe** (429 `ACCOUNT_THROTTLED`) ; email d'alerte au titulaire, **sans lien** (anti-hameçonnage) ; déblocage par « Mot de passe oublié » (CNIL § 43 : moyen de déblocage) ; adresses inconnues comptées pareil (sinon le blocage révélerait les comptes) ; la table ne contient que l'empreinte HMAC de l'adresse ; compteurs effacés par la purge de nuit |
+| Rappel annuel (équipe) | `User.passwordChangedAt`, bandeau `PasswordRenewalBanner` | Comptes ADMIN et EDITOR dont le mot de passe a plus d'un an : bandeau dans les pages de gestion, lien vers « Mon compte » ; un rappel, jamais un blocage ; jamais pour les citoyens |
+| Mot de passe de l'admin de production | `api/prisma/seed-prod.js` | `ADMIN_PASSWORD` soumis à la même règle |
+
+Bilan des 4 écarts NIST du § 8.1 : **tous corrigés**. Restent hors périmètre, comme prévu : le poivre et la 2FA par application ou clé d'accès (offre à la mairie, document 30).
 
 ---
 

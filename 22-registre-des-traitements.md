@@ -60,9 +60,9 @@
 |---|---|
 | Finalité | Protéger les comptes et le service (force brute, abus) |
 | Base légale | Intérêt légitime (art. 6.1.f) |
-| Données | Adresse IP (rate limiting, journaux techniques de l'hébergeur — adresses email masquées dans les journaux applicatifs), code de connexion admin (empreinte, 10 min, 5 essais), jeton « appareil de confiance » (1 h), numéro de version des sessions |
+| Données | Adresse IP (rate limiting, journaux techniques de l'hébergeur — adresses email masquées dans les journaux applicatifs), code de connexion admin (empreinte, 10 min, 5 essais), jeton « appareil de confiance » (1 h), numéro de version des sessions, nombre d'essais de connexion manqués par compte (empreinte HMAC de l'adresse, jamais l'adresse en clair — S5R-13b), date du dernier changement de mot de passe (rappel annuel, équipe seulement) |
 | Destinataires | Éditrice, Clever Cloud |
-| Durée | Codes et jetons : jusqu'à expiration ; journaux : 1 an au plus |
+| Durée | Codes et jetons : jusqu'à expiration ; compteurs d'essais de connexion : 1 heure, effacés chaque nuit ; journaux : 1 an au plus |
 | Journal d'administration | Actions des comptes admin et Admin-test (connexions, rôles, propositions, enquêtes) — pseudo, date, objet visé ; conservé 6 mois (S5A-06) |
 
 ## Services tiers appelés par le navigateur (hors sous-traitance)
@@ -89,3 +89,4 @@
 | 27/09/2026 | Fiche 4 : journal d'administration (6 mois), révocation des sessions, limite d'essais 2FA (S5A-06) |
 | 09/10/2026 | Rôle « Admin-test » (S5R2-11) : comptes de préparation (mairie, partenaire) sans accès aux données des citoyen·nes — ni comptes, ni réponses, ni résultats détaillés ; 2FA et journalisation comme un admin ; jamais purgés automatiquement |
 | 12/10/2026 | Fiche 3 : sauvegarde automatique des saisies en cours dans le navigateur (S5R2-13) — clé `senlis:draft:*`, propre à chaque compte, effacée à l'envoi, à la déconnexion ou après 7 jours ; politique de confidentialité mise à jour |
+| 05/11/2026 | Fiche 4 : limite de 10 essais de connexion par heure et par compte, avec email d'alerte au titulaire (S5R-13b, CNIL 2022-100 § 43) — compteurs sans adresse en clair, effacés après une heure ; date du dernier changement de mot de passe pour le rappel annuel des comptes de l'équipe ; politique de confidentialité mise à jour |
