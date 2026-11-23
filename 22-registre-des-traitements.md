@@ -65,6 +65,19 @@
 | Durée | Codes et jetons : jusqu'à expiration ; compteurs d'essais de connexion : 1 heure, effacés chaque nuit ; journaux : 1 an au plus |
 | Journal d'administration | Actions des comptes admin et Admin-test (connexions, rôles, propositions, enquêtes) — pseudo, date, objet visé ; conservé 6 mois (S5A-06) |
 
+## Fiche 5 — Lecture au survol avec voix naturelles (S5R2-07)
+
+| Rubrique | Contenu |
+|---|---|
+| Finalité | Lire à voix haute le texte survolé, avec une voix naturelle, pour les personnes qui lisent difficilement (dyslexie, illettrisme, fatigue visuelle, grand âge, francophones débutants) |
+| Base légale | Exécution du service demandé (art. 6.1.b) — fonction activée par la personne elle-même dans le module d'accessibilité, et voix naturelle choisie par elle (une voix de l'appareil n'envoie rien) |
+| Personnes concernées | Visiteurs, connectés ou non, qui activent la lecture au survol |
+| Données | Le **texte public** survolé (titre, paragraphe, bouton), la voix et la vitesse choisies ; l'adresse IP (limite de 40 lectures par minute). **Jamais** : les pages « Mon compte » et d'administration, la réinitialisation du mot de passe, le contenu d'un champ de saisie, le pseudo de l'en-tête, le jeton de connexion (la demande est anonyme) |
+| Destinataires | Éditrice ; sous-traitants : Clever Cloud (relais), **Microsoft (Azure AI Speech, région France Central)** |
+| Transferts hors UE | Traitement en France ; Microsoft étant un groupe américain, un accès depuis les États-Unis ne peut être exclu — encadré par le Data Privacy Framework UE–États-Unis (Microsoft certifié) et l'accord de traitement des données de Microsoft |
+| Durée | Aucune conservation côté Senlis Participatif hors cache audio en mémoire (effacé au redémarrage) ; selon Microsoft, ni le texte ni l'audio ne sont conservés dans ses journaux ; voix et vitesse : `localStorage` du navigateur (`senlis:lecture`) |
+| Sécurité | Clé Azure côté serveur uniquement, texte jamais écrit dans les journaux de l'API, longueur limitée (600 caractères), limite par IP, garde-fou mensuel, repli sur les voix de l'appareil |
+
 ## Services tiers appelés par le navigateur (hors sous-traitance)
 
 | Service | Données vues | Localisation | Justification |
@@ -79,6 +92,7 @@
 |---|---|---|
 | Clever Cloud SAS, 4 rue Voltaire, 44000 Nantes | Hébergement (API, base PostgreSQL, site) | Accord de traitement des données (DPA) intégré aux CGU — ISO 27001, données en France |
 | Sendinblue SAS (Brevo), 17 rue Salneuve, 75017 Paris | Emails transactionnels | DPA intégré aux conditions d'utilisation — suivi d'ouverture désactivé |
+| Microsoft Ireland Operations Ltd (Azure AI Speech), région France Central | Voix naturelles de la lecture au survol (fiche 5) — offre gratuite F0 | Accord de traitement des données Microsoft (DPA, *Products and Services Data Protection Addendum*) ; Microsoft Corporation certifiée Data Privacy Framework UE–États-Unis — procédure : document 33 |
 
 ## Historique
 
@@ -90,3 +104,4 @@
 | 09/10/2026 | Rôle « Admin-test » (S5R2-11) : comptes de préparation (mairie, partenaire) sans accès aux données des citoyen·nes — ni comptes, ni réponses, ni résultats détaillés ; 2FA et journalisation comme un admin ; jamais purgés automatiquement |
 | 12/10/2026 | Fiche 3 : sauvegarde automatique des saisies en cours dans le navigateur (S5R2-13) — clé `senlis:draft:*`, propre à chaque compte, effacée à l'envoi, à la déconnexion ou après 7 jours ; politique de confidentialité mise à jour |
 | 05/11/2026 | Fiche 4 : limite de 10 essais de connexion par heure et par compte, avec email d'alerte au titulaire (S5R-13b, CNIL 2022-100 § 43) — compteurs sans adresse en clair, effacés après une heure ; date du dernier changement de mot de passe pour le rappel annuel des comptes de l'équipe ; politique de confidentialité mise à jour |
+| 18/11/2026 | Fiche 5 : lecture au survol avec voix naturelles (S5R2-07) — Microsoft (Azure AI Speech, France Central) ajouté aux sous-traitants ; texte public seulement, jamais les pages de compte ni les champs saisis ; politique de confidentialité mise à jour (destinataires, `senlis:lecture`) |

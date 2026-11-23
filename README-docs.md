@@ -38,6 +38,7 @@
 | 30 | [Offre d'évolutions à la mairie](30-offre-evolutions-mairie.md) | Sprints 6–7, backlogs et Lot 3 regroupés par thème et chiffrés en jours |
 | 31 | Rapport d'audit et de refactorisation | Réservé (S5R2-08) |
 | 32 | [Procédure de mise à jour des quartiers et des parkings](32-procedure-mise-a-jour-quartiers-parkings.md) | Vérification annuelle des contours INSEE (script), limite de Saint-Vincent, parkings et tarifs, check-list (S5R-13) |
+| 33 | [Procédure des voix naturelles (Azure)](33-procedure-voix-azure.md) | Lecture au survol : créer la ressource Azure gratuite, brancher la clé, vérifier, surveiller le quota, changer la clé (S5R2-07) |
 
 Annexes Word : workflow GitHub, installation de Prisma 7, résumé technique.
 
