@@ -126,7 +126,7 @@ Peu coûteux, utiles dès le premier jour — **validés par Nath le 09/10** :
 | C3 — voix naturelles (Azure AI Speech, offre gratuite F0) ✅ | 2 j | S5R2-07 (livré le 18/11) |
 | BACKLOG-03 — chargement des données (qualité du code) | (inclus) | S5R2-08 |
 | F3 — second email avant suppression d'un compte inactif ✅ | 0,5 j | S5R2-09 (livré le 23/11) |
-| Mascotte de la page 404 (extrait de H1) | 0,5 j | S5R2-10 |
+| Mascotte de la page 404 (extrait de H1) ✅ | 0,5 j | S5R2-10 (livré le 23/11) |
 | Rôle « Admin-test » limité aux brouillons (première brique de F1) | 1,5 j | S5R2-11 |
 
 ---
