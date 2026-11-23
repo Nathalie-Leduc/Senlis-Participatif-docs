@@ -23,10 +23,10 @@
 | Finalité | Créer et sécuriser un compte, vérifier l'adresse email, permettre la réinitialisation du mot de passe, garantir « une personne = un compte » |
 | Base légale | Exécution du service demandé (art. 6.1.b) |
 | Personnes concernées | Habitants, actifs et visiteurs de Senlis qui s'inscrivent |
-| Données | Pseudo, email, empreinte Argon2 du mot de passe, rôle, email vérifié (oui/non), préférences de notification, dates de création, de modification, de dernière connexion et d'avertissement d'inactivité |
+| Données | Pseudo, email, empreinte Argon2 du mot de passe, rôle, email vérifié (oui/non), préférences de notification, dates de création, de modification, de dernière connexion et des deux avertissements d'inactivité |
 | Destinataires | Éditrice ; sous-traitants : Clever Cloud (hébergement), Brevo (emails) |
 | Transferts hors UE | Aucun |
-| Durée | Jusqu'à la suppression du compte, ou 3 ans sans connexion : email d'avertissement puis suppression 30 jours plus tard (`npm run purge`, quotidien — jamais sans avertissement envoyé, jamais un compte admin ni Admin-test). Jetons email : effacés 24 h après expiration |
+| Durée | Jusqu'à la suppression du compte, ou 3 ans sans connexion : **deux** emails d'avertissement, 30 jours puis 7 jours avant (« dernier rappel », S5R2-09), puis suppression (`npm run purge`, quotidien — jamais sans les deux avertissements envoyés, jamais moins de 7 jours après le dernier, jamais un compte admin ni Admin-test). Jetons email : effacés 24 h après expiration |
 | Sécurité | HTTPS, Argon2id, jetons email à usage unique (empreinte SHA-256, 1 h), rate limiting, rôle relu en base à chaque requête |
 
 ## Fiche 2 — Profil déclaré et ciblage des enquêtes
@@ -105,3 +105,4 @@
 | 12/10/2026 | Fiche 3 : sauvegarde automatique des saisies en cours dans le navigateur (S5R2-13) — clé `senlis:draft:*`, propre à chaque compte, effacée à l'envoi, à la déconnexion ou après 7 jours ; politique de confidentialité mise à jour |
 | 05/11/2026 | Fiche 4 : limite de 10 essais de connexion par heure et par compte, avec email d'alerte au titulaire (S5R-13b, CNIL 2022-100 § 43) — compteurs sans adresse en clair, effacés après une heure ; date du dernier changement de mot de passe pour le rappel annuel des comptes de l'équipe ; politique de confidentialité mise à jour |
 | 18/11/2026 | Fiche 5 : lecture au survol avec voix naturelles (S5R2-07) — Microsoft (Azure AI Speech, France Central) ajouté aux sous-traitants ; texte public seulement, jamais les pages de compte ni les champs saisis ; politique de confidentialité mise à jour (destinataires, `senlis:lecture`) |
+| 23/11/2026 | Fiche 1 : second email d'avertissement (« dernier rappel ») 7 jours avant la suppression d'un compte inactif (S5R2-09) ; la suppression exige les deux emails envoyés ; politique de confidentialité mise à jour |

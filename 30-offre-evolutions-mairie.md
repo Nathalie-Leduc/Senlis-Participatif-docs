@@ -39,9 +39,31 @@
 |---|---|:--:|---|
 | C1 (ex-L3-01) | **Site multilingue** (anglais et langues des communautés locales), traduction assistée par IA puis relue | 4–6 j | API de traduction (ex. Mistral, DeepL) : quelques euros/mois au volume d'une ville |
 | C2 (ex-L3-02) | **Aide à la rédaction** (orthographe, grammaire) en suggestion, pour les propositions et commentaires | 2 j | API IA, au volume |
-| C3 (ex-L3-03) | **Voix naturelles** (« neuronales ») pour la lecture à voix haute | 2–3 j | Service de synthèse vocale, au volume |
+| C3 (ex-L3-03) | ~~**Voix naturelles** (« neuronales ») pour la lecture à voix haute~~ — ✅ **intégré au Lot 1** (S5R2-07, 18/11/2026) avec Azure AI Speech, offre gratuite F0 : voir § 3 | ~~2–3 j~~ | 0 € |
+| C3b (20/11/2026) | **Voix naturelles souveraines** : remplacer Azure (Microsoft, groupe américain) par **Mistral Voxtral TTS** (Mistral AI, Paris) — toute la chaîne devient française (Clever Cloud + Mistral) ; détail ci-dessous | 0,5 j | Au volume : ≈ 1,60 $ à 16 $/mois (voir tableau) |
 | C4 (ex-L3-04) | Le **cerf comme curseur** de la lecture au survol | 0,5 j | — |
-| | **Sous-total** | **8,5–11,5 j** | |
+| | **Sous-total** | **7–9 j** | |
+
+> **Option C3b — Mistral Voxtral TTS, en détail** *(décision de Nath du 20/11 : Azure F0 reste au Lot 1 ; Voxtral est proposé à la mairie)*
+>
+> **Pourquoi la proposer** : au Lot 1, les voix naturelles passent par Azure AI Speech. Le traitement a lieu en France, mais Microsoft est un groupe américain : un accès depuis les États-Unis ne peut être exclu (encadré par le Data Privacy Framework). Pour une collectivité, un sous-traitant français simplifie le registre des traitements, la politique de confidentialité et le dialogue avec le DPO. La qualité des voix est comparable.
+>
+> **Ce que comprend la demi-journée** : remplacer le relais côté serveur (`api/src/services/azureSpeech.js`, un seul fichier — le client, le cache, les limites et le repli sur les voix de l'appareil ne changent pas), adapter les tests, mettre à jour le registre (fiche 5), la politique de confidentialité et la procédure (document 33), créer le compte Mistral de la mairie avec un **plafond de dépense mensuel**.
+>
+> **Coût du service** (payé par la mairie, ou refacturé) — 0,016 $ pour 1 000 caractères (tarif de lancement de Mistral, mars 2026, à revérifier au devis) :
+>
+> | Usage mensuel de la lecture au survol | Caractères synthétisés | Coût Voxtral |
+> |---|--:|--:|
+> | Faible (quelques dizaines de personnes) | 100 000 | ≈ 1,60 $ |
+> | Moyen | 300 000 | ≈ 4,80 $ |
+> | Équivalent du quota gratuit Azure F0 | 500 000 | ≈ 8 $ |
+> | Fort | 1 000 000 | ≈ 16 $ |
+>
+> Le cache du site (un titre, un menu ou un bouton n'est synthétisé qu'une fois) réduit fortement le volume réel. Le garde-fou mensuel existant (`AZURE_SPEECH_MONTHLY_CHARS`, renommé) et le plafond de dépense de la console Mistral empêchent toute mauvaise surprise : au-delà, le site repasse sur les voix de l'appareil.
+>
+> **Conditions** : offre **payante à l'usage** uniquement — jamais l'offre gratuite « Experiment » de Mistral, dont les requêtes peuvent servir à entraîner ses modèles et qui n'est pas prévue pour la production.
+>
+> **Pistes écartées pour l'instant** : OVHcloud AI Endpoints (pas de voix française au catalogue en novembre 2026 ; à revoir, OVH ayant racheté Gladia, spécialiste de l'IA vocale) ; Piper installé sur notre serveur (gratuit, rien ne sort, mais qualité moindre et licences des voix à vérifier une par une).
 
 ### D. Cartographie et territoire
 
@@ -101,8 +123,9 @@ Peu coûteux, utiles dès le premier jour — **validés par Nath le 09/10** :
 
 | Élément | Estim. | Où |
 |---|:--:|---|
+| C3 — voix naturelles (Azure AI Speech, offre gratuite F0) ✅ | 2 j | S5R2-07 (livré le 18/11) |
 | BACKLOG-03 — chargement des données (qualité du code) | (inclus) | S5R2-08 |
-| F3 — second email avant suppression d'un compte inactif | 0,5 j | S5R2-09 |
+| F3 — second email avant suppression d'un compte inactif ✅ | 0,5 j | S5R2-09 (livré le 23/11) |
 | Mascotte de la page 404 (extrait de H1) | 0,5 j | S5R2-10 |
 | Rôle « Admin-test » limité aux brouillons (première brique de F1) | 1,5 j | S5R2-11 |
 
@@ -114,18 +137,18 @@ Peu coûteux, utiles dès le premier jour — **validés par Nath le 09/10** :
 |---|:--:|
 | A. Participation citoyenne | 14 |
 | B. Communication et notifications | 5 |
-| C. Accessibilité et inclusion | 8,5–11,5 |
+| C. Accessibilité et inclusion (hors C3, intégré) | 7–9 |
 | D. Cartographie et territoire | 7 (+ 0,5/an) |
 | E. Enquêtes avancées | 8–11 |
 | F. Administration et gouvernance (hors F3) | 7–12 |
 | G. Connexion simplifiée | 4–6 |
 | H. Identité (hors 404) | 0,5 |
 | I. Recette par lot | 2 par lot |
-| **Total des évolutions** | **≈ 54 à 67 jours**, hors recettes, maintenance et coûts tiers |
+| **Total des évolutions** | **≈ 52,5 à 64,5 jours**, hors recettes, maintenance et coûts tiers |
 
 **Découpage commercial suggéré** (à affiner en présentant les maquettes) :
 
 1. **Lot 2 « Participation »** — A + B1 + I1 : ≈ 19 j. C'était le MVP complet prévu initialement ; le plus attendu par les citoyens.
-2. **Lot 3 « Accessibilité et territoire »** — C + D : ≈ 15,5–18,5 j. Fort intérêt pour une commune (inclusion, carte).
+2. **Lot 3 « Accessibilité et territoire »** — C + D : ≈ 14–16 j. Fort intérêt pour une commune (inclusion, carte) ; l'option C3b (voix souveraines, 0,5 j) peut aussi se vendre seule, dès la mise en ligne.
 3. **Lot 4 « Administration »** — F1, F2, G, B2 : ≈ 13–20 j. Utile quand plusieurs services de la mairie utilisent l'outil.
 4. **Options** — E (enquêtes avancées), H, et la maintenance (I2) en contrat annuel.

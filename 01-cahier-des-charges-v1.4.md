@@ -1,8 +1,9 @@
 # Cahier des charges — Senlis Participatif
 
-> *Version 1.4 — 23 septembre 2026 — Document de travail, à faire évoluer au fil du projet*
+> *Version 1.5 — 20 novembre 2026 — Document de travail, à faire évoluer au fil du projet (le fichier garde le nom `…-v1.4.md` pour ne pas casser les liens)*
 >
-> **Journal des décisions** — 23/09/2026 : **audit sécurité / RGPD / accessibilité** avant la mise en ligne (document 21). Les points bloquants deviennent un bloc d'issues dédié (Sprint 5 audit, S5A-01 → S5A-08) placé **avant** la mise en ligne réelle. La documentation API Swagger, annoncée depuis la v1.0, n'est pas encore implémentée : elle passe explicitement en « prévu ».
+> **Journal des décisions** — 20/11/2026 : **voix naturelles de la lecture au survol** (S5R2-07) : on garde **Azure AI Speech, offre gratuite F0** (région France Central) au Lot 1. Une **alternative souveraine payante, Mistral Voxtral TTS**, est proposée au Lot 3 (§ 3.2) : toute la chaîne deviendrait française (Clever Cloud + Mistral), pour quelques euros par mois — à décider avec la collectivité.
+> — 23/09/2026 : **audit sécurité / RGPD / accessibilité** avant la mise en ligne (document 21). Les points bloquants deviennent un bloc d'issues dédié (Sprint 5 audit, S5A-01 → S5A-08) placé **avant** la mise en ligne réelle. La documentation API Swagger, annoncée depuis la v1.0, n'est pas encore implémentée : elle passe explicitement en « prévu ».
 > — 22/09/2026 : le profil citoyen est scindé en **deux axes indépendants** — où l'on réside (`situation` + `quartier`) et où l'on travaille (`travailleQuartier` + `travailType`) ; la valeur `CENTRE_COMMERCANT` est retirée. Une question d'enquête peut désormais **mettre à jour le profil** du répondant (`syncsToProfile`).
 > — Août-septembre 2026 (Sprint 5bis, v1.4 à v1.9 du backlog) : relecture du cahier des charges juste avant le déploiement — le moteur d'enquêtes ne ciblait pas réellement son public. Ajouts : situation déclarée à l'inscription, quartier IRIS en cascade, publication des résultats décidée par l'admin, vue détaillée, **branchement conditionnel** de questions, suggestions de villes via `geo.api.gouv.fr`, résultats segmentés et impression/PDF, gestion simple des comptes admin, appareil de confiance 2FA. Les exports PDF passent de « Évolutions » au Lot 1.
 > — Été 2026 (Sprint 5) : sécurité renforcée au-delà du plan initial — mot de passe conforme CNIL (12 caractères, 4 familles) et **double authentification par email pour les admins**. Hébergement : **Clever Cloud** (France) dès le Lot 1, domaine `senlis-participatif.fr` chez OVH, emails Brevo — Railway est abandonné (l'exigence de souveraineté n'attend pas le Lot 3).
@@ -112,9 +113,26 @@ Le projet est porté à titre personnel, hors de tout cadre institutionnel, avec
 - **Accessibilité RGAA 4** : ce qui est une bonne pratique au MVP devient une obligation légale formelle — audit d'accessibilité, déclaration d'accessibilité publiée, schéma pluriannuel
 - **RGPD renforcé** : contrat de sous-traitance (article 28 RGPD) avec la collectivité responsable de traitement, coopération avec son DPO, registre des traitements, analyse d'impact (AIPD) si requise
 - **Hébergement souverain** : ✅ déjà acquis au Lot 1 (Clever Cloud, France) — reste à contractualiser engagements de service et réversibilité avec la collectivité
+- **Voix naturelles souveraines (option payante)** : au Lot 1, la lecture au survol utilise Azure AI Speech (Microsoft) en offre gratuite F0 — un sous-traitant **américain**, même si le traitement a lieu en France (accès depuis les États-Unis possible, encadré par le Data Privacy Framework). Alternative proposée : **Mistral Voxtral TTS** (Mistral AI, Paris), voix françaises d'une qualité comparable (voir l'encadré ci-dessous)
 - **Sécurité des téléservices** : journalisation des accès, sauvegardes contractualisées, plan de reprise d'activité simplifié
 - **Open data** : export des résultats anonymisés en formats ouverts (les communes de plus de 3 500 habitants ont des obligations d'ouverture des données — Senlis en fait partie)
 - **Réversibilité** : clause d'export complet des données dans un format ouvert en fin de contrat (exigence systématique des acheteurs publics)
+
+> **Option « voix naturelles souveraines » — Mistral Voxtral TTS** *(proposée le 20/11/2026)*
+>
+> | | Lot 1 (actuel) : Azure AI Speech F0 | Option : Mistral Voxtral TTS |
+> |---|---|---|
+> | Prestataire | Microsoft (américain), région France Central | Mistral AI (français) |
+> | Coût | 0 € (0,5 million de caractères par mois, jamais facturé) | 0,016 $ pour 1 000 caractères (tarif de lancement, mars 2026) : **environ 8 $ par mois** pour le même volume de 500 000 caractères, beaucoup moins en pratique grâce au cache (un titre ou un bouton n'est synthétisé qu'une fois) |
+> | Maîtrise du budget | Garde-fou mensuel de l'API, puis voix de l'appareil | Le même garde-fou, plus un **plafond de dépense mensuel** fixé dans la console Mistral |
+> | RGPD | Sous-traitant hors UE (Data Privacy Framework) | Sous-traitant français : registre et politique de confidentialité simplifiés |
+> | Qualité | Très bonne | Très bonne (comparable aux meilleures voix du marché selon Mistral) |
+>
+> **Conditions** : offre **payante à l'usage**, jamais l'offre gratuite « Experiment », dont les requêtes peuvent servir à entraîner les modèles de Mistral et qui n'est pas prévue pour la production. Le modèle téléchargeable (licence CC BY-NC, non commerciale, carte graphique nécessaire) n'est pas adapté.
+>
+> **Effort** : environ **½ journée**. Le relais côté serveur est déjà isolé (`api/src/services/azureSpeech.js`) : on remplace ce seul fichier ; le client, le cache, les limites et le repli sur les voix de l'appareil ne changent pas. Puis mise à jour du registre (fiche 5), de la politique de confidentialité et de la procédure (document 33).
+>
+> **Autres pistes écartées pour l'instant** : OVHcloud AI Endpoints (pas de voix française au catalogue en novembre 2026 — à surveiller, OVH ayant racheté Gladia, spécialiste de l'IA vocale, en 2026) ; Piper installé sur notre serveur (gratuit, rien ne sort, mais qualité moindre et licence à vérifier voix par voix — la voix française « Siwis » est non commerciale).
 
 **Adaptations techniques**
 - Configuration par commune (nom, logo, **mascotte personnalisable**, emprise de la carte, couches IRIS, comptes agents) : instance dédiée par collectivité dans un premier temps, multi-tenant si plusieurs communes clientes
@@ -359,6 +377,7 @@ Note : les animations CSS de la mascotte utilisent exclusivement des propriété
 | Faible participation (échantillon non significatif) | Élevée | Élevé | Hors-code : QR codes commerçants, relais associations / réseaux sociaux locaux ; afficher le nombre de répondants avec les résultats (honnêteté statistique) ; **design joyeux avec mascotte guide pour abaisser la barrière d'entrée** |
 | Développement solo (maladie, indisponibilité) | Moyenne | Moyen | Documentation continue, commits atomiques, CI, ce cahier des charges |
 | Biais de l'enquête (formulation orientée des questions) | Moyenne | Élevé | Questions neutres relues par un tiers ; options exhaustives incluant « Autre » |
+| Dépendance à un prestataire américain pour les voix naturelles (Azure) | Moyenne | Faible | Fonction facultative ; texte public seulement, jamais de données de compte ; repli automatique sur les voix de l'appareil ; relais isolé dans un fichier, remplaçable par Mistral Voxtral (option Lot 3, § 3.2) |
 | Surcharge visuelle de la mascotte / animations | Faible | Moyen | `prefers-reduced-motion` respecté (les animations se désactivent) ; mascotte non bloquante (widget fermable, bulles escamotables) ; audit accessibilité incluant les animations |
 
 ---
