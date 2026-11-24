@@ -63,7 +63,7 @@ Le projet est porté à titre personnel, hors de tout cadre institutionnel, avec
 - Être accueilli par la **mascotte cerf** qui contextualise chaque page et guide la navigation via un widget flottant
 
 **Citoyen (connecté, email vérifié)**
-- Voter POUR / CONTRE / NEUTRE sur une proposition (un seul vote, modifiable)
+- Voter POUR / CONTRE / NEUTRE sur une proposition (un seul vote par proposition, modifiable : changer de choix demande une confirmation)
 - Répondre à une enquête ouverte (une seule réponse par enquête), avec préremplissage des réponses déjà connues de son profil
 - Déclarer sa situation (résidence : centre historique, autre quartier — lequel —, hors Senlis ; travail à Senlis : quartier et rôle), modifiable à tout moment
 - Gérer son compte : modifier pseudo / email / mot de passe, « mot de passe oublié », supprimer son compte (droit à l'effacement RGPD)

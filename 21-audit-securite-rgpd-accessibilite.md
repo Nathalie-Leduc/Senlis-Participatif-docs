@@ -160,7 +160,9 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 >
 > ⚠️ **Dépendances vulnérables connues au 28/09/2026** : 4 failles « élevées » et 3 « modérées », toutes dans l'outillage de la CLI Prisma 7.8 (`@prisma/dev`, `mysql2`, `deepmerge-ts`, `valibot`, `@hono/node-server`), jamais exécuté par l'API en fonctionnement. Seule correction proposée par npm : redescendre en Prisma 6 (rupture). Suivi : Dependabot + audit informatif en CI.
 >
-> ✅ **Mise à jour du 28/10/2026** : Prisma **7.10.1** corrige toute la chaîne de l'outillage ci-dessus sans changement de version majeure ; corrigés aussi `body-parser` 2.4.0, `multer` 2.5.0, `nodemailer` 10.2.1, `qs`, `fast-uri` (branche `chore/deps-security`). **Reste** : `zod` 3 (consommation mémoire sur des listes géantes, GHSA-mrhx-c7xc-m3w5), corrigé seulement en Zod 4 — risque contenu par les limites de taille des requêtes (10 ko, 100 ko pour les enquêtes) ; migration avec S5R2-08.
+> ✅ **Mise à jour du 28/10/2026** : Prisma **7.10.1** corrige toute la chaîne de l'outillage ci-dessus sans changement de version majeure ; corrigés aussi `body-parser` 2.4.0, `multer` 2.5.0, `nodemailer` 10.2.1, `qs`, `fast-uri` (branche `chore/deps-security`). ~~**Reste** : `zod` 3 (consommation mémoire sur des listes géantes, GHSA-mrhx-c7xc-m3w5), corrigé seulement en Zod 4 — risque contenu par les limites de taille des requêtes (10 ko, 100 ko pour les enquêtes) ; migration avec S5R2-08.~~
+>
+> ✅ **Mise à jour du 23/11/2026 (S5R2-08 partie 2)** : **`npm audit` à 0.** Zod **4.6.7** (messages de validation gardés en français, voir document 31 § 3) ; `effect` 3.22.5 (ReDoS GHSA-7589-6fvf-x4pw dans la CLI Prisma, corrigé par `overrides` en attendant que Prisma suive) ; express-rate-limit 8 (IPv6 regroupées par sous-réseau).
 >
 > ℹ️ **PHP2Shell** (CVE-2026-109618 et CVE-2026-109619, failles critiques du cœur de PHP corrigées le 21/10/2026) : **projet non concerné** — aucune ligne de PHP, images Docker `node:22-alpine` et `postgres:16-alpine` sans PHP, hébergement Node.js. À vérifier en revanche sur tout autre site en PHP (WordPress, etc.) : PHP 8.2.35, 8.3.36, 8.4.27 ou 8.5.12 au minimum.
 

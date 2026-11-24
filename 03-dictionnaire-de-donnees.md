@@ -110,7 +110,7 @@
 | order | Int | NOT NULL | Position dans le questionnaire |
 | uiHint | String | NULL | Indicateur de rendu, seulement pour `TEXTE_LIBRE` — ex. `VILLE_FR` : suggestions de communes via l'API officielle `geo.api.gouv.fr` (stockage et agrégation inchangés) |
 | syncsToProfile | String | NULL | `situation` \| `quartier` \| `travailleQuartier` \| `travailType` \| `travailleASenlis` (Oui/Non, S5R-05) — la réponse met aussi à jour ce champ du profil (après le COMMIT, jamais à sa place). Réservé à `CHOIX_UNIQUE` (Zod) ; `OUI_NON` sert au seul préremplissage |
-| minValue / maxValue | Float | NULL | NOMBRE uniquement : bornes de la réponse (ex. au moins 1 véhicule professionnel) — vérifiées par l'API et le navigateur (S5R-05) |
+| minValue / maxValue | Float | NULL | NOMBRE uniquement : bornes de la réponse (ex. au moins 1 véhicule professionnel) — vérifiées par l'API et le navigateur (S5R-05) ; **entières** (validateur, recette du 24/11) |
 | maxChoicesFromId | UUID | FK → QUESTION, NULL, SET NULL | CHOIX_MULTIPLE uniquement : pas plus de cases que la réponse à cette question « Nombre » précédente (S5R-05) |
 | surveyId | UUID | FK → SURVEY, CASCADE | Enquête parente |
 | — | — | **UNIQUE(surveyId, order)** | Pas deux questions au même rang |
@@ -146,7 +146,7 @@
 | questionId | UUID | FK → QUESTION, CASCADE | Question visée |
 | optionId | UUID | FK → QUESTION_OPTION, NULL, CASCADE | Option choisie (questions fermées) — N lignes pour un choix multiple |
 | valueText | String | NULL | Réponse libre (type `TEXTE_LIBRE`) |
-| valueNumber | Float | NULL | Réponse numérique (type `NOMBRE`) |
+| valueNumber | Float | NULL | Réponse numérique (type `NOMBRE`) — **nombre entier** imposé par l'API (validateur et moteur d'enquête, recette du 24/11 : une question « Nombre » compte des véhicules, des personnes…) ; colonne gardée en `Float` pour ne pas exiger de migration |
 | — | — | **UNIQUE(responseId, questionId, optionId)** | Pas de double coche |
 
 > Règle d'intégrité applicative (validée par Zod, en complément des contraintes SQL) : **une seule** des trois valeurs (`optionId`, `valueText`, `valueNumber`) est renseignée, en cohérence avec le `type` de la question.

@@ -45,11 +45,11 @@
 1. Le citoyen consulte une proposition et clique sur un des trois boutons de vote
 2. Le système authentifie la requête (JWT) et vérifie `emailVerified`
 3. Le système valide la valeur (`POUR`/`CONTRE`/`NEUTRE`) et le statut de la proposition
-4. Le système enregistre le vote en **upsert** : création s'il n'existe pas, mise à jour sinon (changement d'avis)
+4. Le système enregistre le vote en **upsert** : création s'il n'existe pas, mise à jour sinon (changement d'avis). Côté interface, un vote déjà enregistré est rappelé (« Vous avez voté « Pour » ») et un clic sur un **autre** choix demande d'abord confirmation (« Voulez-vous changer votre vote ? » — Oui / Non) ; un clic sur le choix actif retire le vote
 5. Le système renvoie le nouvel agrégat (totaux par camp) ; l'interface se met à jour
 
 **Alternatives / exceptions**
-- 2a. Non connecté → invitation à se connecter (le vote n'est pas perdu : rejoué après connexion)
+- 2a. Non connecté → invitation à se connecter (le vote n'est pas perdu : rejoué après connexion ; s'il diffère d'un vote déjà enregistré, la confirmation est demandée)
 - 2b. Email non vérifié → `403 EMAIL_NOT_VERIFIED`, message expliquant pourquoi (intégrité des résultats) + lien de renvoi
 - 3a. Proposition `CLOSED` → 403, votes clos
 - 4a. Deux votes simultanés du même citoyen (double clic, deux onglets) → la contrainte `UNIQUE(userId, proposalId)` ne laisse passer qu'une ligne ; l'upsert absorbe le conflit
@@ -66,13 +66,13 @@
 | **Postconditions** | Un bulletin (`SurveyResponse`) et toutes ses réponses (`Answer`) enregistrés **atomiquement** |
 
 **Scénario nominal**
-1. Le citoyen ouvre l'enquête ; le système renvoie questions et options dans l'ordre. Les questions **conditionnelles** ne s'affichent que si l'option déclencheuse a été choisie ; celles qui correspondent à un champ déjà connu du profil (`syncsToProfile`) s'affichent préremplies, modifiables
+1. Le citoyen ouvre l'enquête ; le système renvoie questions et options dans l'ordre. Les questions **conditionnelles** ne s'affichent que si l'option déclencheuse a été choisie ; celles qui correspondent à un champ déjà connu du profil (`syncsToProfile`) s'affichent préremplies, modifiables (une réponse modifiée reste affichée en revenant en arrière, avec la mention « votre profil sera mis à jour quand vous enverrez le questionnaire »)
 2. Le citoyen complète le questionnaire et soumet
 3. Le système authentifie (JWT + `emailVerified`)
 4. Le système valide le payload (Zod) : toutes les questions `required` couvertes, cohérence type/valeur (une option pour un choix unique, un nombre pour `NOMBRE`…), options appartenant bien à leurs questions
 5. Le système vérifie que l'enquête est `OPEN` (et dans sa fenêtre `opensAt`/`closesAt`)
 6. Le système ouvre une **transaction** : insertion du `SurveyResponse` puis de toutes les `Answer`
-7. La transaction est validée (COMMIT) ; les réponses liées au profil mettent à jour le compte (hors transaction) ; réponse `201 Created`
+7. La transaction est validée (COMMIT) ; les réponses liées au profil mettent à jour le compte (hors transaction) ; réponse `201 Created` ; l'interface rafraîchit alors le profil (« Mon compte » à jour sans recharger la page) et le signale sur l'écran de fin
 8. L'interface remercie et affiche, le cas échéant, le nombre de participants
 
 **Alternatives / exceptions**
