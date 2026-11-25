@@ -39,6 +39,7 @@
 | 31 | [Rapport d'audit et de refactorisation](31-rapport-audit-refactorisation.md) | Audit avant mise en ligne (S5R2-08) : chargement des données, dépendances (0 faille), défauts de recette, code mort, **grille OWASP Top 10:2025**, Lighthouse |
 | 32 | [Procédure de mise à jour des quartiers et des parkings](32-procedure-mise-a-jour-quartiers-parkings.md) | Vérification annuelle des contours INSEE (script), limite de Saint-Vincent, parkings et tarifs, check-list (S5R-13) |
 | 33 | [Procédure des voix naturelles (Azure)](33-procedure-voix-azure.md) | Lecture au survol : créer la ressource Azure gratuite, brancher la clé, vérifier, surveiller le quota, changer la clé (S5R2-07) |
+| 34 | [Procédure de mise en ligne](34-procedure-mise-en-ligne.md) | GitHub (`dev` par défaut, `main` protégée), secrets neufs, Clever Cloud (API, site Caddy, PostgreSQL, FS Bucket, purge nocturne), DNS OVH, premier déploiement, vérifications, dépannage (S5-22) — remplace `guide-clever-cloud.docx` |
 
 Annexes Word : workflow GitHub, installation de Prisma 7, résumé technique.
 

@@ -5,6 +5,7 @@ Toutes les évolutions notables du projet sont documentées ici.
 ## [Non publié] — Sprint 5bis
 
 ### Ajouté
+- **Document 34 — procédure de mise en ligne** (S5-22) : vue d'ensemble, GitHub (`dev` par défaut, ruleset de `main`), secrets neufs, Clever Cloud (PostgreSQL, FS Bucket, API Node.js, site Static avec Caddy, variables commentées), DNS OVH, premier déploiement et compte administrateur, 10 vérifications, dépannage ; remplace `guide-clever-cloud.docx`. Kanban (S5-22 🟡), document 06 (Caddy, FS Bucket, purge nocturne)
 - **Document 31** : image d'une proposition vérifiée dès le choix du fichier (recette du 25/11) ;
 - **Document 31** : tests de l'API 4 fois plus rapides (Argon2 léger en test seulement) et avertissement esbuild/oxc supprimé (recette du 25/11)
 - **Document 31 terminé** (S5R2-08 partie 3) : code mort et doublons, **grille OWASP Top 10:2025** (dix risques, ce qui est en place, corrigé, restant), Lighthouse avant / après ; document 21 § 7 bis (revue OWASP 2025) ; kanban (S5R2-08 ✅)
