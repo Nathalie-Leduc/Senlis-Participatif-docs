@@ -18,7 +18,7 @@
 | Sécurité | Grille **OWASP Top 10:2025**, relecture des routes, essais d'attaque dans les tests | Failles et mauvaises configurations |
 | Performance | **Lighthouse 12** (profil mobile), poids du build | Lenteurs, décalages de mise en page, accessibilité, SEO |
 
-**Chiffres des tests** : API **402 → 417**, client **345 → 372** (au 25/11/2026).
+**Chiffres des tests** : API **402 → 417**, client **345 → 375** (au 25/11/2026).
 
 ---
 
@@ -94,6 +94,7 @@ jsdom 31 exige **Node 22.22.2+ ou 24.15+**. La CI (Node 22, dernière version) e
 | « 4,7 voitures » accepté, puis « Jusqu'à 4.7 réponses » | Rien n'imposait un entier | Réponses « Nombre » **entières** : message sous le champ, `step="1"`, clavier numérique ; l'API refuse aussi (validateur + moteur) ; bornes de l'admin entières |
 | Situation changée dans un questionnaire, mais pas dans « Mon compte » | Le profil n'est mis à jour qu'**à l'envoi**, et le site gardait l'ancien profil en mémoire | Profil rafraîchi après l'envoi ; message « sera mis à jour quand vous enverrez le questionnaire » ; écran de fin « Votre profil a aussi été mis à jour » |
 | En revenant sur la question, l'ancienne valeur réapparaît | La lecture seule montrait le **profil**, pas la réponse | Lecture seule seulement si la réponse est toujours celle du profil |
+| Un document Word renommé en `.png` : aucun message en choisissant le fichier (25/11) | Le contrôle (API, partie 3) n'avait lieu qu'à l'enregistrement, après celui du reste de la proposition | Vérifié **dès le choix** : si l'aperçu ne peut pas s'afficher, message sous le champ, fichier retiré, image en ligne réaffichée ; plus de 5 Mo refusé aussi ; l'API garde son contrôle |
 
 Piège évité au passage : rafraîchir le profil rechargeait l'enquête (elle dépendait de tout l'objet `user`) et affichait « Vous avez déjà répondu » à la place du merci. Le chargement ne dépend plus que de la **personne** (son id).
 
