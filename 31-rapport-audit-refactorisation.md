@@ -18,7 +18,7 @@
 | Sécurité | Grille **OWASP Top 10:2025**, relecture des routes, essais d'attaque dans les tests | Failles et mauvaises configurations |
 | Performance | **Lighthouse 12** (profil mobile), poids du build | Lenteurs, décalages de mise en page, accessibilité, SEO |
 
-**Chiffres des tests** : API **402 → 415**, client **345 → 372** (au 24/11/2026).
+**Chiffres des tests** : API **402 → 417**, client **345 → 372** (au 25/11/2026).
 
 ---
 
@@ -72,6 +72,12 @@ L'état « chargement » n'est plus stocké mais **déduit** : si la réponse po
 ### Bonus : tests du client 4 fois plus rapides
 
 Vitest 5 signalait que le navigateur simulé (jsdom) était reconstruit pour **chacun** des 67 fichiers, soit la moitié du temps. Avec `pool: 'vmThreads'` (`client/vite.config.js`), chaque fichier reste isolé mais jsdom n'est préparé qu'une fois par fil : **≈ 50 s → 12 s** dans le bac à sable (≈ 80 s → une vingtaine de secondes attendues sur le téléporteur).
+
+### Bonus : tests de l'API 4 fois plus rapides *(recette du 25/11)*
+
+La suite de l'API prenait **186 s** sur le téléporteur. Cause principale : **Argon2**, volontairement lent (≈ 170 ms par inscription et connexion), recalculé pour chacune des centaines de comptes créés par les tests. Réglage léger (1 Mio, 1 passe : ≈ 2 ms) **uniquement quand `NODE_ENV === 'test'`**, dans un seul fichier (`api/src/lib/argon2Options.js`). Le développement et la production gardent les paramètres forts (argon2id, 64 Mio, 3 passes), et un test le vérifie. La vérification n'a besoin d'aucun réglage, car les paramètres sont écrits dans l'empreinte. Mesure dans le bac à sable : **114 s → 33 s**.
+
+Au passage, l'avertissement « Both esbuild and oxc options were set » des tests du client a disparu : le réglage `esbuild` de `vite.config.js` ne servait plus qu'à Vitest 4.
 
 ### Version de Node
 

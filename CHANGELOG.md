@@ -5,6 +5,7 @@ Toutes les évolutions notables du projet sont documentées ici.
 ## [Non publié] — Sprint 5bis
 
 ### Ajouté
+- **Document 31** : tests de l'API 4 fois plus rapides (Argon2 léger en test seulement) et avertissement esbuild/oxc supprimé (recette du 25/11)
 - **Document 31 terminé** (S5R2-08 partie 3) : code mort et doublons, **grille OWASP Top 10:2025** (dix risques, ce qui est en place, corrigé, restant), Lighthouse avant / après ; document 21 § 7 bis (revue OWASP 2025) ; kanban (S5R2-08 ✅)
 - **Document 31 — rapport d'audit et de refactorisation** (S5R2-08, en cours) : méthode, partie 1 (hook commun de chargement, défauts trouvés), partie 2 (dépendances, 0 faille, pièges Zod 4 / dotenv 18 / fichier verrou, tests 4 fois plus rapides, Node 24.15+), défauts de la recette du 23–24/11, points à surveiller, leçons ; partie 3 à venir
 - **Page 404 « le cerf perdu dans la forêt »** (S5R2-10, extrait de S7-05) : scène de sapins, cerf à l'humeur **perplexe** (nouvelle option `mood="perplexe"` du composant `Mascot` : sourcils levés, bouche en « o », point d'interrogation — charte § 7 : pas de message culpabilisant), l'adresse demandée rappelée (on y voit souvent la faute), un **panneau indicateur** vers l'accueil, les propositions, les enquêtes et la carte, balise `robots` « noindex » le temps de l'affichage ; page sortie d'`App.jsx` dans `pages/NotFound.jsx`, styles dans `_not-found.scss`
