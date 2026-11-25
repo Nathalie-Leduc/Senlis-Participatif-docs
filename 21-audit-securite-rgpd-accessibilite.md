@@ -1,7 +1,7 @@
 # Audit sécurité, RGPD et accessibilité — Senlis Participatif
 
 > Audit du **23/09/2026**, réalisé sur la branche `dev` du dépôt de code (dernier commit du 23/09, 09h55), **avant la mise en ligne réelle** (Sprint 5ter).
-> Référentiels : **OWASP Top 10 (2021)** et ASVS 4.0 · **ANSSI** (recommandations pour la sécurisation des sites web, guide d'hygiène) · **CNIL** (RGPD, délibération 2020-091 sur les traceurs, 2022-100 sur les mots de passe, recommandation du 14/04/2026 sur les pixels de suivi) · **RGAA 4.1** (WCAG 2.1 AA).
+> Référentiels : **OWASP Top 10 (2021)**, puis **OWASP Top 10:2025** (grille complète au document 31 § 5.2, 24/11/2026) et ASVS 4.0 · **ANSSI** (recommandations pour la sécurisation des sites web, guide d'hygiène) · **CNIL** (RGPD, délibération 2020-091 sur les traceurs, 2022-100 sur les mots de passe, recommandation du 14/04/2026 sur les pixels de suivi) · **RGAA 4.1** (WCAG 2.1 AA).
 > Chaque constat renvoie à une issue du kanban (`16-kanban-issues-complet.md`, v1.10).
 > **Complété le 21/10/2026 (S5R-13)** : section 8, référentiels du **NIST** — SP 800-63B-4 (authentification, version finale du 31/07/2025) et Cybersecurity Framework 2.0.
 
@@ -175,6 +175,16 @@ Segmenter par profil (ex. « salarié·e·s de la Zone industrielle ») peut pro
 | `docker-compose.yml` : API sans `JWT_SECRET` ; PostgreSQL exposé sur toutes les interfaces | L'API plante au démarrage (`validateEnv`) ; base joignable depuis le réseau local | Ajouter les variables ; `127.0.0.1:5432:5432` |
 | `Dockerfile` : `npm ci --omit=dev` alors que `postinstall` appelle `prisma` (devDependency) ; conteneur en root | Build cassé ; principe du moindre privilège non respecté (ANSSI) | Build multi-étapes + `USER node` (Docker = dev uniquement, Clever Cloud déploie sans Docker) |
 | Pas d'en-têtes de sécurité sur le site statique (CSP, HSTS…) | Helmet ne protège que l'API | Configuré avec l'hébergeur en S5-24 |
+
+---
+
+## 7 bis. OWASP Top 10:2025 — revue du 24/11/2026 (S5R2-08 partie 3) ✅
+
+> L'édition 2025 remplace celle de 2021 (nouveautés : **A03** chaîne d'approvisionnement logicielle, **A10** conditions exceptionnelles ; SSRF fusionnée dans A01). Les dix risques ont été revus un par un dans le code : grille détaillée au **document 31, § 5.2**.
+
+Corrigé lors de cette revue : fiche du compte envoyée au navigateur par **liste blanche** unique (A01) ; **404 en JSON** pour une adresse d'API inconnue (A02) ; audit de la CI **bloquant dès « élevé »** (A03) ; **`JWT_SECRET` d'au moins 32 caractères** exigé en production (A04) ; CI en **moindre privilège** (A08) ; perte de connexion à la base **journalisée** (A09) ; faux fichier image → **400** au lieu de 500, et **arrêt propre** du serveur (A10).
+
+Restent, déjà planifiés : CSP, HSTS et alertes d'exploitation (**S5-24**) ; changement des secrets provisoires (**S5-22**). Risque accepté inchangé : énumération des comptes à l'inscription (§ 3.3).
 
 ---
 
