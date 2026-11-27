@@ -5,6 +5,8 @@ Toutes les évolutions notables du projet sont documentées ici.
 ## [Non publié] — Sprint 5bis
 
 ### Ajouté
+- **Document 34, § 4 et dépannage** (recette du 27/11, premier déploiement) : DNS chez OVH **avant** d'ajouter les domaines dans Clever Cloud ; recopier exactement la liste des adresses A de la console (une adresse en trop, `.219`, bloquait le certificat du domaine nu) ; `@` et point final ; entrées OVH à supprimer (`3|welcome`, `1|www…`, `ftp`, AAAA) ; diagnostic `openssl` et certificat de secours `lolcatho.st`
+- **Document 34, § 2 bis — Brevo et adresse de contact** (recette du 25/11) : vérifier le compte Brevo, domaine authentifié sans sous-domaine (méthode automatique avec OVH), refus de l'offre de domaine d'envoi, pas de blocage par IP, expéditeur `Senlis Participatif <no-reply@…>`, une clé SMTP par environnement, réception de `contact@` par OVH (`dig MX`) ; vérifications et dépannage complétés
 - **Document 34 — procédure de mise en ligne** (S5-22) : vue d'ensemble, GitHub (`dev` par défaut, ruleset de `main`), secrets neufs, Clever Cloud (PostgreSQL, FS Bucket, API Node.js, site Static avec Caddy, variables commentées), DNS OVH, premier déploiement et compte administrateur, 10 vérifications, dépannage ; remplace `guide-clever-cloud.docx`. Kanban (S5-22 🟡), document 06 (Caddy, FS Bucket, purge nocturne)
 - **Document 31** : image d'une proposition vérifiée dès le choix du fichier (recette du 25/11) ;
 - **Document 31** : tests de l'API 4 fois plus rapides (Argon2 léger en test seulement) et avertissement esbuild/oxc supprimé (recette du 25/11)

@@ -88,6 +88,37 @@ Le script affiche un `JWT_SECRET` (64 caractères) et un `ADMIN_PASSWORD` (24 ca
 
 ---
 
+## 2 bis. Brevo et adresse de contact
+
+> Recette du 25/11 : la clé SMTP et le domaine avaient été créés dans un **autre compte Brevo** que celui consulté. Vérifiez d'abord que l'identifiant SMTP affiché par Brevo (**SMTP & API** → **SMTP**, ligne **Connexion**) est bien celui de votre `.env`.
+
+### Domaine authentifié
+
+Brevo → **Expéditeurs, domaine, IP** → **Domaines** → `senlis-participatif.fr` doit être **authentifié** (DKIM et DMARC en vert). Sinon : **Ajouter un domaine** → `senlis-participatif.fr`, **sans sous-domaine** (le site n'envoie que des emails de compte, il n'y a pas de réputation à isoler) → méthode **Automatique**. Brevo se connecte à OVH, qui affiche les entrées à ajouter : acceptez si ce ne sont que des **ajouts** (`brevo-code`, `_domainkey`, `_dmarc`).
+
+- **Refusez l'offre « Réclamez votre domaine d'envoi gratuit »** (`senlis-participatif.com`, `.online`…) : une adresse d'envoi différente de celle du site ressemble à de l'hameçonnage.
+- **Ne bloquez pas les clés SMTP par adresse IP** : l'API n'a pas d'adresse IP de sortie fixe chez Clever Cloud, et les emails cesseraient de partir.
+
+### Expéditeur
+
+**Expéditeurs** → **Ajouter un expéditeur** : **From Name** = `Senlis Participatif`, **From Email** = `no-reply@senlis-participatif.fr`. Supprimez les expéditeurs d'une autre adresse (`@free.fr`…) : Gmail, Yahoo et Microsoft exigent un expéditeur authentifié par son propre domaine (DKIM, DMARC).
+
+### Deux clés SMTP, une par environnement
+
+**SMTP & API** → **Clés SMTP** → générer `senlis-dev` (votre `api/.env`) et `senlis-prod-clever-cloud` (étape 3.3). Si une clé fuit, on la supprime sans couper l'autre environnement.
+
+### `contact@senlis-participatif.fr` reçoit bien
+
+Cette adresse est affichée sur les pages Mentions légales, Confidentialité (droits RGPD) et Accessibilité. Brevo ne fait qu'**envoyer** : la réception passe par OVH.
+
+```bash
+dig MX senlis-participatif.fr +short   # doit afficher les serveurs mx…mail.ovh.net
+```
+
+OVH → **Web Cloud** → **E-mails** → `senlis-participatif.fr` : une **redirection** `contact@` → votre adresse habituelle (ou une boîte). Testez en écrivant à `contact@` depuis une autre adresse.
+
+---
+
 ## 3. Clever Cloud — créer les quatre briques
 
 Console : https://console.clever-cloud.com. Région : **Paris (par)** partout.
@@ -171,18 +202,22 @@ VITE_API_URL="https://api.senlis-participatif.fr/api/v1"
 
 ## 4. OVH — zone DNS
 
-Dans Clever Cloud, chaque application affiche, dans **Domain names**, les enregistrements DNS à créer. Recopiez **leurs** valeurs (elles peuvent changer).
+> ⚠️ **Ordre important** (recette du 27/11) : modifiez la zone DNS chez OVH **avant** d'ajouter les domaines dans Clever Cloud (§ 3.3 et § 3.4), ou supprimez puis rajoutez les domaines **après** la propagation. Clever Cloud demande le certificat HTTPS au moment de l'ajout : si le domaine pointe encore vers OVH, la demande échoue et n'est pas relancée.
+
+Dans Clever Cloud, chaque application affiche, dans **Noms de domaine** (tout en bas de la page, sous « Sécurisez votre application »), les enregistrements DNS à créer : une cible **CNAME** et une liste d'adresses **A**. Recopiez **exactement** ces valeurs.
 
 OVH : **Web Cloud** → **Noms de domaine** → `senlis-participatif.fr` → **Zone DNS** → **Ajouter une entrée** :
 
 | Sous-domaine | Type | Cible | Pour |
 |---|---|---|---|
-| *(vide)* | **A** | les adresses IP indiquées par Clever Cloud pour un domaine « nu » | le site |
+| `@` | **A** | **une entrée par adresse IP de la liste de la console**, ni plus ni moins | le site |
 | `www` | **CNAME** | la cible indiquée par Clever Cloud (finit par `clever-cloud.com.`) | le site |
 | `api` | **CNAME** | la même cible | l'API |
 
-- **Supprimez** les anciennes entrées A, AAAA ou CNAME de la racine et de `www` qui pointeraient ailleurs (page OVH par défaut).
-- **Ne touchez pas** aux entrées de Brevo (TXT SPF, DKIM, DMARC) : sans elles, les emails tombent en indésirables.
+- **Ne complétez pas** la liste des adresses A : si la console affiche `.214` à `.218` puis `.220`, l'adresse `.219` **n'existe pas** chez Clever Cloud. Recette du 27/11 : une seule adresse en trop a bloqué le certificat du domaine nu pendant des heures, car Let's Encrypt tombait au hasard sur elle.
+- `@` désigne la racine du domaine chez OVH. Le **point final** n'appartient qu'aux **cibles** de CNAME (`domain.par.clever-cloud.com.`), jamais aux noms saisis dans Clever Cloud ni aux sous-domaines.
+- **Supprimez** les entrées laissées par OVH : `A 213.186.33.5` sur `@` et `www` (page « en construction »), les **TXT** `"3|welcome"` et `"1|www…"`, les **AAAA** éventuelles, le CNAME `ftp` ; et une éventuelle redirection dans l'onglet **Redirection**. Sans cela, OVH refuse le CNAME `www` (« CNAME and other data »).
+- **Ne touchez pas** aux entrées de Brevo (`brevo-code`, `_domainkey`, `_dmarc`) ni aux entrées **MX** de la messagerie OVH : sans elles, les emails tombent en indésirables ou `contact@` ne reçoit plus rien. Brevo n'a pas besoin d'entrée SPF sur une IP mutualisée.
 
 Propagation : de quelques minutes à 24 h. Clever Cloud crée ensuite seul les certificats HTTPS (Let's Encrypt).
 
@@ -209,10 +244,11 @@ Propagation : de quelques minutes à 24 h. Clever Cloud crée ensuite seul les c
 | # | Test | Résultat attendu |
 |---|---|---|
 | 1 | https://api.senlis-participatif.fr/api/v1/health | `{"status":"ok"}` |
-| 2 | https://senlis-participatif.fr | L'accueil, cadenas HTTPS |
+| 2 | https://senlis-participatif.fr | L'accueil, cadenas HTTPS. Diagnostic : `echo \| openssl s_client -connect senlis-participatif.fr:443 -servername senlis-participatif.fr 2>/dev/null \| openssl x509 -noout -subject -issuer` doit afficher le nom du domaine et **Let's Encrypt** (même test pour `www.` et `api.`) |
 | 3 | Ouvrir une proposition, puis **F5** | La page se recharge (pas de 404) |
 | 4 | http://www.senlis-participatif.fr/carte | Redirigé vers https://senlis-participatif.fr/carte |
-| 5 | Inscription d'un compte de test | Email de vérification reçu (Brevo), pas dans les indésirables |
+| 5 | Inscription d'un compte de test, avec une adresse **Gmail** | Email de vérification reçu de « Senlis Participatif », dans la **boîte de réception** (pas les indésirables) |
+| 5 bis | Écrire à `contact@senlis-participatif.fr` | Message reçu sur votre adresse habituelle |
 | 6 | Admin : image sur une proposition, puis **Restart** de l'API | L'image est toujours là (FS Bucket) |
 | 7 | Lecture au survol, voix « Denise » | Voix naturelle (Azure) |
 | 8 | Le lendemain : **Logs** de l'API vers 3 h 17 UTC | Le bilan de la purge (`Comptes inactifs supprimés : …`) |
@@ -230,8 +266,10 @@ Propagation : de quelques minutes à 24 h. Clever Cloud crée ensuite seul les c
 | Site en ligne, mais « Erreur réseau » partout | `VITE_API_URL` absente au moment du build, ou `CLIENT_URL` différente de l'adresse du site (CORS) | Corriger, puis **Rebuild and restart** du site |
 | 404 en rafraîchissant une page | `CC_STATIC_CADDYFILE` absent : Caddy n'est pas utilisé | Ajouter la variable, **Rebuild and restart** |
 | Images disparues après un déploiement | FS Bucket non monté | Vérifier `CC_FS_BUCKET` (chemin `/api/uploads`, hôte exact) et la liaison |
-| Emails en indésirables | Entrées SPF / DKIM / DMARC de Brevo absentes | Les rétablir dans la zone OVH (guide Brevo) |
-| Certificat HTTPS absent après 24 h | DNS encore vers l'ancienne cible | Vérifier la zone OVH (§ 4), puis le domaine dans Clever Cloud |
+| Emails en indésirables | Domaine non authentifié dans Brevo, ou expéditeur d'un autre domaine (`@free.fr`) | § 2 bis : domaine authentifié, expéditeur `no-reply@senlis-participatif.fr` |
+| Clé SMTP introuvable dans Brevo | Créée dans un autre compte Brevo | Comparer l'identifiant SMTP de Brevo et `SMTP_USER` (§ 2 bis) |
+| Navigateur : `ERR_CERT_AUTHORITY_INVALID` / `SELF_SIGNED_CERT` ; `openssl` montre `CN = lolcatho.st` | **Pas de certificat** pour ce nom : c'est le certificat de secours de Clever Cloud | Comparer les entrées **A** d'OVH à la liste de la console (aucune en trop) ; puis supprimer et rajouter le domaine dans Clever Cloud ; en dernier recours, le support |
+| Certificat HTTPS absent après 24 h | DNS encore vers l'ancienne cible | Vérifier la zone OVH (§ 4), puis supprimer et rajouter le domaine dans Clever Cloud |
 
 ---
 
